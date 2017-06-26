@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1 user page
+  p= user
+
+  a(href="/users/" + user._id + "/edit") edit
+  form(method="Post" action="/users/" + user._id + "/delete") 
+    button(type="submit") delete
+
+

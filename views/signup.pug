@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= Signup
+
+  form(method="Post" action="/users/signup")
+    label(for="name") Name
+    input(type="text" name="name" id="name")
+    label(for="email") Email
+    input(type="email" name="email" id="email")
+    input(type="submit")

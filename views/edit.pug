@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1 edit
+
+  form(method="Post" action="/users/" + user._id)
+    label(for="name") Name
+    input(type="text" name="name" id="name" value=user.name)
+    label(for="email") Email
+    input(type="email" name="email" id="email" value=user.email)
+    input(type="submit")

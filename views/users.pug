@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1 Leaderboard
+  p #{users}
+
+  ul
+    for user in users
+      a(href="/users/" + user._id) 
+        li= user
+  
+
