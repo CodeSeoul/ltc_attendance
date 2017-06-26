@@ -1,11 +1,17 @@
 extends layout
 
 block content
-  h1= Signup
+  .ui.main.text.container.segment
+    header(class="ui header") Signup
 
-  form(method="Post" action="/users/signup")
-    label(for="name") Name
-    input(type="text" name="name" id="name")
-    label(for="email") Email
-    input(type="email" name="email" id="email")
-    input(type="submit")
+    form(method="Post" action="/users/signup" class="ui form")
+      .field
+        label(for="name") Name
+        input(type="text" name="name" id="name")
+      .field
+        label(for="email") Email
+        input(type="email" name="email" id="email")
+
+      .field
+        button(type="submit" class="ui basic blue big button") submit
+        a(href="/users" class="ui basic grey big button") cancel
