@@ -36,14 +36,12 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', (req, res) => {
-  let name = req.body.name;
-  let email = req.body.email;
-  User.create({name: name, email: email}, (err, newUser) => {
+  User.create(req.body, (err, newUser) => {
     if (err) {
       console.log(err);
       res.redirect('/signup');
     } else {
-      res.redirect('/');
+      res.redirect('/users');
     }
   });
 });
@@ -71,9 +69,7 @@ router.get('/:id/edit', (req, res) => {
 });
 
 router.post('/:id', (req, res) => {
-  let name = req.body.name;
-  let email = req.body.email;
-  User.findByIdAndUpdate(req.params.id, {name: name, email: email}, (err, result) => {
+  User.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
     if (err) {
       console.log(err); 
       res.redirect('/');

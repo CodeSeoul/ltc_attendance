@@ -1,13 +1,40 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+main {
+  padding: 50px;
 }
 
 a {
   color: #00B7FF;
+  text-decoration: none;
 }
 
 input {
   display: block;
   margin: 12px 0;
 }
+
+nav {
+  background: #eee;
+  padding: 0;
+  text-align: right;
+}
+
+nav li {
+  display: inline-block;
+  list-style: none;
+  padding: 20px;
+  cursor: pointer;
+}
+
+nav li:first-child {
+  float: left;
+}
+
