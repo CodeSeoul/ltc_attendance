@@ -26,10 +26,11 @@ let User = mongoose.model("User", userSchema);
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   User.find({}, (err, users) => {
-    if (err) return console.log(err); 
+    if (err) return console.log(err);
     res.render('users', { users: users });
   });
 });
+
 
 router.get('/signup', (req, res) => {
   res.render('signup');
@@ -49,7 +50,7 @@ router.post('/signup', (req, res) => {
 router.get('/:id', (req, res) => {
   User.findById(req.params.id, (err, user) => {
     if (err) {
-      console.log(err); 
+      console.log(err);
       res.redirect('/');
     } else {
       res.render('user', {user: user});
@@ -60,7 +61,7 @@ router.get('/:id', (req, res) => {
 router.get('/:id/edit', (req, res) => {
   User.findById(req.params.id, (err, user) => {
     if (err) {
-      console.log(err); 
+      console.log(err);
       res.redirect('/');
     } else {
       res.render('edit', {user: user});
@@ -71,7 +72,7 @@ router.get('/:id/edit', (req, res) => {
 router.post('/:id', (req, res) => {
   User.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
     if (err) {
-      console.log(err); 
+      console.log(err);
       res.redirect('/');
     } else {
       res.redirect('/users/' + req.params.id);
@@ -82,7 +83,7 @@ router.post('/:id', (req, res) => {
 router.post('/:id/delete', (req, res) => {
   User.findByIdAndRemove(req.params.id, (err, result) => {
     if (err) {
-      console.log(err); 
+      console.log(err);
       res.redirect('/');
     } else {
       res.redirect('/users');

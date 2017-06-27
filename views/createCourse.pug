@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= Signup
+
+  form(method="Post" action="/courses/create")
+    label(for="title") Name
+    input(type="text" name="title" id="title")
+    label(for="description") Description
+    textarea(name="description" id="description")
+    input(type="submit")

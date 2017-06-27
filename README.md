@@ -24,7 +24,7 @@ Collections ->
 -course_id
 -date
 
-[Class]
+[Lecture]
 -_id
 -course_id
 -time

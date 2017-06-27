@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1 Here are some courses
+
+    ul
+      for course in courses
+        a(href="/courses/" + course._id)
+          li= course
