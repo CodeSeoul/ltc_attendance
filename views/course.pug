@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1 course page
+  p= course
+
+  a(href="/courses/" + course._id + "/edit") edit
+  form(method="Post" action="/courses/" + course._id + "/delete")
+    button(type="submit") delete
