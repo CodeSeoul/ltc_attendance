@@ -38,3 +38,15 @@ nav li:first-child {
   float: left;
 }
 
+input[type="submit"] {
+  margin-top: 20px
+}
+
+form {
+  margin-top: 30px;
+}
+
+form label {
+  margin-top: 14px;
+}
+
