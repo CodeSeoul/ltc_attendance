@@ -2,13 +2,6 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://heroku_d895z9hp:74v0ph37vib5v5gf02jb675acf@ds135522.mlab.com:35522/heroku_d895z9hp', err => {
-  if (err) {
-  console.log("couldn't connect to MongoDB");
-  }
-  console.log('#connected to MongoDB!')
-})
-
 const Course = mongoose.model('Course', {
   title: {type: String, required: true},
   description: String

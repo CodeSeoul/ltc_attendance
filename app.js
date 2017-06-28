@@ -10,6 +10,16 @@ var users = require('./routes/users');
 var courses = require('./routes/courses');
 var app = express();
 
+// database
+const mongoose = require('mongoose')
+mongoose.connect('mongodb://heroku_d895z9hp:74v0ph37vib5v5gf02jb675acf@ds135522.mlab.com:35522/heroku_d895z9hp', err => {
+  if (err) {
+    console.log("couldn't connect to MongoDB");
+  } else {
+    console.log('#connected to MongoDB!')
+  }
+})
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
