@@ -4,15 +4,15 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const config = require('./config')
 
 var index = require('./routes/index');
 var users = require('./routes/users');
 var courses = require('./routes/courses');
 var app = express();
-
 // database
 const mongoose = require('mongoose')
-mongoose.connect('mongodb://heroku_d895z9hp:74v0ph37vib5v5gf02jb675acf@ds135522.mlab.com:35522/heroku_d895z9hp', err => {
+mongoose.connect(config.MONGODB_URI, err => {
   if (err) {
     console.log("couldn't connect to MongoDB");
   } else {
