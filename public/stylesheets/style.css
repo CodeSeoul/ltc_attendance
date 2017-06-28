@@ -38,3 +38,14 @@ nav li:first-child {
   float: left;
 }
 
+h1 {
+  text-align: center;
+}
+
+.field {
+  padding: 10px;
+}
+
+.ui.button {
+  margin-right: 20px;
+}
