@@ -1,11 +1,5 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-
-const Course = mongoose.model('Course', {
-  title: {type: String, required: true},
-  description: String
-})
+const router = require('express').Router();
+const Course = require('../models/Course')
 
 // Course.create({title: "Linux", description: "Shell programming"});
 // Course.create({title: "Windows", description: "Y u no unix based system"});

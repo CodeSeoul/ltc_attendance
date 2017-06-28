@@ -1,14 +1,5 @@
-const express = require('express');
-const router = express.Router();
-const mongoose = require('mongoose');
-
-const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, required: true },
-  level: { type: String, default: 'student' },
-});
-
-let User = mongoose.model("User", userSchema);
+const router = require('express').Router()
+const User = require('../models/User')
 
 // dummy data
 // User.create({name: 'Dale', email: 'dale@gmail.com'});
