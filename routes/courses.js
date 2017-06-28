@@ -10,12 +10,12 @@ const Course = require('../models/Course')
 router.get('/', function(req, res, next) {
   Course.find({}, (err, courses) => {
     if (err) return console.log(err);
-    res.render('courses', { courses: courses });
+    res.render('courses/index', { courses: courses });
   });
 });
 
 router.get('/create', (req, res)=>{
-  res.render('createCourse')
+  res.render('courses/create')
 })
 
 router.post('/create', (req, res) => {
@@ -30,14 +30,13 @@ router.post('/create', (req, res) => {
   });
 });
 
-
 router.get('/:id', (req, res) => {
   Course.findById(req.params.id, (err, course) => {
     if (err) {
       console.log(err);
       res.redirect('/');
     } else {
-      res.render('course', {course: course});
+      res.render('courses/show', {course: course});
     }
   });
 });
@@ -49,7 +48,7 @@ router.get('/:id/edit', (req, res) => {
       console.log(err);
       res.redirect('/');
     } else {
-      res.render('editCourse', {course: course});
+      res.render('courses/edit', {course: course});
     }
   });
 });
@@ -75,6 +74,5 @@ router.post('/:id/delete', (req, res) => {
     }
   });
 });
-
 
 module.exports = router;

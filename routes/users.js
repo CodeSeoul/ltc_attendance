@@ -6,12 +6,12 @@ const userRepo = new UserRepository();
 
 router.get('/', (req, res, next) => {
   userRepo.getUsers(users => {
-    res.render('users', { users: users });
+    res.render('users/index', { users: users });
   });
 });
 
 router.get('/signup', (req, res) => {
-  res.render('signup');
+  res.render('users/signup');
 });
 
 router.post('/signup', (req, res) => {
@@ -22,13 +22,13 @@ router.post('/signup', (req, res) => {
 
 router.get('/:id', (req, res) => {
   userRepo.getUser(req.params.id, user => {
-    res.render('user', { user, user });
+    res.render('users/show', { user, user });
   });
 });
 
 router.get('/:id/edit', (req, res) => {
   userRepo.getUser(req.params.id, user => {
-    res.render('edit', { user: user });
+    res.render('users/edit', { user: user });
   });
 });
 
