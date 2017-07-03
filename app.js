@@ -10,9 +10,12 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 var courses = require('./routes/courses');
 var app = express();
+
 // database
 const mongoose = require('mongoose')
-mongoose.connect(config.MONGODB_URI, err => {
+process.env.NODE_ENV = 'development';
+
+mongoose.connect(config.MONGODB_URI[app.settings.env], err => {
   if (err) {
     console.log("couldn't connect to MongoDB");
   } else {

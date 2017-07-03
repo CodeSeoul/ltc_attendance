@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const User = require('../models/User');
 const UserRepository = require('../src/UserRepository')
 const userRepo = new UserRepository();
 
-router.get('/', (req, res, next) => {
+router.get('/', (req, res) => {
   userRepo.getUsers(users => {
     res.render('users/index', { users: users });
   });
