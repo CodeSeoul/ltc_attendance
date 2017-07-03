@@ -3,8 +3,7 @@ process.env.NODE_ENV = 'test';
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
-const userRepository = require('../src/userRepository');
-const Repo = new userRepository();
+const Repo = require('../src/userRepository');
 
 mongoose.Promise = global.Promise; 
 
