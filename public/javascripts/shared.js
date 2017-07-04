@@ -5,8 +5,7 @@ document.addEventListener("DOMContentLoaded", function() {
   let alertWrapper = document.querySelector('.alert-wrap');
   if(alertMsg) {
     setTimeout( () => {
-      // alertMsg.style.visibility = 'hidden';
       alertWrapper.removeChild(alertMsg);
-    }, 2500);
+    }, 2600);
   }
 });

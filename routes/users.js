@@ -11,8 +11,7 @@ router.get('/', (req, res) => {
 });
 
 router.get('/signup', (req, res) => {
-  let msg = '';
-  res.render('users/signup', {msg: msg});
+  res.render('users/signup');
 });
 
 router.post('/signup', (req, res) => {
@@ -21,7 +20,7 @@ router.post('/signup', (req, res) => {
       let error = 'Unable to create user';
       res.render('users/signup', {error: error});
     } else {
-      let success = 'Welcome to the class';
+      let success = req.body.name + '!';
       res.render('users/signup', {success: success});
     }
   });
