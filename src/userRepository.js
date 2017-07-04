@@ -1,4 +1,4 @@
-var User = require('../models/User');
+const User = require('../models/User');
 
 module.exports = {
 
@@ -11,8 +11,11 @@ module.exports = {
 
   createUser(user, cb) {
     User.create(user, (err, user) => {
-      if (err) return console.log(err);
-      cb(user);
+      let result = {
+        err: err,
+        res: user
+      }
+      cb(result);
     });
   },
 

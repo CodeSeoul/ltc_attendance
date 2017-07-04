@@ -49,8 +49,8 @@ describe('User', () => {
         newUser2.name = 'Bat Man';
         newUser2.email = 'bman@mail.com';
     Repo.createUser(newUser2, newUser => {
-      newUser.should.have.property('name').eql('Bat Man');
-      newUser.should.have.property('email').eql('bman@mail.com');
+      newUser.res.should.have.property('name').eql('Bat Man');
+      newUser.res.should.have.property('email').eql('bman@mail.com');
       Repo.getUsers(users => {
         users.should.be.a('array');
         users.length.should.be.eql(2);
@@ -64,8 +64,8 @@ describe('User', () => {
         newUser3.name = 'Tom Bossworth';
         newUser3.email = 'Tommy@mail.com';
     Repo.createUser(newUser3, newUser => {
-      Repo.getUser(newUser._id, result => {
-        result.should.have.property('_id').eql(newUser._id);
+      Repo.getUser(newUser.res._id, result => {
+        result.should.have.property('_id').eql(newUser.res._id);
         done()
       });
     });
@@ -76,7 +76,7 @@ describe('User', () => {
         newUser4.name = 'Maggie May';
         newUser4.email = 'wakeup@mail.com';
     Repo.createUser(newUser4, newUser => {
-      newUser._id.should.be.equal(newUser4._id);
+      newUser.res._id.should.be.equal(newUser4._id);
       newUser.email = 'milwaukee@mail.com';
       Repo.updateUser(newUser._id, newUser, result => {
         newUser.email.should.be.equal('milwaukee@mail.com');
@@ -92,7 +92,7 @@ describe('User', () => {
     Repo.createUser(newUser5, newUser => {
       Repo.getUsers(users => {
         users.length.should.be.eql(2);
-        Repo.deleteUser(newUser, result => {
+        Repo.deleteUser(newUser.res, result => {
           Repo.getUsers(users => {
             users.length.should.be.eql(1);
             users[0].name.should.not.be.eql('Sarah Dimond');

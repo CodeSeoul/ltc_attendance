@@ -11,12 +11,19 @@ router.get('/', (req, res) => {
 });
 
 router.get('/signup', (req, res) => {
-  res.render('users/signup');
+  let msg = '';
+  res.render('users/signup', {msg: msg});
 });
 
 router.post('/signup', (req, res) => {
   userRepo.createUser(req.body, cb => {
-    res.redirect('/users');
+    if (cb.err) {
+      let error = 'Unable to create user';
+      res.render('users/signup', {error: error});
+    } else {
+      let success = 'Welcome to the class';
+      res.render('users/signup', {success: success});
+    }
   });
 });
 
