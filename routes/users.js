@@ -16,7 +16,13 @@ router.get('/signup', (req, res) => {
 
 router.post('/signup', (req, res) => {
   userRepo.createUser(req.body, cb => {
-    res.redirect('/users');
+    if (cb.err) {
+      let error = 'Unable to create user';
+      res.render('users/signup', {error: error});
+    } else {
+      let success = req.body.name + '!';
+      res.render('users/signup', {success: success});
+    }
   });
 });
 

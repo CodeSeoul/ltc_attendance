@@ -5,7 +5,15 @@ block content
     div(class="row")
       div(class="col-md-2")
       div(class="col-md-8")
-        h1 Signup
+        h2 I attended class today
+        container.alert-wrap
+          - if(success) {
+          .alert.alert-success
+            strong Welcome to the class #{success}
+          - } else if (error) {
+          .alert.alert-danger
+            strong Error! #{error}          
+          - }
         
         form(method="Post" action="/users/signup")
           div(class="form-group")
