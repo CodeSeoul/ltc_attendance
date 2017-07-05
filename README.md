@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/LearnTeachCodeSeoul/ltc_attendance.svg?branch=master)](https://travis-ci.org/LearnTeachCodeSeoul/ltc_attendance)
 
-#Learn Teach Code Attendance Tracker
+
+# Learn Teach Code Attendance Tracker
 ## Track Attendance
 
 ## Award Badges
@@ -8,9 +9,6 @@
 ## Display Leaderboard
 
 ## Basic live messaging
-
- mongodb://heroku_d895z9hp:74v0ph37vib5v5gf02jb675acf@ds135522.mlab.com:35522/heroku_d895z9hp
-
 
 Collections ->
 
