@@ -13,13 +13,14 @@ var app = express();
 
 // database
 const mongoose = require('mongoose')
-process.env.NODE_ENV = 'development';
 
-mongoose.connect(config.MONGODB_URI[app.settings.env], err => {
+mongoose.Promise = global.Promise
+mongoose.set('debug', true)
+mongoose.connect(config.MONGODB_URI, err => {
   if (err) {
-    console.log("couldn't connect to MongoDB");
+    console.log("# Failed to connect to MongoDB :", config.MONGODB_URI);
   } else {
-    console.log('#connected to MongoDB!')
+    console.log('# Connected to MongoDB :', config.MONGODB_URI)
   }
 })
 
