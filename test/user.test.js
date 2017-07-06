@@ -1,13 +1,14 @@
-process.env.NODE_ENV = 'test';
+const config = require('./config.test.js')
 
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
+
+mongoose.Promise = global.Promise;
+mongoose.set('debug', true)
+mongoose.connect(config.MONGODB_URI)
+
 const Repo = require('../src/userRepository');
-
-mongoose.Promise = global.Promise; 
-
-const server = require('../app');
 const User = require('../models/User');
 
 const should = chai.should();
