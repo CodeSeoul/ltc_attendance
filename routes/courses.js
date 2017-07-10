@@ -6,9 +6,8 @@ const Course = require('../models/Course')
 // Course.create({title: "Web Dev", description: "All lol cats"});
 // Course.create({title: "Java", description: "Not just coffee anymore"});
 
-
 router.get('/', function(req, res, next) {
-  Course.find({}, (err, courses) => {
+  Course.find({}).sort({createdAt: -1}).exec((err, courses) => {
     if (err) return console.log(err);
     res.render('courses/index', { courses: courses });
   });
