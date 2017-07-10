@@ -1,6 +1,4 @@
 const User = require('../models/User');
-const Session = require('../models/session');
-const Course = require('../models/course');
 const config = require('./config.test.js');
 
 const assert = require('assert');
