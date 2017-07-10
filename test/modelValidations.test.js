@@ -47,7 +47,6 @@ describe('Model validations', () => {
 
     user1.save()
       .then((result) => {
-        console.log(result);
         User.findOne({name: 'Tim'}, (result) => {
           assert(result === null);
           done();
