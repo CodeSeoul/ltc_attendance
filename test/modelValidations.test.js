@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../models/User');
 const Session = require('../models/session');
 const Course = require('../models/course');
 const config = require('./config.test.js');
@@ -46,12 +46,12 @@ describe('Model validations', () => {
     });
 
     user1.save()
+      .then(() => User.findOne({name: 'Tim'}))
       .then((result) => {
-        User.findOne({name: 'Tim'}, (result) => {
-          assert(result === null);
+          console.log(result);
+          assert(result !== null);
           done();
       });
-    });
   });
 
   it('Should have user level set to student by default', (done) => {

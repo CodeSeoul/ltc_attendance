@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const UserSchema = require('./user');
+const UserSchema = require('./User');
 
 const sessionSchema = new mongoose.Schema({
   sessionOpen: { type: Boolean, default: true},

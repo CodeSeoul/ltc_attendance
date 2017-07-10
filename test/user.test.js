@@ -9,7 +9,7 @@ mongoose.set('debug', true)
 mongoose.connect(config.MONGODB_URI)
 
 const Repo = require('../src/userRepository');
-const User = require('../models/user');
+const User = require('../models/User');
 
 const should = chai.should();
 chai.use(chaiHttp);
