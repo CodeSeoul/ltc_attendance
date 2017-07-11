@@ -13,8 +13,8 @@ describe('Model validations', () => {
 
   beforeEach( (done) => {
     const newUser1 = new User({
-      name: 'Bob',
-      email: 'grumpy@mail.com'
+      name: 'Joe',
+      email: 'mail@mail.com'
     });
     newUser1.save( (err) => {
       done();
@@ -37,24 +37,25 @@ describe('Model validations', () => {
     done()
   });
 
-  it('Should require unique email', (done) => {
+  it.only('Should require unique email', (done) => {
     const user1 = new User({ 
       name: 'Tim',
-      email: 'grumpy@mail.com',
+      email: 'mail@mail.com',
     });
 
     user1.save()
-      .then(() => User.findOne({name: 'Tim'}))
-      .then((result) => {
-          console.log(result);
-          assert(result !== null);
+      .then()
+      .catch((err) => {
+          assert(err.message.includes('duplicate key error'));
           done();
-      });
+      })
   });
 
   it('Should have user level set to student by default', (done) => {
-    User.findOne({name: 'Bob'}) 
+    User.findOne({name: 'Joe'}) 
       .then((user) => {
+        console.log(user); 
+        console.log('user'); 
         assert(user.level === 'student')
         done();
       })
