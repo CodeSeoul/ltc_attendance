@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Course = require('../models/Course');
 const config = require('./config.test.js');
 
 const assert = require('assert');
@@ -8,15 +9,15 @@ mongoose.createConnection(config.MONGODB_URI);
 
 mongoose.Promise = global.Promise;
 
-describe('Model validations', () => {
+describe('User model validations', () => {
   User.collection.drop();
 
   beforeEach( (done) => {
-    const newUser1 = new User({
-      name: 'Joe',
+    const joe = new User({
+      name: 'joe',
       email: 'mail@mail.com'
     });
-    newUser1.save( (err) => {
+    joe.save( (err) => {
       done();
     });
   });
@@ -26,39 +27,47 @@ describe('Model validations', () => {
     done();
   });
 
-  it('Should require valid email', (done) => {
-    const user = new User({ 
-      name: 'Jane',
-      email: 'mm.'
-    });
-    const validationResult = user.validateSync();
-    const message = validationResult.errors.email.message;
-    assert(message === 'Email must be valid');
-    done()
-  });
-
-  it.only('Should require unique email', (done) => {
-    const user1 = new User({ 
-      name: 'Tim',
+  it('Should require unique email', (done) => {
+    const jane = new User({ 
+      name: 'jane',
       email: 'mail@mail.com',
-    });
-
-    user1.save()
+    })
+    .save()
       .then()
       .catch((err) => {
           assert(err.message.includes('duplicate key error'));
           done();
       })
   });
+  
+  it('Should require valid email', (done) => {
+    const jane = new User({ 
+      name: 'jane',
+      email: 'mm.'
+    });
+    const validationResult = jane.validateSync();
+    const message = validationResult.errors.email.message;
+    assert(message === 'Email must be valid');
+    done()
+  });
 
-  it('Should have user level set to student by default', (done) => {
-    User.findOne({name: 'Joe'}) 
+  it('Should set student level to default', (done) => {
+    User.findOne({name: 'joe'}) 
       .then((user) => {
-        console.log(user); 
-        console.log('user'); 
         assert(user.level === 'student')
         done();
       })
+  });
+
+  it('Should require name to be valid length', (done) => {
+    const jo = new User({ 
+      name: 'jo',
+      email: 'jo@mail.com'
+    });
+    const validationResult = jo.validateSync();
+    const message = validationResult.errors.name.message;
+    assert(message === 'Name must be valid length');
+    done()
   });
 
 });
