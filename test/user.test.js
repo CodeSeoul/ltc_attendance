@@ -19,7 +19,7 @@ describe('User', () => {
   User.collection.drop();
 
   beforeEach( (done) => {
-    let newUser1 = new User({
+    const newUser1 = new User({
       name: 'Mr Jones',
       email: 'bdylan@mail.com'
     });
@@ -46,7 +46,7 @@ describe('User', () => {
   });
 
   it('should add a new user with createUser()', (done) => {
-    let newUser2 = new User();
+    const newUser2 = new User();
         newUser2.name = 'Bat Man';
         newUser2.email = 'bman@mail.com';
     Repo.createUser(newUser2, newUser => {
@@ -61,7 +61,7 @@ describe('User', () => {
   });
 
   it('should list a single user with getUser()', (done) => {
-    let newUser3 = new User();
+    const newUser3 = new User();
         newUser3.name = 'Tom Bossworth';
         newUser3.email = 'Tommy@mail.com';
     Repo.createUser(newUser3, newUser => {
@@ -73,7 +73,7 @@ describe('User', () => {
   });
 
   it('should update existing user with updateUser()', (done) => {
-    let newUser4 = new User();
+    const newUser4 = new User();
         newUser4.name = 'Maggie May';
         newUser4.email = 'wakeup@mail.com';
     Repo.createUser(newUser4, newUser => {
@@ -87,7 +87,7 @@ describe('User', () => {
   });
 
   it('should delete an existing user with deleteUser()', (done) => {
-    let newUser5 = new User();
+    const newUser5 = new User();
         newUser5.name = 'Sarah Dimond';
         newUser5.email = 'huricane@mail.com';
     Repo.createUser(newUser5, newUser => {

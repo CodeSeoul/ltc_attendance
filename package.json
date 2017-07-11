@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon ./bin/www",
-    "test": "mocha **/*.test.js",
+    "test": "mocha",
     "test-watch": "nodemon --exec 'npm test'"
   },
   "dependencies": {
@@ -18,7 +18,8 @@
     "mongoose": "^4.7.2",
     "morgan": "~1.8.1",
     "pug": "~2.0.0-beta11",
-    "serve-favicon": "~2.4.2"
+    "serve-favicon": "~2.4.2",
+    "validator": "^8.0.0"
   },
   "devDependencies": {
     "chai": "^4.0.2",
