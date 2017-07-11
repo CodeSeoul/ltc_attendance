@@ -1,17 +1,10 @@
-const User = require('../models/User');
-const config = require('./config.test.js');
-
+const User = require('../../models/User');
+const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
-mongoose.set('debug', true);
-mongoose.createConnection(config.MONGODB_URI);
-
-mongoose.Promise = global.Promise;
 
 describe('User model validations', () => {
-  User.collection.drop();
-
-  beforeEach( (done) => {
+  beforeEach((done) => {
     const joe = new User({
       name: 'joe',
       email: 'mail@mail.com'
@@ -21,22 +14,19 @@ describe('User model validations', () => {
     });
   });
 
-  afterEach( (done) => {
+  afterEach((done) => {
     User.collection.drop();
     done();
   });
 
   it('Should require unique email', (done) => {
-    const jane = new User({ 
-      name: 'jane',
-      email: 'mail@mail.com',
-    })
-    .save()
-      .then()
+    const jane = new User({name: 'jane', email: 'mail@mail.com'})
+      .save()
       .catch((err) => {
-          assert(err.message.includes('duplicate key error'));
-          done();
-      })
+        const message = err.errors.email.message
+        assert(message.includes('to be unique'))
+        done();
+      });
   });
   
   it('Should require valid email', (done) => {
