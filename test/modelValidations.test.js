@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const Course = require('../models/Course');
 const config = require('./config.test.js');
 
 const assert = require('assert');
@@ -51,17 +50,20 @@ describe('User model validations', () => {
     done()
   });
 
-  it('Should set student level to default', (done) => {
-    User.findOne({name: 'joe'}) 
-      .then((user) => {
-        assert(user.level === 'student')
-        done();
-      })
-  });
-
-  it('Should require name to be valid length', (done) => {
+  it('Should require name to be more than 2 chars', (done) => {
     const jo = new User({ 
       name: 'jo',
+      email: 'jo@mail.com'
+    });
+    const validationResult = jo.validateSync();
+    const message = validationResult.errors.name.message;
+    assert(message === 'Name must be valid length');
+    done()
+  });
+
+  it('Should require name to be less then 100 chars', (done) => {
+    const jo = new User({ 
+      name: 'j'.repeat(100),
       email: 'jo@mail.com'
     });
     const validationResult = jo.validateSync();
