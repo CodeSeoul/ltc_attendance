@@ -9,7 +9,7 @@ const Course = mongoose.model('Course', {
     type: String, 
     required: [true, 'Title is required'],
     validate: {
-      validator: (title) => title.length > 2 && title.length < 100,
+      validator: (title) => title.length > 1 && title.length < 100,
       message: 'Title must be valid length'
     }
   },
