@@ -4,7 +4,7 @@ const assert = require('assert');
 const mongoose = require('mongoose');
 
 describe('User Create', () => {
-  it('Should create a new User', (done) => {
+  it('Should create a new User record', (done) => {
     const joe = new User({
       name: 'joe',
       email: 'mail@mail.com'

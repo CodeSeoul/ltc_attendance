@@ -1,5 +1,5 @@
-const Course = require('../models/Course');
-const config = require('./config.test.js');
+const Course = require('../../models/Course');
+const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 

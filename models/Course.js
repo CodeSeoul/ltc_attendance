@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+const TagSchema = mongoose.Schema({
+  title: String
+});
+
 const Course = mongoose.model('Course', {
   title: {
     type: String, 
@@ -17,9 +21,14 @@ const Course = mongoose.model('Course', {
       message: 'Description must be valid length'
     }
   },
-  tags: [String],
+  tags: [TagSchema],
   createdAt: { type: Date, default: Date.now },
-  createdBy: String
+  instructors: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
+    }
+  ]
 })
 
 module.exports = Course
