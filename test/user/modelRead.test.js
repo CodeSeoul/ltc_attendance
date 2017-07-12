@@ -1,10 +1,7 @@
 const User = require('../../models/User');
 const config = require('../config.test.js');
-
 const assert = require('assert');
 const mongoose = require('mongoose');
-mongoose.set('debug', true);
-mongoose.createConnection(config.MONGODB_URI);
 
 describe('User Read model', () => {
 
