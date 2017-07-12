@@ -24,7 +24,7 @@ describe('Course Update', () => {
         sql = new Course({
           title: 'sql', 
           description: 'beginner sql',
-          tags: [{title: 'beginner'}],
+          tags: ['beginner'],
           instructors: [{_id : jane._id}]
         })
       sql.save()
@@ -58,12 +58,12 @@ describe('Course Update', () => {
       });
   });
 
-  it('Should update sql course tag to beginner', (done) => {
-    sql.set('tags', [{title: 'beginner'}]);
+  it('Should update sql course tag to intermediate', (done) => {
+    sql.set('tags', ['intermediate']);
     sql.save()
       .then(() => Course.find({}))
       .then((courses) => {
-        assert(courses[0].tags[0].title === 'beginner');
+        assert(courses[0].tags[0] === 'intermediate');
         done();
       });
   });

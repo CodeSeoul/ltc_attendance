@@ -22,24 +22,24 @@ describe('Course Read', () => {
         const sql = new Course({
           title: 'sql', 
           description: 'beginner sql',
-          tags: [{title: 'sql'}, {title: 'beginner'}],
+          tags: ['sql', 'beginner'],
           instructors: [{_id : jane._id}]
-        })
+        });
         const ruby = new Course({
           title: 'ruby', 
           description: 'intermediate ruby',
-          tags: [{title: 'ruby'}, {title: 'intermediate'}],
+          tags: ['ruby', 'intermediate'],
           instructors: [{_id : joe._id}]
-        })
+        });
         const go = new Course({
           title: 'go', 
           description: 'beginner go',
-          tags: [{title: 'beginner'}],
+          tags: ['beginner'],
           instructors: [{_id : joe._id}, {_id: jane._id}]
-        })
-      Promise.all([sql.save(), ruby.save(), go.save()])
-        .then(() => done());
-      })
+        });
+        Promise.all([sql.save(), ruby.save(), go.save()])
+          .then(() => done());
+        });
   });
 
   afterEach((done) => {
@@ -67,9 +67,8 @@ describe('Course Read', () => {
 
   it('Should find courses tag beginner for go course', (done) => {
     Course.findOne({title: 'go'})
-      .populate('tags')
       .then((user) => {
-      assert(user.tags[0].title === 'beginner')
+      assert(user.tags[0] === 'beginner')
       done();
     })
   });

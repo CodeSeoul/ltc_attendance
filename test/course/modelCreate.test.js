@@ -30,17 +30,14 @@ describe('Course Create', () => {
   });
 
   it('Should create record with Tags embeded refrence', (done) => {
-    sql.tags = [{title: 'sql'}, {title: 'beginner'}]
+    sql.tags = ['sql', 'beginner']
     sql.save()
-      .then(() => {
-        Course.findOne({title: 'sql'})
-      .populate('tags')
+      .then(() => Course.findOne({title: 'sql'}))
       .then((result) => {
-        assert(result.tags[0].title === 'sql');
-        assert(result.tags[1].title === 'beginner');
+        assert(result.tags[0] === 'sql');
+        assert(result.tags[1] === 'beginner');
         done();
       });
-    });
   });
 
   it('Should create record with CreatedBy User obj refrence', (done) => {
