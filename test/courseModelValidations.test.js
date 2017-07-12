@@ -1,31 +1,9 @@
 const Course = require('../models/Course');
 const config = require('./config.test.js');
-
 const assert = require('assert');
 const mongoose = require('mongoose');
-mongoose.set('debug', true);
-mongoose.createConnection(config.MONGODB_URI);
-
-mongoose.Promise = global.Promise;
 
 describe('Course model validations', () => {
-  Course.collection.drop();
-
-  beforeEach( (done) => {
-    const python = new Course({
-      name: 'Beginner python',
-      description: 'Learn python with friends',
-    });
-    python.save( (err) => {
-      done();
-    });
-  });
-
-  afterEach( (done) => {
-    Course.collection.drop();
-    done();
-  });
-
   it('Should require title', (done) => {
     const ruby = new Course({ name: undefined });
     const validationResult = ruby.validateSync();

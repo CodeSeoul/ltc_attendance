@@ -1,22 +1,15 @@
-const config = require('./config.test.js')
-
+const config = require('../config.test.js')
+const Repo = require('../../src/userRepository');
+const User = require('../../models/User');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
-
-mongoose.Promise = global.Promise;
-mongoose.set('debug', true)
-mongoose.connect(config.MONGODB_URI)
-
-const Repo = require('../src/userRepository');
-const User = require('../models/User');
-
 const should = chai.should();
 chai.use(chaiHttp);
 
-describe('User', () => {
+mongoose.connect(config.MONGODB_URI)
 
-  User.collection.drop();
+describe('User Repo routes', () => {
 
   beforeEach( (done) => {
     const newUser1 = new User({
