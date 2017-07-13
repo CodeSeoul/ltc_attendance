@@ -1,13 +1,16 @@
 const User = require('../../models/User');
+const Course = require('../../models/Course');
 const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
 describe('User Update model', () => {
  let joe;
+ let sql;
 
   beforeEach((done) => {
     joe = new User({name: 'joe', email: 'mail@mail.com'});
+    sql = new Course({title: 'sql', description: 'beginner sql'});
     joe.save()
       .then(() => done());
   });
@@ -42,6 +45,15 @@ describe('User Update model', () => {
       .then(() => User.findOne({name: 'joe'}))
       .then((result) => {
         assert(result.level === 'admin');
+        done();
+      });
+  });
+  it('Should update signIn from null to sql course', (done) => {
+    joe.signIns.push({_id: sql._id});
+    joe.save()
+      .then(() => User.findOne({name: 'joe'}))
+      .then((result) => {
+        assert(String(result.signIns) === String(sql._id));
         done();
       });
   });

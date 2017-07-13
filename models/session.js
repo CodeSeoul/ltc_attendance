@@ -1,19 +1,21 @@
 const mongoose = require('mongoose')
-const UserSchema = require('./User');
+const signInSchema = require('./Signin');
 
 const sessionSchema = new mongoose.Schema({
   sessionOpen: { type: Boolean, default: true},
   date: { type: Date, default: Date.now },
-  users: [UserSchema],
-  users: String,
-  course: [
+  signIns: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course'
+      ref: 'signIn'
     }
   ],
+  course: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'course'
+    }
 });
 
-const Session = mongoose.model('Session', sessionSchema);
+const Session = mongoose.model('session', sessionSchema);
 
 module.export = Session;
