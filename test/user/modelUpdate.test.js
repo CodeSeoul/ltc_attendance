@@ -48,12 +48,12 @@ describe('User Update model', () => {
         done();
       });
   });
-  it('Should update signIn from null to sql course', (done) => {
-    joe.signIns.push({_id: sql._id});
+  it('Should update checkIn from null to sql course', (done) => {
+    joe.checkIns.push({_id: sql._id});
     joe.save()
       .then(() => User.findOne({name: 'joe'}))
       .then((result) => {
-        assert(String(result.signIns) === String(sql._id));
+        assert(String(result.checkIns) === String(sql._id));
         done();
       });
   });

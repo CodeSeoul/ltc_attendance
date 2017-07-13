@@ -19,10 +19,10 @@ const userSchema = new mongoose.Schema({
     }
   },
   level: { type: String, default: 'student' },
-  signIns: [
+  checkIns: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'signIn'
+      ref: 'checkIn'
     }
   ]
 });

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const signInSchema = new mongoose.Schema({
+const checkInSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
@@ -12,6 +12,6 @@ const signInSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now }
 });
 
-const SignIn = mongoose.model('signIn', signInSchema);
+const CheckIn = mongoose.model('checkIn', checkInSchema);
 
-module.export = SignIn;
+module.export = CheckIn;
