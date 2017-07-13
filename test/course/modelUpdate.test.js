@@ -6,78 +6,64 @@ const mongoose = require('mongoose');
 
 describe('Course modelUpdate', () => {
   let sql;
-  let joe;
 
   beforeEach((done) => {
-    const jane = new User({
-      name: 'jane', 
-      email: 'jane@mail.com', 
-      level: 'instructor'
+    const joe = new User({});
+    sql = new Course({
+      title: 'sql', 
+      description: 'beginner sql',
+      tags: ['beginner', 'sql'],
+      instructors: [{_id: joe._id}]
     });
-    joe = new User({
-      name: 'joe', 
-      email: 'joe@mail.com',
-      level: 'instructor'
-    });
-    Promise.all([jane.save(), joe.save()])
-      .then(() => {
-        sql = new Course({
-          title: 'sql', 
-          description: 'beginner sql',
-          tags: ['beginner'],
-          instructors: [{_id : jane._id}]
-        })
-      sql.save()
-        .then(() => done());
-      })
+    sql.save()
+      .then(() => done());
   });
 
   afterEach((done) => {
-    User.collection.drop();
     Course.collection.drop();
+    User.collection.drop();
     done();
   });
 
-  it('Should update sql course title to noSql', (done) => {
-    sql.set('title', 'noSql');
+  it('Should update Title', (done) => {
+    sql.title = 'ruby';
     sql.save()
-      .then(() => Course.find({}))
-      .then((courses) => {
-        assert(courses[0].title === 'noSql');
+      .then(() => Course.findOne({_id: sql._id}))
+      .then((result) => {
+        assert(result.title === 'ruby');
         done();
       });
   });
 
-  it('Should update sql course description to beginner noSql', (done) => {
-    sql.set('description', 'beginner noSql');
+  it('Should update Description', (done) => {
+    sql.description = 'beginner ruby';
     sql.save()
-      .then(() => Course.find({}))
-      .then((courses) => {
-        assert(courses[0].description === 'beginner noSql');
+      .then(() => Course.findOne({_id: sql._id}))
+      .then((result) => {
+        assert(result.description === 'beginner ruby');
         done();
       });
   });
 
-  it('Should update sql course tag to intermediate', (done) => {
-    sql.set('tags', ['intermediate']);
+  it('Should update Tags', (done) => {
+    sql.tags = ['beginner', 'ruby']
     sql.save()
-      .then(() => Course.find({}))
-      .then((courses) => {
-        assert(courses[0].tags[0] === 'intermediate');
+      .then(() => Course.findOne({_id: sql._id}))
+      .then((result) => {
+        assert(result.tags[0] === 'beginner');
+        assert(result.tags[1] === 'ruby');
         done();
       });
   });
 
-  it('Should update sql course instructor to joe', (done) => {
-    sql.instructors = [{_id: joe._id}];
+  it('Should update Instructors', (done) => {
+    const jane = new User({});
+    sql.instructors = {_id: jane._id};
     sql.save()
-      .then(() => {
-        Course.find({})
-        .populate('instructors')
-        .then((courses) => {
-          assert(courses[0].instructors[0].name === 'joe');
-          done();
-        });
+      .then(() => Course.findOne({_id: sql._id}))
+      .then((result) => {
+        assert(String(result.instructors[0]) === String(jane._id));
+        done();
       });
   });
 });

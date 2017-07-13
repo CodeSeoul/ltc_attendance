@@ -18,7 +18,11 @@ const userSchema = new mongoose.Schema({
       message: 'Email must be valid'
     }
   },
-  level: { type: String, default: 'student' },
+  level: { 
+    type: String, 
+    default: 'student',
+    enum: ['student', 'instructor', 'admin']
+  },
   checkIns: [
     {
       type: mongoose.Schema.Types.ObjectId,
