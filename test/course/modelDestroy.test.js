@@ -3,7 +3,7 @@ const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('Course Destroy model', () => {
+describe('Course modelDestroy', () => {
   beforeEach((done) => {
     const sql = new Course({title: 'sql', description: 'beginner sql'})
     sql.save()

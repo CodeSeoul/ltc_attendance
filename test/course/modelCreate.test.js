@@ -4,7 +4,7 @@ const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('Course Create', () => {
+describe('Course modelCreate', () => {
   let sql;
 
   beforeEach((done) => {

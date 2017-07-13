@@ -4,7 +4,7 @@ const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('Course Update', () => {
+describe('Course modelUpdate', () => {
   let sql;
   let joe;
 

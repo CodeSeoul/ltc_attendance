@@ -3,7 +3,7 @@ const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('User Destroy model', () => {
+describe('User modelDestroy', () => {
   beforeEach((done) => {
     const joe = new User({name: 'joe', email: 'mail@mail.com'});
     joe.save()
