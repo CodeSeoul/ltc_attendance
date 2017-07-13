@@ -1,5 +1,5 @@
-const Course = require('../models/Course');
-const config = require('./config.test.js');
+const Course = require('../../models/Course');
+const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
@@ -12,9 +12,9 @@ describe('Course model validations', () => {
     done();
   });
   
-  it('Should require title length more than 2 chars', (done) => {
+  it('Should require title length more than 1 chars', (done) => {
     const ruby = new Course({ 
-      title: 'rr',
+      title: 'r',
     });
     const validationResult = ruby.validateSync();
     const message = validationResult.errors.title.message;
