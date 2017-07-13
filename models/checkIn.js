@@ -14,4 +14,4 @@ const checkInSchema = new mongoose.Schema({
 
 const CheckIn = mongoose.model('checkIn', checkInSchema);
 
-module.export = CheckIn;
+module.exports = CheckIn;

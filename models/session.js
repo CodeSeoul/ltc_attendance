@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const signInSchema = require('./checkin');
 
 const sessionSchema = new mongoose.Schema({
   sessionOpen: { type: Boolean, default: true},
@@ -18,4 +17,4 @@ const sessionSchema = new mongoose.Schema({
 
 const Session = mongoose.model('session', sessionSchema);
 
-module.export = Session;
+module.exports = Session;
