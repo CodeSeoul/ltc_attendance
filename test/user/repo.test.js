@@ -61,7 +61,7 @@ describe('User Repo routes', () => {
 
   it('should update existing user with updateUser()', (done) => {
     joe.email = 'm@m.com'; 
-    Repo.updateUser(joe._id, joe, result => {
+    Repo.updateUser({_id: joe._id}, joe, result => {
       Repo.getUser(joe._id, result => {
         result.email.should.be.equal('m@m.com');
         done();
