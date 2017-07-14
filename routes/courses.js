@@ -63,6 +63,16 @@ router.post('/:id', (req, res) => {
   });
 });
 
+router.get('/:id/checkin', (req, res) => {
+  Course.findById(req.params.id, (err, course) => {
+    if (err) {
+      console.log(err); 
+    } else {
+      res.render('users/signup', {course: course})
+    }
+  });
+});
+
 router.post('/:id/delete', (req, res) => {
   Course.findByIdAndRemove(req.params.id, (err, result) => {
     if (err) {

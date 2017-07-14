@@ -5,11 +5,13 @@ block content
     div(class="row")
       div(class="col-md-2")
       div(class="col-md-8")
-        h2 I attended class today
+        h2 I attended 
+          strong
+            em #{course.title}
         container.alert-wrap
           - if(success) {
           .alert.alert-success
-            strong Welcome to the class #{success}
+            strong Welcome #{success}
           - } else if (error) {
           .alert.alert-danger
             strong Error! #{error}          
@@ -17,9 +19,11 @@ block content
         
         form(method="Post" action="/users/signup")
           div(class="form-group")
-            label(for="name") Name
+            label(for="name") Username
             input(class="form-control" type="text" name="name" id="name")
             label(for="email") Email
             input(class="form-control" type="email" name="email" id="email")
+            input(type="text" name="courseId" value=course._id hidden)
+            input(type="text" name="courseTitle" value=course.title hidden)
             input(class="btn btn-success" type="submit")
       div(class="col-md-2")
