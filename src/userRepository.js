@@ -60,8 +60,8 @@ module.exports = {
     });
   },
 
-  updateUser(id, user, cb) {
-    User.findOneAndUpdate(id, user, (err, result) => {
+  updateUser(name, user, cb) {
+    User.findOneAndUpdate({name: name}, user, (err, result) => {
       if (err) return console.log(err);
       cb(result);
     });
