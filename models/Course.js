@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const Course = mongoose.model('Course', {
+const courseSchema = new mongoose.Schema({
   title: {
     type: String, 
     required: [true, 'Title is required'],
@@ -25,6 +25,8 @@ const Course = mongoose.model('Course', {
       ref: 'user'
     }
   ]
-})
+});
+
+const Course = mongoose.model('course', courseSchema)
 
 module.exports = Course

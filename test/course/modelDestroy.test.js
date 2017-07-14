@@ -3,9 +3,9 @@ const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('Course Destroy model', () => {
+describe('Course modelDestroy', () => {
   beforeEach((done) => {
-    const sql = new Course({title: 'sql', description: 'beginner sql'})
+    const sql = new Course({title: 'sql'})
     sql.save()
       .then(() => done());
   });
@@ -14,8 +14,8 @@ describe('Course Destroy model', () => {
     done();
   });
 
-  it('Should destroy Course with name sql', (done) => {
-    const ruby = new Course({title: 'ruby', description: 'beginner ruby'})
+  it('Should destroy course record', (done) => {
+    const ruby = new Course({title: 'ruby'})
       ruby.save()
       .then(() => Course.remove({title: 'sql'}))
       .then(() => Course.find({}))

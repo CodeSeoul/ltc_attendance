@@ -3,7 +3,7 @@ const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('User model validations', () => {
+describe('User modelValidations', () => {
   beforeEach((done) => {
     const joe = new User({
       name: 'joe',
@@ -59,6 +59,16 @@ describe('User model validations', () => {
     const validationResult = jo.validateSync();
     const message = validationResult.errors.name.message;
     assert(message === 'Name must be valid length');
+    done()
+  });
+
+  it('Should require valid level', (done) => {
+    const joe = new User({ 
+      level: 'dragon'
+    });
+    const validationResult = joe.validateSync();
+    const { message } = validationResult.errors.level;
+    assert(message.includes('not a valid enum'));
     done()
   });
 

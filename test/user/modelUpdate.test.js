@@ -1,47 +1,66 @@
 const User = require('../../models/User');
+const CheckIn = require('../../models/checkIn');
 const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('User Update model', () => {
+describe('User modelUpdate', () => {
  let joe;
 
   beforeEach((done) => {
-    joe = new User({name: 'joe', email: 'mail@mail.com'});
+    const firstCheckIn = new CheckIn({});
+    joe = new User({
+      name: 'joe', 
+      email: 'mail@mail.com',
+      checkIns: [{_id: firstCheckIn._id}]
+    });
     joe.save()
       .then(() => done());
   });
+
   afterEach((done) => {
     User.collection.drop();
+    CheckIn.collection.drop();
     done();
   });
 
-  it('Should update name from joe to Joey', (done) => {
-    joe.set('name', 'Joey')
+  it('Should update Name', (done) => {
+    joe.name = 'jane';
     joe.save()
-      .then(() => User.findOne({email: 'mail@mail.com'}))
+      .then(() => User.findOne({_id: joe._id}))
       .then((result) => {
-        assert(result.name === 'Joey');
+        assert(result.name === 'jane'); 
         done();
       });
   });
 
-  it('Should update email from mail@mail.com to m@m.com', (done) => {
-    joe.set('email', 'm@m.com')
+  it('Should update Email', (done) => {
+    joe.email = 'm@m.com';
     joe.save()
-      .then(() => User.findOne({name: 'joe'}))
+      .then(() => User.findOne({_id: joe._id}))
       .then((result) => {
-        assert(result.email === 'm@m.com');
+        assert(result.email === 'm@m.com'); 
         done();
       });
   });
 
-  it('Should update level from student to admin', (done) => {
-    joe.set('level', 'admin')
+  it('Should update Level', (done) => {
+    joe.level = 'instructor';
     joe.save()
-      .then(() => User.findOne({name: 'joe'}))
+      .then(() => User.findOne({_id: joe._id}))
       .then((result) => {
-        assert(result.level === 'admin');
+        assert(result.level === 'instructor'); 
+        done();
+      });
+  });
+
+  it('Should update CheckIns', (done) => {
+    const checkIn2 = new CheckIn({});
+    joe.checkIns = [{_id: checkIn2._id}];
+    joe.save()
+      .then(() => User.findOne({_id: joe._id}))
+      .then((result) => {
+        assert(String(result.checkIns) === String(checkIn2._id));
         done();
       });
   });

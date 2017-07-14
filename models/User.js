@@ -1,9 +1,8 @@
 const mongoose = require('mongoose')
-const Schema = mongoose.Schema;
 const validator = require('validator');
 const uniqueValidator = require('mongoose-unique-validator')
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
     validate: {
@@ -19,11 +18,21 @@ const userSchema = new Schema({
       message: 'Email must be valid'
     }
   },
-  level: { type: String, default: 'student' }
+  level: { 
+    type: String, 
+    default: 'student',
+    enum: ['student', 'instructor', 'admin']
+  },
+  checkIns: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'checkIn'
+    }
+  ]
 });
 
 userSchema.plugin(uniqueValidator);
 
 const User = mongoose.model('user', userSchema)
 
-module.exports = User
+module.exports = User;

@@ -4,14 +4,12 @@ const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('Course Create', () => {
+describe('Course modelCreate', () => {
   let sql;
-  let joe;
 
   beforeEach((done) => {
-    sql = new Course({title: 'sql', description: 'beginner sql'})
-    joe = new User({name: 'joe', email: 'mail@mail.com'});
-    Promise.all([sql.save(), joe.save()])
+    sql = new Course({title: 'sql'})
+    sql.save()
       .then(() => done());
   });
   afterEach((done) => {
@@ -21,15 +19,20 @@ describe('Course Create', () => {
   });
 
   it('Should create a new Course record', (done) => {
-    ruby = new Course({title: 'ruby', description: 'beginner ruby'})
-    .save()
-    .then((result) => {
-      assert(!ruby.isNew);
-      done();
-    });
+    assert(!sql.isNew);
+    done();
   });
 
-  it('Should create record with Tags embeded refrence', (done) => {
+  it('Should be able to set Course Description', (done) => {
+    sql.description = "beginner sql";
+    sql.save()
+      .then((result) => {
+        assert(result.description === "beginner sql");
+        done();
+      })
+  });
+
+  it('Should be able to set Course Tags', (done) => {
     sql.tags = ['sql', 'beginner']
     sql.save()
       .then(() => Course.findOne({title: 'sql'}))
@@ -40,21 +43,20 @@ describe('Course Create', () => {
       });
   });
 
-  it('Should create record with CreatedBy User obj refrence', (done) => {
-    sql.set('instructors', [{_id: joe._id}])
-    sql.save()
-      .then(() => {
-        Course.findOne({title: 'sql'})
-      .populate('instructors')
-      .then((result) => {
-        assert(result.instructors[0].name === 'joe');
-        done();
-      });
-    });
-  });
-
-  it('Should set createdAt should have timestamp by default', (done) => {
+  it('Should set CreatedAt timestamp by default', (done) => {
     assert(sql.createdAt instanceof Date);
     done();
   });
+
+  it('Should be able to set CreatedBy', (done) => {
+    const joe = new User({});
+    sql.instructors.push({_id: joe._id})
+    sql.save()
+      .then(() => Course.findOne({title: 'sql'}))
+      .then((result) => {
+        assert(String(result.instructors) === String(joe._id));
+        done();
+    });
+  });
+
 });
