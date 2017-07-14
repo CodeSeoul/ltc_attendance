@@ -61,7 +61,7 @@ module.exports = {
   },
 
   updateUser(id, user, cb) {
-    User.findByIdAndUpdate(id, user, (err, result) => {
+    User.findOneAndUpdate(id, user, (err, result) => {
       if (err) return console.log(err);
       cb(result);
     });
