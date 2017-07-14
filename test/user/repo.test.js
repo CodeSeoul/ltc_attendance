@@ -60,13 +60,13 @@ describe('User Repo routes', () => {
   });
 
   it('should update existing user with updateUser()', (done) => {
-    joe.email = 'm@m.com'; 
-    Repo.updateUser(joe.name, joe, result => {
-      Repo.getUser(joe._id, result => {
-        result.email.should.be.equal('m@m.com');
+    joe.email = 'm@m.com';
+    Repo.updateUser(joe._id, joe, result => {
+      Repo.getUser(joe._id, result2 => {
+        result2.email.should.be.equal('m@m.com');
         done();
       });
-    });
+    })
   });
 
   it('should delete existing user with deleteUser()', (done) => {
