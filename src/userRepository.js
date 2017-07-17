@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const CheckIn = require('../models/checkIn');
 
 module.exports = {
 
@@ -9,13 +10,39 @@ module.exports = {
     });
   },
 
-  createUser(user, cb) {
+  createUser(reqBody, cb) {
+    const newCheckIn = new CheckIn({
+      user: reqBody._id, 
+      course: reqBody.courseId
+    });
+    const user = {
+      name: reqBody.name,
+      email: reqBody.email,
+      checkIns: [newCheckIn]
+    }
     User.create(user, (err, user) => {
-      let result = {
-        err: err,
-        res: user
-      }
+      const result = {err: err, res: user}
       cb(result);
+    });
+  },
+
+  createCheckIn(data, cb) {
+    User.findOne({email: data.email}, (err, user) => {
+      const result = {err: err, res: user}
+      if (err) {
+        cb(result);
+      } else {
+        const newCheckIn = new CheckIn({
+          user: user._id, 
+          course: data.courseId
+        });
+        user.checkIns.push({_id: newCheckIn._id})
+        user.name = data.name;
+        User.findByIdAndUpdate(user._id, user, (err, result) => {
+            result = {err: err, res: user}
+            cb(result);
+          });
+        }
     });
   },
 
@@ -26,8 +53,15 @@ module.exports = {
     });
   },
 
+  getUserByEmail(email, cb) {
+    User.findOne({email: email}, (err, user) => {
+      if (err) return console.log(err);
+      cb(user);
+    });
+  },
+
   updateUser(id, user, cb) {
-    User.findByIdAndUpdate(id, user, (err, result) => {
+    User.findOneAndUpdate(id, user, (err, result) => {
       if (err) return console.log(err);
       cb(result);
     });
