@@ -49,6 +49,11 @@ describe('User modelCreate', () => {
     done()
   });
 
+  it('Should set Hometown to hometown by default', (done) => {
+    assert(joe.hometown === 'hometown');
+    done()
+  });
+
   it('Should be able to set CheckIns', (done) => {
     const firstCheckIn = new CheckIn({});
     joe.checkIns.push(firstCheckIn);

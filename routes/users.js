@@ -15,13 +15,25 @@ router.get('/signup', (req, res) => {
 });
 
 router.post('/signup', (req, res) => {
-  userRepo.createUser(req.body, cb => {
-    if (cb.err) {
-      let error = 'Unable to create user';
-      res.render('users/signup', {error: error});
-    } else {
-      let success = req.body.name + '!';
-      res.render('users/signup', {success: success});
+  console.log('signup...req.body')
+  console.log(req.body)
+  userRepo.getUserByEmail(req.body.email, cb => {
+    if (cb === null) {
+      userRepo.createUser(req.body, cb => {
+        if (cb.err) {
+          const error = 'Unable to create user';
+          res.render('users/signup', {error: cb.err, course: req.body});
+        } else { 
+          const success = 'to the class ' + req.body.name + '!';
+          res.redirect('/users');
+        }
+      });
+    } else { 
+      userRepo.createCheckIn(req.body, cb => {
+        const success = 'back to class ' + req.body.name + '!';
+        // res.render('users/signup', {success: success, course: req.body});
+        res.redirect('/users');
+      });
     }
   });
 });

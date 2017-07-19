@@ -23,6 +23,10 @@ const userSchema = new mongoose.Schema({
     default: 'student',
     enum: ['student', 'instructor', 'admin']
   },
+  hometown: {
+    type: String,
+    default: 'hometown'
+  },
   checkIns: [
     {
       type: mongoose.Schema.Types.ObjectId,

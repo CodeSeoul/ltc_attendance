@@ -1,0 +1,82 @@
+body {
+  font-family: 'Source Sans Pro', sans-serif;
+  color: #333;
+}
+/********************************************/
+/* form styles */
+/********************************************/
+.form {
+  margin-top: 80px;
+}
+label {
+  margin-top: 15px;
+}
+input[type="submit"] {
+  margin-top: 20px;
+  cursor: pointer;
+}
+/********************************************/
+/* leaderboard styles */
+/********************************************/
+.leaderboard {
+  margin: 60px 0;
+  max-width: 600px;
+}
+.leaderboard a {
+  text-decoration: none;
+  color: inherit;
+}
+.leader {
+  border: 2px solid #eee;
+  margin-bottom: 10px;
+  padding: 6px;
+  border-radius: 8px;
+}
+.leader img {
+  border-radius: 50%;
+}
+.leader h2, .leader h3, .leader h4, .leader p {
+  display: inline-block;
+}
+.leader p {
+  background-color: #2674F2;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  vertical-align: 8px;
+  color: #fff;
+  border-radius: 4px;
+  padding: 2px 5px;
+  position: absolute;
+  top: 46px;
+  right: 10px;
+}
+.leader h2 {
+  font-size: 20px;
+  padding: 0 10px;
+}
+.leader h4 {
+  position: absolute;
+  top: 46px;
+  left: 78px;
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #aaa;
+}
+.leader h3 {
+  margin: 6px 4px;
+  font-size: 16px;
+  float: right;
+}
+.leader .counter {
+  background: crimson;
+  color: #ddd;
+  font-size: 11px;
+  text-align: center;
+  font-weight: bold;
+  padding: 3px;
+  border-radius: 50%;
+  width: 18px;
+}
+.leader .teacher {
+  background: limegreen;
+}
