@@ -31,7 +31,6 @@ router.post('/signup', (req, res) => {
     } else { 
       userRepo.createCheckIn(req.body, cb => {
         const success = 'back to class ' + req.body.name + '!';
-        // res.render('users/signup', {success: success, course: req.body});
         res.redirect('/users');
       });
     }
