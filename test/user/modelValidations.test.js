@@ -19,7 +19,7 @@ describe('User modelValidations', () => {
     done();
   });
 
-  it('Should require unique email', (done) => {
+  it('Should require unique Email', (done) => {
     const jane = new User({name: 'jane', email: 'mail@mail.com'})
       .save()
       .catch((err) => {
@@ -29,7 +29,7 @@ describe('User modelValidations', () => {
       });
   });
   
-  it('Should require valid email', (done) => {
+  it('Should require valid Email', (done) => {
     const jane = new User({ 
       name: 'jane',
       email: 'mm.'
@@ -60,6 +60,60 @@ describe('User modelValidations', () => {
     const message = validationResult.errors.name.message;
     assert(message === 'Name must be valid length');
     done()
+  });
+
+  it('Should require Hometown to be more then 2 chars', (done) => {
+    const joe = new User({ 
+      name: 'joe',
+      hometown: 'hi',
+      email: 'jo@mail.com'
+    });
+    const validationResult = joe.validateSync();
+    const message = validationResult.errors.hometown.message;
+    assert(message === 'Hometown must be valid length');
+    done()
+  });
+
+  it('Should require Hometown to be less then 100 chars', (done) => {
+    const joe = new User({ 
+      name: 'joe',
+      hometown: 'h'.repeat(100),
+      email: 'jo@mail.com'
+    });
+    const validationResult = joe.validateSync();
+    const message = validationResult.errors.hometown.message;
+    assert(message === 'Hometown must be valid length');
+    done()
+  });
+
+  it('Should expect Hometown to be hometown by default', (done) => {
+    const joe = new User({name: 'joe', email: 'joe@mail.com'});
+    joe.save()
+      .then((user) => {
+        assert(user.hometown === 'hometown');
+        done()
+      });
+  });
+
+  it('Should require Website to be a valid url', (done) => {
+    const joe = new User({ 
+      name: 'joe',
+      email: 'joe@mail.com',
+      website: 'bla'
+    });
+    const validationResult = joe.validateSync();
+    const message = validationResult.errors.website.message;
+    assert(message === 'Website must be valid');
+    done()
+  });
+
+  it('Should expect Level to be student by default', (done) => {
+    const joe = new User({name: 'joe', email: 'joe@mail.com'});
+    joe.save()
+      .then((user) => {
+        assert(user.level === 'student');
+        done()
+      });
   });
 
   it('Should require valid level', (done) => {
