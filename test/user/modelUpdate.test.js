@@ -54,6 +54,16 @@ describe('User modelUpdate', () => {
       });
   });
 
+  it('Should update Hometown', (done) => {
+    joe.hometown = 'Capetown, South Africa';
+    joe.save()
+      .then(() => User.findOne({_id: joe._id}))
+      .then((result) => {
+        assert(result.hometown === 'Capetown, South Africa'); 
+        done();
+      });
+  });
+
   it('Should update CheckIns', (done) => {
     const checkIn2 = new CheckIn({});
     joe.checkIns = [{_id: checkIn2._id}];

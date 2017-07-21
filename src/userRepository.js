@@ -2,9 +2,8 @@ const User = require('../models/User');
 const CheckIn = require('../models/checkIn');
 
 module.exports = {
-
   getUsers(cb) {
-    User.find({}, (err, users) => {
+    User.find({}).sort({checkIns: -1}).exec((err, users) => {
       if (err) return console.log(err);
       cb(users);
     });

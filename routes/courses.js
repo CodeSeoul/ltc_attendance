@@ -1,11 +1,6 @@
 const router = require('express').Router();
 const Course = require('../models/Course')
 
-// Course.create({title: "Linux", description: "Shell programming"});
-// Course.create({title: "Windows", description: "Y u no unix based system"});
-// Course.create({title: "Web Dev", description: "All lol cats"});
-// Course.create({title: "Java", description: "Not just coffee anymore"});
-
 router.get('/', function(req, res, next) {
   Course.find({}).sort({createdAt: -1}).exec((err, courses) => {
     if (err) return console.log(err);
