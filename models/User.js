@@ -25,7 +25,18 @@ const userSchema = new mongoose.Schema({
   },
   hometown: {
     type: String,
-    default: 'hometown'
+    default: 'hometown',
+    validate: {
+      validator: (hometown) => hometown.length > 2 && hometown.length < 100,
+      message: 'Hometown must be valid length'
+    }
+  },
+  website: { 
+    type: String,
+    validate: {
+      validator: (website) => validator.isURL(website),
+      message: 'Website must be valid'
+    }
   },
   checkIns: [
     {

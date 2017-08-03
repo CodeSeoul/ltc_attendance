@@ -64,6 +64,16 @@ describe('User modelUpdate', () => {
       });
   });
 
+  it('Should update Website', (done) => {
+    joe.website = 'www.blue.com';
+    joe.save()
+      .then(() => User.findOne({_id: joe._id}))
+      .then((result) => {
+        assert(result.website === 'www.blue.com'); 
+        done();
+      });
+  });
+
   it('Should update CheckIns', (done) => {
     const checkIn2 = new CheckIn({});
     joe.checkIns = [{_id: checkIn2._id}];
