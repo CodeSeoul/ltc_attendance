@@ -17,7 +17,6 @@ const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 mongoose.set('debug', true)
 
-// can be uncomented for development mode if connection below is commented out
 // mongoose.connect('mongodb://localhost/ltc_dev', err => {
 //   if (err) {
 //     console.log("# Failed to connect to MongoDB :");

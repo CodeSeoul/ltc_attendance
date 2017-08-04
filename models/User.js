@@ -23,9 +23,27 @@ const userSchema = new mongoose.Schema({
     default: 'student',
     enum: ['student', 'instructor', 'admin']
   },
+  website: {
+    type: String,
+    validate: {
+      validator: (website) => validator.isURL(website),
+      message: 'Website must be valid url'
+    }
+  },
   hometown: {
     type: String,
-    default: 'hometown'
+    default: 'hometown',
+    validate: {
+      validator: (hometown) => hometown.length < 100,
+      message: 'Hometown must be less than 100 characters'
+    }
+  },
+  description: {
+    type: String,
+    validate: {
+      validator: (description) => description.length < 1000,
+      message: 'Description must be less than 1000 characters'
+    }
   },
   checkIns: [
     {

@@ -62,6 +62,30 @@ describe('User modelValidations', () => {
     done()
   });
 
+  it('Should require Description to be less then 1000 chars', (done) => {
+    const joe = new User({ 
+      name: 'joe',
+      email: 'jo@mail.com',
+      description: 'j'.repeat(1000)
+    });
+    const validationResult = joe.validateSync();
+    const message = validationResult.errors.description.message;
+    assert(message === 'Description must be less than 1000 characters');
+    done()
+  });
+
+  it('Should require Hometown to be less then 100 chars', (done) => {
+    const joe = new User({ 
+      name: 'joe',
+      email: 'jo@mail.com',
+      hometown: 'j'.repeat(100)
+    });
+    const validationResult = joe.validateSync();
+    const message = validationResult.errors.hometown.message;
+    assert(message === 'Hometown must be less than 100 characters');
+    done()
+  });
+
   it('Should require valid level', (done) => {
     const joe = new User({ 
       level: 'dragon'
@@ -69,6 +93,17 @@ describe('User modelValidations', () => {
     const validationResult = joe.validateSync();
     const { message } = validationResult.errors.level;
     assert(message.includes('not a valid enum'));
+    done()
+  });
+
+  it('Should require valid Website url', (done) => {
+    const jane = new User({ 
+      name: 'jane',
+      website: 'mm.'
+    });
+    const validationResult = jane.validateSync();
+    const message = validationResult.errors.website.message;
+    assert(message === 'Website must be valid url');
     done()
   });
 

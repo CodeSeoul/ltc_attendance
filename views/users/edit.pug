@@ -1,27 +1,53 @@
 extends ../layout
 
 block content
-  div(class="container")
-    div(class="row")
-      div(class="col-md-2")
-      div(class="col-md-8")
-        h1 Signup
-        
-        form(method="Post" action="/users/" + user._id)
-          div(class="form-group")
-            label(for="name") Name
-            input(
-              class="form-control" 
-              type="text" 
-              name="name" 
-              id="name" 
-              value=user.name)
-            label(for="email") Email
-            input(
-              class="form-control" 
-              type="email"
-              name="email"
-              id="email"
-              value=user.email)
-            input(class="btn btn-success" type="submit")
-      div(class="col-md-2")
+  .user-profile-edit
+    .container
+      .row
+        .col-md-2
+        .col-md-8
+          h1 Edit (coming soon)
+          
+          // form(method="Post" action="/users/" + user._id)
+          //   .form-group
+          //     label(for="name") Name
+          //     input(
+          //       class="form-control" 
+          //       type="text" 
+          //       name="name" 
+          //       id="name" 
+          //       value=user.name)
+
+          //     label(for="email") Email
+          //     input(
+          //       class="form-control" 
+          //       type="email"
+          //       name="email"
+          //       id="email"
+          //       value=user.email)
+
+          //     label(for="hometown") Hometown
+          //     input(
+          //       class="form-control" 
+          //       type="text"
+          //       name="hometown"
+          //       id="hometown"
+          //       value=user.hometown)
+
+          //     label(for="website") Website
+          //     input(
+          //       class="form-control" 
+          //       type="text"
+          //       name="website"
+          //       id="website"
+          //       value=user.website)
+
+          //     label(for="description") Description
+          //     textarea(
+          //       class="form-control" 
+          //       name="description"
+          //       id="description") #{user.description}
+          //     input(class="btn btn-success" type="submit")
+          //     form(method="Post" action="/users/" + user._id + "/delete") 
+          //         input(type="submit" id="delete-user" value="")
+        // .col-md-2

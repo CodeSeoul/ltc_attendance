@@ -54,12 +54,32 @@ describe('User modelUpdate', () => {
       });
   });
 
+  it('Should update Website', (done) => {
+    joe.website = 'www.github.com';
+    joe.save()
+      .then(() => User.findOne({_id: joe._id}))
+      .then((result) => {
+        assert(result.website === 'www.github.com'); 
+        done();
+      });
+  });
+
   it('Should update Hometown', (done) => {
     joe.hometown = 'Capetown, South Africa';
     joe.save()
       .then(() => User.findOne({_id: joe._id}))
       .then((result) => {
         assert(result.hometown === 'Capetown, South Africa'); 
+        done();
+      });
+  });
+
+  it('Should update Description', (done) => {
+    joe.description = 'I like to play guitar';
+    joe.save()
+      .then(() => User.findOne({_id: joe._id}))
+      .then((result) => {
+        assert(result.description === 'I like to play guitar'); 
         done();
       });
   });
