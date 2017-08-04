@@ -51,6 +51,8 @@ router.get('/:id/edit', (req, res) => {
 
 router.post('/:id', (req, res) => {
   userRepo.updateUser(req.params.id, req.body, user => {
+    console.log('user...........');
+    console.log(user);
     res.redirect('/users/' + req.params.id);
   });
 });
