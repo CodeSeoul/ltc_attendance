@@ -1,10 +1,13 @@
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
-const logger = require('morgan');
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const config = require('./config')
+const configDB = require('./config/database.js')
+const passport = require('passport');
+const flash = require('connect-flash');
+const session = require('express-session');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -17,21 +20,23 @@ const mongoose = require('mongoose')
 mongoose.Promise = global.Promise
 mongoose.set('debug', true)
 
-// mongoose.connect('mongodb://localhost/ltc_dev', err => {
-//   if (err) {
-//     console.log("# Failed to connect to MongoDB :");
-//   } else {
-//     console.log('# Connected to MongoDB :')
-//   }
-// });
-
-mongoose.connect(config.MONGODB_URI, err => {
+mongoose.connect(configDB.MONGO_DEV, err => {
   if (err) {
-    console.log("# Failed to connect to MongoDB :", config.MONGODB_URI);
+    console.log("# Failed to connect to MongoDB Dev:");
   } else {
-    console.log('# Connected to MongoDB :', config.MONGODB_URI)
+    console.log('# Connected to MongoDB Dev:')
   }
-})
+});
+
+// mongoose.connect(configDB.MONGODB_URI, err => {
+//   if (err) {
+//     console.log("# Failed to connect to MongoDB :", configDB.MONGODB_URI);
+//   } else {
+//     console.log('# Connected to MongoDB :', configDB.MONGODB_URI)
+//   }
+// })
+
+// require('./config/passport')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -39,7 +44,7 @@ app.set('view engine', 'pug');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -48,6 +53,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/courses', courses);
+
+// required for passport
+app.use(session({ secret: 'thisneedstobehidden' }));
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
