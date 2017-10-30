@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
         validate: {
             validator: (name) => name.length > 2 && name.length < 100,
             message: 'Name must be valid length'
-        }
+        },
+        required: true
     },
     email: {
         type: String,

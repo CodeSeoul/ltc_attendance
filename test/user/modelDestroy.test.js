@@ -11,7 +11,8 @@ describe('User modelDestroy', () => {
             password: 'mypass'
         });
         joe.save()
-            .then(() => done());
+            .then(() => done())
+            .catch(done);
     });
     afterEach((done) => {
         User.collection.drop();

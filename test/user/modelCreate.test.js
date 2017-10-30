@@ -11,7 +11,8 @@ describe('User modelCreate', () => {
             password: 'mypass'
         });
         joe.save()
-            .then(() => done());
+            .then(() => done())
+            .catch(done);
     });
 
     afterEach((done) => {

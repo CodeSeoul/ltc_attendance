@@ -4,7 +4,6 @@ const User = require('../../models/User');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
-const should = chai.should();
 chai.use(chaiHttp);
 
 mongoose.connect(config.MONGODB_URI)

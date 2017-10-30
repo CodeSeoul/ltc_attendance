@@ -1,8 +1,6 @@
 const User = require('../../models/User');
 const CheckIn = require('../../models/checkIn');
-const config = require('../config.test.js');
 const assert = require('assert');
-const mongoose = require('mongoose');
 
 describe('User modelUpdate', () => {
     let joe;
@@ -12,10 +10,12 @@ describe('User modelUpdate', () => {
         joe = new User({
             name: 'joe',
             email: 'mail@mail.com',
+            password: 'mypass',
             checkIns: [{_id: firstCheckIn._id}]
         });
         joe.save()
-            .then(() => done());
+            .then(() => done())
+            .catch(done);
     });
 
     afterEach((done) => {

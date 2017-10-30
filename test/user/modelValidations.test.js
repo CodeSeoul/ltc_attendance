@@ -1,17 +1,16 @@
 const User = require('../../models/User');
-const config = require('../config.test.js');
 const assert = require('assert');
-const mongoose = require('mongoose');
 
 describe('User modelValidations', () => {
     beforeEach((done) => {
         const joe = new User({
             name: 'joe',
-            email: 'mail@mail.com'
+            email: 'mail@mail.com',
+            password: 'mypass'
         });
-        joe.save((err) => {
-            done();
-        });
+        joe.save()
+            .then(() => done())
+            .catch(done);
     });
 
     afterEach((done) => {
@@ -20,7 +19,7 @@ describe('User modelValidations', () => {
     });
 
     it('Should require unique email', (done) => {
-        const jane = new User({name: 'jane', email: 'mail@mail.com'})
+        const jane = new User({name: 'jane', email: 'mail@mail.com', password: 'otherpass'})
             .save()
             .catch((err) => {
                 const message = err.errors.email.message
