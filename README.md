@@ -6,6 +6,8 @@ This is a tool to help Learn Teach Code track and manage attendance to meetup ev
 
 See Issues for the features we're working on.
 
+Currently, the application has no authentication, and anyone can create events or register. The application is not yet ready for production, but the core features of event creation and attendance marking are there. 
+
 ## Setup instructions
 
 We'll assume you have no experience with NodeJS or the ecosystem.
