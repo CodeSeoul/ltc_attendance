@@ -8,7 +8,10 @@ describe('User modelDestroy', () => {
     let joe;
 
     beforeEach((done) => {
-        joe = new User({});
+        joe = new User({
+            name: 'joe',
+            password: 'mypass'
+        });
         joe.save()
             .then(() => done());
     });
@@ -18,8 +21,11 @@ describe('User modelDestroy', () => {
         done();
     });
 
-    it('Should destroy User recorde', (done) => {
-        const jane = new User({})
+    it('Should destroy User record', (done) => {
+        const jane = new User({
+            name: 'jane',
+            password: 'otherpass'
+        })
         jane.save()
             .then(() => User.remove({_id: joe._id}))
             .then(() => User.find({}))
@@ -27,6 +33,7 @@ describe('User modelDestroy', () => {
                 assert(results.length === 1);
                 assert(String(results[0]._id) === String(jane._id));
                 done()
-            });
+            })
+            .catch(done);
     });
 });
