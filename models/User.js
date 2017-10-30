@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 const validator = require('validator');
+const bcrypt = require('bcrypt')
 const uniqueValidator = require('mongoose-unique-validator')
+const SALT_WORK_FACTOR = 10;
+
+// http://devsmash.com/blog/password-authentication-with-mongoose-and-bcrypt
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -17,6 +21,10 @@ const userSchema = new mongoose.Schema({
             validator: (email) => validator.isEmail(email),
             message: 'Email must be valid'
         }
+    },
+    password: {
+        type: String,
+        required: true
     },
     level: {
         type: String,
@@ -52,6 +60,32 @@ const userSchema = new mongoose.Schema({
         }
     ]
 });
+
+// Mongoose middleware is not invoked on update() operations, so you must use a save() if you want to update user passwords.
+userSchema.pre('save', function(next) {
+    const user = this;
+
+    if (!user.isModified('password')) return next();
+
+    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+        if (err) return next(err);
+
+        bcrypt.hash(user.password, salt, function(err, hash) {
+            if (err) return next(err);
+
+            user.password = hash;
+            next();
+        });
+    });
+});
+
+// add a comparePassword method with callback to our user model
+userSchema.methods.comparePassword = function(candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if (err) return cb(err);
+        cb(null, isMatch);
+    });
+};
 
 userSchema.plugin(uniqueValidator);
 
