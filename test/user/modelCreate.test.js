@@ -1,8 +1,6 @@
 const User = require('../../models/User');
 const CheckIn = require('../../models/checkIn');
-const config = require('../config.test.js');
 const assert = require('assert');
-const mongoose = require('mongoose');
 
 describe('User modelCreate', () => {
     let joe;
