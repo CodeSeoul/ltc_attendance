@@ -34,12 +34,42 @@ describe('User modelCreate', () => {
       })    
   });
 
+  it('Should be able to set Description', (done) => {
+    joe.description = 'I like to surf';
+    joe.save()
+      .then(() => User.findOne({_id: joe._id}))
+      .then((result) => {
+        assert(result.description === 'I like to surf');
+        done()
+      })    
+  });
+
   it('Should be able to set Email', (done) => {
     joe.email = 'mail@mail.com';
     joe.save()
       .then(() => User.findOne({_id: joe._id}))
       .then((result) => {
         assert(result.email === 'mail@mail.com');
+        done()
+      })    
+  });
+
+  it('Should be able to set Hometown', (done) => {
+    joe.hometown = 'Detroit';
+    joe.save()
+      .then(() => User.findOne({_id: joe._id}))
+      .then((result) => {
+        assert(result.hometown === 'Detroit');
+        done()
+      })    
+  });
+
+  it('Should be able to set Website', (done) => {
+    joe.website = 'mail.com';
+    joe.save()
+      .then(() => User.findOne({_id: joe._id}))
+      .then((result) => {
+        assert(result.website === 'mail.com');
         done()
       })    
   });

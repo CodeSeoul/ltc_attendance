@@ -80,3 +80,59 @@ input[type="submit"] {
 .leader .teacher {
   background: limegreen;
 }
+/********************************************/
+/* user-profile styles */
+/********************************************/
+.user-profile {
+  margin: 40px auto;
+  padding: 0 40px;
+}
+.user-profile img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+}
+.user-profile .center-column {
+  margin: auto;
+}
+.user-profile h1 {
+  margin-top: 20px;
+}
+.user-profile hr {
+  border: 0;
+  height: 1px;
+  margin: 20px 0 40px -80px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, .05), rgba(0, 0, 0, .5), rgba(0, 0, 0, .05));
+  width: 120%;
+  position: absolute;
+  top: 50px;
+  z-index: -1;
+}
+.user-profile a {
+  display: inline-block;
+  background-image: url('../images/edit.png');
+  background-color: #fff;
+  background-size: 104px 84px;
+  background-position: 20px -10px;
+  background-repeat: no-repeat;
+  height: 34px;
+  width: 54px;
+}
+.user-profile a:hover {
+  text-decoration: none;
+}
+/********************************************/
+/* user-profile-edit styles */
+/********************************************/
+.user-profile-edit #delete-user {
+  background-image: url('../images/trash.png');
+  border: none;
+  background-color: #fff;
+  background-size: 24px 24px;
+  background-repeat: no-repeat;
+  height: 24px;
+  width: 24px;
+  position: relative;
+  top: 20px;
+  left: 20px;
+}

@@ -19,7 +19,7 @@ describe('User modelValidations', () => {
     done();
   });
 
-  it('Should require unique Email', (done) => {
+  it('Should require unique email', (done) => {
     const jane = new User({name: 'jane', email: 'mail@mail.com'})
       .save()
       .catch((err) => {
@@ -29,7 +29,7 @@ describe('User modelValidations', () => {
       });
   });
   
-  it('Should require valid Email', (done) => {
+  it('Should require valid email', (done) => {
     const jane = new User({ 
       name: 'jane',
       email: 'mm.'
@@ -62,58 +62,28 @@ describe('User modelValidations', () => {
     done()
   });
 
-  it('Should require Hometown to be more then 2 chars', (done) => {
+  it('Should require Description to be less then 1000 chars', (done) => {
     const joe = new User({ 
       name: 'joe',
-      hometown: 'hi',
-      email: 'jo@mail.com'
+      email: 'jo@mail.com',
+      description: 'j'.repeat(1000)
     });
     const validationResult = joe.validateSync();
-    const message = validationResult.errors.hometown.message;
-    assert(message === 'Hometown must be valid length');
+    const message = validationResult.errors.description.message;
+    assert(message === 'Description must be less than 1000 characters');
     done()
   });
 
   it('Should require Hometown to be less then 100 chars', (done) => {
     const joe = new User({ 
       name: 'joe',
-      hometown: 'h'.repeat(100),
-      email: 'jo@mail.com'
+      email: 'jo@mail.com',
+      hometown: 'j'.repeat(100)
     });
     const validationResult = joe.validateSync();
     const message = validationResult.errors.hometown.message;
-    assert(message === 'Hometown must be valid length');
+    assert(message === 'Hometown must be less than 100 characters');
     done()
-  });
-
-  it('Should expect Hometown to be hometown by default', (done) => {
-    const joe = new User({name: 'joe', email: 'joe@mail.com'});
-    joe.save()
-      .then((user) => {
-        assert(user.hometown === 'hometown');
-        done()
-      });
-  });
-
-  it('Should require Website to be a valid url', (done) => {
-    const joe = new User({ 
-      name: 'joe',
-      email: 'joe@mail.com',
-      website: 'bla'
-    });
-    const validationResult = joe.validateSync();
-    const message = validationResult.errors.website.message;
-    assert(message === 'Website must be valid');
-    done()
-  });
-
-  it('Should expect Level to be student by default', (done) => {
-    const joe = new User({name: 'joe', email: 'joe@mail.com'});
-    joe.save()
-      .then((user) => {
-        assert(user.level === 'student');
-        done()
-      });
   });
 
   it('Should require valid level', (done) => {
@@ -123,6 +93,17 @@ describe('User modelValidations', () => {
     const validationResult = joe.validateSync();
     const { message } = validationResult.errors.level;
     assert(message.includes('not a valid enum'));
+    done()
+  });
+
+  it('Should require valid Website url', (done) => {
+    const jane = new User({ 
+      name: 'jane',
+      website: 'mm.'
+    });
+    const validationResult = jane.validateSync();
+    const message = validationResult.errors.website.message;
+    assert(message === 'Website must be valid url');
     done()
   });
 
