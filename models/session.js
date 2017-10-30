@@ -1,17 +1,17 @@
 const mongoose = require('mongoose')
 
 const sessionSchema = new mongoose.Schema({
-  sessionOpen: { type: Boolean, default: true},
-  date: { type: Date, default: Date.now },
-  checkIns: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'checkIn'
-    }
-  ],
-  course: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'course'
+    sessionOpen: {type: Boolean, default: true},
+    date: {type: Date, default: Date.now},
+    checkIns: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'checkIn'
+        }
+    ],
+    course: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'course'
     }
 });
 
