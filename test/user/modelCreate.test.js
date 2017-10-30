@@ -8,7 +8,10 @@ describe('User modelCreate', () => {
     let joe;
 
     beforeEach((done) => {
-        joe = new User({});
+        joe = new User({
+            name: 'joe',
+            password: 'mypass'
+        });
         joe.save()
             .then(() => done());
     });
@@ -32,6 +35,7 @@ describe('User modelCreate', () => {
                 assert(result.name === 'joe');
                 done()
             })
+            .catch(done);
     });
 
     it('Should be able to set Description', (done) => {
@@ -42,6 +46,7 @@ describe('User modelCreate', () => {
                 assert(result.description === 'I like to surf');
                 done()
             })
+            .catch(done);
     });
 
     it('Should be able to set Email', (done) => {
@@ -52,6 +57,7 @@ describe('User modelCreate', () => {
                 assert(result.email === 'mail@mail.com');
                 done()
             })
+            .catch(done);
     });
 
     it('Should be able to set Hometown', (done) => {
@@ -62,6 +68,7 @@ describe('User modelCreate', () => {
                 assert(result.hometown === 'Detroit');
                 done()
             })
+            .catch(done);
     });
 
     it('Should be able to set Website', (done) => {
@@ -72,6 +79,7 @@ describe('User modelCreate', () => {
                 assert(result.website === 'mail.com');
                 done()
             })
+            .catch(done);
     });
 
     it('Should set Level to student by default', (done) => {
@@ -93,5 +101,6 @@ describe('User modelCreate', () => {
                 assert(String(result.checkIns) === String(firstCheckIn._id));
                 done()
             })
+            .catch(done);
     });
 });
