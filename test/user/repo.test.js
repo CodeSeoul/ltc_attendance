@@ -19,7 +19,7 @@ describe('User Repo routes', () => {
             password: 'somepass'
         });
 
-        tad = new User({
+        let tad = new User({
             name: 'tad',
             email: 'tad@mail.com',
             password: 'otherpass'
