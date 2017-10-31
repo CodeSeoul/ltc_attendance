@@ -60,6 +60,13 @@ module.exports = {
         });
     },
 
+    getUserByUsername(name, cb) {
+        User.findOne({name: name}, (err, user) => {
+            if (err) return console.log(err);
+            cb(user);
+        });
+    },
+
     updateUser(id, user, cb) {
         User.findByIdAndUpdate(id, user, (err, result) => {
             if (err) return console.log(err);
