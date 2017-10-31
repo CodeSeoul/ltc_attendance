@@ -17,17 +17,18 @@ module.exports = {
         const user = {
             name: reqBody.name,
             email: reqBody.email,
+            password: reqBody.password,
             checkIns: [newCheckIn]
-        }
+        };
         User.create(user, (err, user) => {
-            const result = {err: err, res: user}
+            const result = {err: err, res: user};
             cb(result);
         });
     },
 
     createCheckIn(data, cb) {
         User.findOne({email: data.email}, (err, user) => {
-            const result = {err: err, res: user}
+            const result = {err: err, res: user};
             if (err) {
                 cb(result);
             } else {
@@ -35,10 +36,10 @@ module.exports = {
                     user: user._id,
                     course: data.courseId
                 });
-                user.checkIns.push({_id: newCheckIn._id})
+                user.checkIns.push({_id: newCheckIn._id});
                 user.name = data.name;
                 User.findByIdAndUpdate(user._id, user, (err, result) => {
-                    result = {err: err, res: user}
+                    result = {err: err, res: user};
                     cb(result);
                 });
             }
@@ -73,4 +74,4 @@ module.exports = {
         });
     }
 
-}
+};
