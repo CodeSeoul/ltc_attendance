@@ -1,4 +1,4 @@
-const config = require('../config.test.js')
+const config = require('../config.test.js');
 const Repo = require('../../src/userRepository');
 const User = require('../../models/User');
 const chai = require('chai');
@@ -10,7 +10,7 @@ const expect = chai.expect;
 mongoose.connect(config.MONGODB_URI);
 
 describe('User Repo routes', () => {
-    let joe;
+    let joe, tad;
 
     beforeEach((done) => {
         joe = new User({
@@ -19,7 +19,7 @@ describe('User Repo routes', () => {
             password: 'somepass'
         });
 
-        let tad = new User({
+        tad = new User({
             name: 'tad',
             email: 'tad@mail.com',
             password: 'otherpass'
@@ -73,18 +73,18 @@ describe('User Repo routes', () => {
 
     it('should list single user with getUser()', (done) => {
         Repo.getUser(joe._id, result => {
-            result.should.have.property('name').eql('joe');
+            expect(result).to.have.property('name').eql('joe');
             done()
         });
     });
 
     it('should update existing user with updateUser()', (done) => {
-        const jane = new User({name: 'jane', email: 'jane@mail.com'});
-        let toBeUpdated = {email: 'thadious@m.com'}
-        Repo.createUser(jane, newUser => {
-            Repo.updateUser(tad._id, toBeUpdated, result => {
+        const jane = new User({name: 'jane', email: 'jane@mail.com', password: 'datpass'});
+        let toBeUpdated = {email: 'thadious@m.com'};
+        Repo.createUser(jane, () => {
+            Repo.updateUser(tad._id, toBeUpdated, () => {
                 Repo.getUser(tad._id, user => {
-                    user.email.should.be.equal('thadious@m.com');
+                    expect(user.email).to.eql('thadious@m.com');
                     done();
                 });
             })
@@ -93,10 +93,10 @@ describe('User Repo routes', () => {
 
     it('should delete existing user with deleteUser()', (done) => {
         Repo.getUsers(users => {
-            users.length.should.be.eql(2);
-            Repo.deleteUser(joe._id, result => {
+            expect(users.length).to.eql(2);
+            Repo.deleteUser(joe._id, () => {
                 Repo.getUsers(users => {
-                    users.length.should.be.eql(1);
+                    expect(users.length).to.eql(1);
                     done();
                 });
             });
