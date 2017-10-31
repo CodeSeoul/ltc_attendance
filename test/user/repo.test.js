@@ -5,8 +5,9 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const mongoose = require('mongoose');
 chai.use(chaiHttp);
+const expect = chai.expect;
 
-mongoose.connect(config.MONGODB_URI)
+mongoose.connect(config.MONGODB_URI);
 
 describe('User Repo routes', () => {
     let joe;
@@ -14,12 +15,14 @@ describe('User Repo routes', () => {
     beforeEach((done) => {
         joe = new User({
             name: 'joe',
-            email: 'joe@mail.com'
+            email: 'joe@mail.com',
+            password: 'somepass'
         });
 
         tad = new User({
             name: 'tad',
-            email: 'tad@mail.com'
+            email: 'tad@mail.com',
+            password: 'otherpass'
         });
 
         joe.save(() => {
@@ -41,24 +44,28 @@ describe('User Repo routes', () => {
                 if (a.name.toUpperCase() > b.name.toUpperCase()) return 1;
                 return 0;
             });
-            sortedUsers.should.be.a('array');
-            sortedUsers[0].should.have.property('_id');
-            sortedUsers[0].should.have.property('name').eql('joe');
-            sortedUsers[0].should.have.property('email').eql('joe@mail.com');
-            sortedUsers[0].should.have.property('level').eql('student');
-            sortedUsers.length.should.be.eql(2);
-            done();
+            expect(sortedUsers).to.be.a('array');
+            expect(sortedUsers.length).to.be.eql(2);
+            expect(sortedUsers[0]).to.have.property('_id');
+            expect(sortedUsers[0]).to.have.property('name').eql('joe');
+            expect(sortedUsers[0]).to.have.property('email').eql('joe@mail.com');
+            expect(sortedUsers[0]).to.have.property('level').eql('student');
+            sortedUsers[0].comparePassword('somepass', (err, isMatch) => {
+                expect(err).to.eql(null);
+                expect(isMatch).to.eql(true);
+                done();
+            });
         });
     });
 
     it('should add new user with createUser()', (done) => {
-        const jane = new User({name: 'jane', email: 'jane@mail.com'});
+        const jane = new User({name: 'jane', email: 'jane@mail.com', password: 'roflcopter'});
         Repo.createUser(jane, newUser => {
-            newUser.res.should.have.property('name').eql('jane');
-            newUser.res.should.have.property('email').eql('jane@mail.com');
+            expect(newUser.res).to.have.property('name').eql('jane');
+            expect(newUser.res).to.have.property('email').eql('jane@mail.com');
             Repo.getUsers(users => {
-                users.should.be.a('array');
-                users.length.should.be.eql(3);
+                expect(users).to.be.a('array');
+                expect(users.length).to.be.eql(3);
                 done();
             });
         });
