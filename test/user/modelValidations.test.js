@@ -4,7 +4,7 @@ const assert = require('assert');
 describe('User modelValidations', () => {
     beforeEach((done) => {
         const joe = new User({
-            name: 'joe',
+            username: 'joe',
             email: 'mail@mail.com',
             password: 'mypass'
         });
@@ -19,18 +19,18 @@ describe('User modelValidations', () => {
     });
 
     it('Should require unique email', (done) => {
-        const jane = new User({name: 'jane', email: 'mail@mail.com', password: 'otherpass'})
+        new User({username: 'jane', email: 'mail@mail.com', password: 'otherpass'})
             .save()
             .catch((err) => {
-                const message = err.errors.email.message
-                assert(message.includes('to be unique'))
+                const message = err.errors.email.message;
+                assert(message.includes('to be unique'));
                 done();
             });
     });
 
     it('Should require valid email', (done) => {
         const jane = new User({
-            name: 'jane',
+            username: 'jane',
             email: 'mm.'
         });
         const validationResult = jane.validateSync();
@@ -41,8 +41,7 @@ describe('User modelValidations', () => {
 
     it('Should require name to be more than 2 chars', (done) => {
         const jo = new User({
-            name: 'jo',
-            email: 'jo@mail.com'
+            name: 'jo'
         });
         const validationResult = jo.validateSync();
         const message = validationResult.errors.name.message;
@@ -52,8 +51,7 @@ describe('User modelValidations', () => {
 
     it('Should require name to be less then 100 chars', (done) => {
         const jo = new User({
-            name: 'j'.repeat(100),
-            email: 'jo@mail.com'
+            name: 'j'.repeat(100)
         });
         const validationResult = jo.validateSync();
         const message = validationResult.errors.name.message;
@@ -61,9 +59,31 @@ describe('User modelValidations', () => {
         done()
     });
 
+    it('Should require username to be more than 2 chars', (done) => {
+        const jo = new User({
+            username: 'jo',
+            email: 'jo@mail.com'
+        });
+        const validationResult = jo.validateSync();
+        const message = validationResult.errors.username.message;
+        assert(message === 'Username must be valid length');
+        done()
+    });
+
+    it('Should require username to be less then 100 chars', (done) => {
+        const jo = new User({
+            username: 'j'.repeat(100),
+            email: 'jo@mail.com'
+        });
+        const validationResult = jo.validateSync();
+        const message = validationResult.errors.username.message;
+        assert(message === 'Username must be valid length');
+        done()
+    });
+
     it('Should require Description to be less then 1000 chars', (done) => {
         const joe = new User({
-            name: 'joe',
+            username: 'joe',
             email: 'jo@mail.com',
             description: 'j'.repeat(1000)
         });
@@ -75,7 +95,7 @@ describe('User modelValidations', () => {
 
     it('Should require Hometown to be less then 100 chars', (done) => {
         const joe = new User({
-            name: 'joe',
+            username: 'joe',
             email: 'jo@mail.com',
             hometown: 'j'.repeat(100)
         });
@@ -97,7 +117,7 @@ describe('User modelValidations', () => {
 
     it('Should require valid Website url', (done) => {
         const jane = new User({
-            name: 'jane',
+            username: 'jane',
             website: 'mm.'
         });
         const validationResult = jane.validateSync();

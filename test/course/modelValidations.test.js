@@ -1,11 +1,9 @@
 const Course = require('../../models/Course');
-const config = require('../config.test.js');
 const assert = require('assert');
-const mongoose = require('mongoose');
 
 describe('Course model validations', () => {
   it('Should require title', (done) => {
-    const ruby = new Course({ name: undefined });
+    const ruby = new Course({ username: undefined });
     const validationResult = ruby.validateSync();
     const message = validationResult.errors.title.message;
     assert(message === 'Title is required');

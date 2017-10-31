@@ -7,7 +7,7 @@ describe('User modelDestroy', () => {
 
     beforeEach((done) => {
         joe = new User({
-            name: 'joe',
+            username: 'joe',
             password: 'mypass'
         });
         joe.save()
@@ -22,9 +22,9 @@ describe('User modelDestroy', () => {
 
     it('Should destroy User record', (done) => {
         const jane = new User({
-            name: 'jane',
+            username: 'jane',
             password: 'otherpass'
-        })
+        });
         jane.save()
             .then(() => User.remove({_id: joe._id}))
             .then(() => User.find({}))

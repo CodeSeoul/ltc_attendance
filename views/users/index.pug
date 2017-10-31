@@ -8,7 +8,7 @@ block content
       a(href="/users/" + user._id) 
         .container.leader
           img(src="http://via.placeholder.com/60" alt="profile image")
-          h2= user.name
+          h2= user.username
           if user.hometown
             h4= user.hometown.toUpperCase()
           h3.counter= user.checkIns.length

@@ -1,19 +1,30 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const validator = require('validator');
-const bcrypt = require('bcrypt')
-const uniqueValidator = require('mongoose-unique-validator')
+const bcrypt = require('bcrypt');
+const uniqueValidator = require('mongoose-unique-validator');
 const SALT_WORK_FACTOR = 10;
 
 // http://devsmash.com/blog/password-authentication-with-mongoose-and-bcrypt
 
 const userSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        validate: {
+            validator: (name) => name.length > 2 && name.length < 100,
+            message: 'Username must be valid length'
+        },
+        required: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         validate: {
             validator: (name) => name.length > 2 && name.length < 100,
             message: 'Name must be valid length'
-        },
-        required: true
+        }
     },
     email: {
         type: String,
@@ -22,10 +33,6 @@ const userSchema = new mongoose.Schema({
             validator: (email) => validator.isEmail(email),
             message: 'Email must be valid'
         }
-    },
-    password: {
-        type: String,
-        required: true
     },
     level: {
         type: String,
@@ -90,6 +97,6 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 userSchema.plugin(uniqueValidator);
 
-const User = mongoose.model('user', userSchema)
+const User = mongoose.model('user', userSchema);
 
 module.exports = User;

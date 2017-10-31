@@ -5,7 +5,7 @@ describe('User modelRead', () => {
 
     it('Should find a User record by _id', (done) => {
         const joe = new User({
-            name: 'joe',
+            username: 'joe',
             password: 'mypass'
         });
         joe.save()

@@ -45,12 +45,12 @@ router.post('/signup', (req, res) => {
                     //const error = 'Unable to create user';
                     res.render('users/signup', {error: cb.err, course: req.body});
                 } else {
-                    //const success = 'to the class ' + req.body.name + '!';
+                    //const success = 'to the class ' + req.body.username + '!';
                     res.redirect('/users');
                 }
             });
         } else {
-            //const success = 'back to class ' + req.body.name + '!';
+            //const success = 'back to class ' + req.body.username + '!';
             res.redirect('/courses');
         }
     });

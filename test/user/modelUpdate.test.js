@@ -8,7 +8,7 @@ describe('User modelUpdate', () => {
     beforeEach((done) => {
         const firstCheckIn = new CheckIn({});
         joe = new User({
-            name: 'joe',
+            username: 'joe',
             email: 'mail@mail.com',
             password: 'mypass',
             checkIns: [{_id: firstCheckIn._id}]
@@ -24,12 +24,22 @@ describe('User modelUpdate', () => {
         done();
     });
 
-    it('Should update Name', (done) => {
-        joe.name = 'jane';
+    it('Should update Username', (done) => {
+        joe.username = 'jane';
         joe.save()
             .then(() => User.findOne({_id: joe._id}))
             .then((result) => {
-                assert(result.name === 'jane');
+                assert(result.username === 'jane');
+                done();
+            });
+    });
+
+    it('Should update Name', (done) => {
+        joe.name = 'jane smith';
+        joe.save()
+            .then(() => User.findOne({_id: joe._id}))
+            .then((result) => {
+                assert(result.name === 'jane smith');
                 done();
             });
     });

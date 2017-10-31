@@ -14,13 +14,13 @@ describe('User Repo routes', () => {
 
     beforeEach((done) => {
         joe = new User({
-            name: 'joe',
+            username: 'joe',
             email: 'joe@mail.com',
             password: 'somepass'
         });
 
         tad = new User({
-            name: 'tad',
+            username: 'tad',
             email: 'tad@mail.com',
             password: 'otherpass'
         });
@@ -40,14 +40,14 @@ describe('User Repo routes', () => {
     it('should list all users with getUsers()', (done) => {
         Repo.getUsers(users => {
             const sortedUsers = users.sort(function (a, b) {
-                if (a.name.toUpperCase() < b.name.toUpperCase()) return -1;
-                if (a.name.toUpperCase() > b.name.toUpperCase()) return 1;
+                if (a.username.toUpperCase() < b.username.toUpperCase()) return -1;
+                if (a.username.toUpperCase() > b.username.toUpperCase()) return 1;
                 return 0;
             });
             expect(sortedUsers).to.be.a('array');
             expect(sortedUsers.length).to.be.eql(2);
             expect(sortedUsers[0]).to.have.property('_id');
-            expect(sortedUsers[0]).to.have.property('name').eql('joe');
+            expect(sortedUsers[0]).to.have.property('username').eql('joe');
             expect(sortedUsers[0]).to.have.property('email').eql('joe@mail.com');
             expect(sortedUsers[0]).to.have.property('level').eql('student');
             sortedUsers[0].comparePassword('somepass', (err, isMatch) => {
@@ -59,9 +59,9 @@ describe('User Repo routes', () => {
     });
 
     it('should add new user with createUser()', (done) => {
-        const jane = new User({name: 'jane', email: 'jane@mail.com', password: 'roflcopter'});
+        const jane = new User({username: 'jane', email: 'jane@mail.com', password: 'roflcopter'});
         Repo.createUser(jane, newUser => {
-            expect(newUser.res).to.have.property('name').eql('jane');
+            expect(newUser.res).to.have.property('username').eql('jane');
             expect(newUser.res).to.have.property('email').eql('jane@mail.com');
             Repo.getUsers(users => {
                 expect(users).to.be.a('array');
@@ -73,13 +73,13 @@ describe('User Repo routes', () => {
 
     it('should list single user with getUser()', (done) => {
         Repo.getUser(joe._id, result => {
-            expect(result).to.have.property('name').eql('joe');
+            expect(result).to.have.property('username').eql('joe');
             done()
         });
     });
 
     it('should update existing user with updateUser()', (done) => {
-        const jane = new User({name: 'jane', email: 'jane@mail.com', password: 'datpass'});
+        const jane = new User({username: 'jane', email: 'jane@mail.com', password: 'datpass'});
         let toBeUpdated = {email: 'thadious@m.com'};
         Repo.createUser(jane, () => {
             Repo.updateUser(tad._id, toBeUpdated, () => {

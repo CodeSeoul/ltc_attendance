@@ -15,7 +15,7 @@ module.exports = {
             course: reqBody.courseId
         });
         const user = {
-            name: reqBody.name,
+            username: reqBody.username,
             email: reqBody.email,
             password: reqBody.password,
             checkIns: [newCheckIn]
@@ -37,7 +37,7 @@ module.exports = {
                     course: data.courseId
                 });
                 user.checkIns.push({_id: newCheckIn._id});
-                user.name = data.name;
+                user.username = data.username;
                 User.findByIdAndUpdate(user._id, user, (err, result) => {
                     result = {err: err, res: user};
                     cb(result);
@@ -61,7 +61,7 @@ module.exports = {
     },
 
     getUserByUsername(name, cb) {
-        User.findOne({name: name}, (err, user) => {
+        User.findOne({username: name}, (err, user) => {
             if (err) return console.log(err);
             cb(user);
         });

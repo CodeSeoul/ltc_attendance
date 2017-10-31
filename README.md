@@ -16,7 +16,7 @@ Collections ->
 -_id
 -email
 -level
--name (optional)
+-username (optional)
 
 [UsersClasses]
 -_id

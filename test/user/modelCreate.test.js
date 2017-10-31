@@ -7,7 +7,7 @@ describe('User modelCreate', () => {
 
     beforeEach((done) => {
         joe = new User({
-            name: 'joe',
+            username: 'joe',
             password: 'mypass'
         });
         joe.save()
@@ -26,12 +26,23 @@ describe('User modelCreate', () => {
         done()
     });
 
-    it('Should be able to set Name', (done) => {
-        joe.name = 'joe';
+    it('Should be able to set Username', (done) => {
+        joe.username = 'joe';
         joe.save()
             .then(() => User.findOne({_id: joe._id}))
             .then((result) => {
-                assert(result.name === 'joe');
+                assert(result.username === 'joe');
+                done()
+            })
+            .catch(done);
+    });
+
+    it('Should be able to set Name', (done) => {
+        joe.name = 'joe billy bob';
+        joe.save()
+            .then(() => User.findOne({_id: joe._id}))
+            .then((result) => {
+                assert(result.name === 'joe billy bob');
                 done()
             })
             .catch(done);
