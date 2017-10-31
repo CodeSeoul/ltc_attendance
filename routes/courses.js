@@ -1,5 +1,13 @@
 const router = require('express').Router();
 const Course = require('../models/Course');
+const passport = require('passport');
+
+const canEditEvents = (user) => {
+    if (user === null) {
+        return false;
+    }
+    return user.level === 'instructor' || user.level === 'admin';
+};
 
 router.get('/', function (req, res) {
     Course.find({}).sort({createdAt: -1}).exec((err, courses) => {
@@ -8,21 +16,35 @@ router.get('/', function (req, res) {
     });
 });
 
-router.get('/create', (req, res) => {
-    res.render('courses/create')
-});
-
-router.post('/create', (req, res) => {
-    Course.create(req.body, (err) => {
-        console.log("this is the post request");
-        if (err) {
-            console.log(err);
-            res.redirect('/courses/create');
+router.get('/create',
+    passport.authenticate('local'),
+    (req, res) => {
+        if (canEditEvents(req.user)) {
+            res.render('courses/create')
         } else {
-            res.redirect('/courses');
+            res.status(res.unauthorized).send();
         }
-    });
-});
+    }
+);
+
+router.post('/create',
+    passport.authenticate('local'),
+    (req, res) => {
+        if (canEditEvents(req.user)) {
+            Course.create(req.body, (err) => {
+                console.log("this is the post request");
+                if (err) {
+                    console.log(err);
+                    res.redirect('/courses/create');
+                } else {
+                    res.redirect('/courses');
+                }
+            });
+        } else {
+            res.status(res.unauthorized).send();
+        }
+    }
+);
 
 router.get('/:id', (req, res) => {
     Course.findById(req.params.id, (err, course) => {
@@ -35,48 +57,73 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.get('/:id/edit', (req, res) => {
-    Course.findById(req.params.id, (err, course) => {
-        console.log("in id/edit of " + req.params.id);
-        if (err) {
-            console.log(err);
-            res.redirect('/');
+router.get('/:id/edit',
+    passport.authenticate('local'),
+    (req, res) => {
+        if (canEditEvents(req.user)) {
+            Course.findById(req.params.id, (err, course) => {
+                console.log("in id/edit of " + req.params.id);
+                if (err) {
+                    console.log(err);
+                    res.redirect('/');
+                } else {
+                    res.render('courses/edit', {course: course, authedUser: req.user});
+                }
+            });
         } else {
-            res.render('courses/edit', {course: course, authedUser: req.user});
+            res.status(res.unauthorized).send();
         }
-    });
-});
+    }
+);
 
-router.post('/:id', (req, res) => {
-    Course.findByIdAndUpdate(req.params.id, req.body, (err) => {
-        if (err) {
-            console.log(err);
-            res.redirect('/');
+router.post('/:id',
+    passport.authenticate('local'),
+    (req, res) => {
+        if (canEditEvents(req.user)) {
+            Course.findByIdAndUpdate(req.params.id, req.body, (err) => {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/');
+                } else {
+                    res.redirect('/courses/' + req.params.id);
+                }
+            });
         } else {
-            res.redirect('/courses/' + req.params.id);
+            res.status(res.unauthorized).send();
         }
-    });
-});
+    }
+);
 
-router.get('/:id/checkin', (req, res) => {
-    Course.findById(req.params.id, (err, course) => {
-        if (err) {
-            console.log(err);
-        } else {
-            res.render('users/signup', {course: course, authedUser: req.user})
-        }
-    });
-});
+router.post('/:id/checkin',
+    passport.authenticate('local'),
+    (req, res) => {
+        Course.findById(req.params.id, (err, course) => {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render('users/signup', {course: course, authedUser: req.user});
+                res.redirect('/courses/' + req.params.id);
+            }
+        });
+    }
+);
 
-router.post('/:id/delete', (req, res) => {
-    Course.findByIdAndRemove(req.params.id, (err) => {
-        if (err) {
-            console.log(err);
-            res.redirect('/');
+router.post('/:id/delete',
+    passport.authenticate('local'),
+    (req, res) => {
+        if (canEditEvents(req.user)) {
+            Course.findByIdAndRemove(req.params.id, (err) => {
+                if (err) {
+                    console.log(err);
+                    res.redirect('/');
+                } else {
+                    res.redirect('/courses');
+                }
+            });
         } else {
-            res.redirect('/courses');
+            res.status(res.unauthorized).send();
         }
-    });
-});
+    }
+);
 
 module.exports = router;
