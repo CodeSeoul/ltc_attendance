@@ -5,9 +5,6 @@ block content
         div(class="row")
             div(class="col-md-2")
             div(class="col-md-8")
-                h2 I attended
-                    strong
-                        em #{course.title}
                 container.alert-wrap
                     - if(success) {
                     .alert.alert-success
@@ -19,8 +16,8 @@ block content
 
                 form(method="Post" action="/users/signup")
                     div(class="form-group")
-                        label(for="name") Username
-                        input(class="form-control" type="text" name="name" id="name")
+                        label(for="username") Username
+                        input(class="form-control" type="text" name="username" id="username")
                         label(for="email") Email
                         input(class="form-control" type="email" name="email" id="email")
                         label(for="password") Password

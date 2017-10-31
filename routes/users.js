@@ -2,32 +2,49 @@ const express = require('express');
 const router = express.Router();
 const userRepo = require('../src/userRepository');
 const passport = require('passport')
-    ,LocalStrategy = require('passport-local').Strategy;
+    , LocalStrategy = require('passport-local').Strategy;
+const User = require('../models/User');
 
-passport.use(new LocalStrategy(null,
+passport.use(new LocalStrategy(
     (username, password, done) => {
+        console.log('local strategy call invoked');
         userRepo.getUserByUsername(username, (user) => {
-            if (user.err) { return done(user.err); }
+            console.log('passport auth getting user by username');
+            if (user.err) {
+                return done(user.err);
+            }
 
             if (!user) {
-                return done(null, false, { message: 'Incorrect username.' });
+                return done(null, false, {message: 'Incorrect username.'});
             }
 
             user.comparePassword(password, (err, isMatch) => {
-                if (err) { return done(err); }
+                if (err) {
+                    return done(err);
+                }
 
                 if (isMatch) {
                     return done(null, user);
                 }
-                return done(null, false, { message: 'Incorrect password.' });
+                return done(null, false, {message: 'Incorrect password.'});
             });
         });
     }
 ));
 
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser((id, done) => {
+    User.findById(id, (err, user) => {
+        done(err, user);
+    });
+});
+
 router.get('/', (req, res) => {
     userRepo.getUsers(users => {
-        res.render('users/index', {users: users});
+        res.render('users/index', {users: users, authedUser: req.user});
     });
 });
 
@@ -38,7 +55,7 @@ router.get('/signup', (req, res) => {
 router.post('/signup', (req, res) => {
     console.log('signup...req.body');
     console.log(req.body);
-    userRepo.getUserByEmail(req.body.email, cb => {
+    userRepo.getUserByUsername(req.body.username, cb => {
         if (cb === null) {
             userRepo.createUser(req.body, cb => {
                 if (cb.err) {
@@ -46,7 +63,12 @@ router.post('/signup', (req, res) => {
                     res.render('users/signup', {error: cb.err, course: req.body});
                 } else {
                     //const success = 'to the class ' + req.body.username + '!';
-                    res.redirect('/users');
+                    req.login(cb, (err) => {
+                        if (err) {
+                            return next(err);
+                        }
+                        return res.redirect('/users');
+                    });
                 }
             });
         } else {
@@ -60,24 +82,32 @@ router.get('/login', (req, res) => {
     res.render('users/login');
 });
 
-router.post('/login', () => {
-    passport.authenticate('local', {
-        successRedirect: '/courses',
-        failureRedirect: '/users/login',
-        failureFlash: true
-    })
+router.get('/logout', (req, res) => {
+    req.logout();
+    res.render('users/logout')
 });
+
+router.post('/login',
+    passport.authenticate('local'),
+    (req, res) => {
+        res.redirect('/courses');
+    }
+);
 
 router.get('/:id', (req, res) => {
     userRepo.getUser(req.params.id, user => {
-        res.render('users/show', {user: user});
+        res.render('users/show', {user: user, authedUser: req.user});
     });
 });
 
 router.get('/:id/edit', (req, res) => {
-    userRepo.getUser(req.params.id, user => {
-        res.render('users/edit', {user: user});
-    });
+    if (req.params.id !== req.user._id) {
+        res.redirect('/users');
+    } else {
+        userRepo.getUser(req.params.id, user => {
+            res.render('users/edit', {user: user, authedUser: req.user});
+        });
+    }
 });
 
 router.post('/:id', (req, res) => {
@@ -89,9 +119,13 @@ router.post('/:id', (req, res) => {
 });
 
 router.post('/:id/delete', (req, res) => {
-    userRepo.deleteUser(req.params.id, () => {
+    if (req.params.id !== req.user._id) {
         res.redirect('/users');
-    });
+    } else {
+        userRepo.deleteUser(req.params.id, () => {
+            res.redirect('/users');
+        });
+    }
 });
 
 module.exports = router;
