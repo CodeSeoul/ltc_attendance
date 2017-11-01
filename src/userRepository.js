@@ -1,5 +1,4 @@
 const User = require('../models/User');
-const CheckIn = require('../models/checkIn');
 
 module.exports = {
     getUsers(cb) {
@@ -10,15 +9,11 @@ module.exports = {
     },
 
     createUser(reqBody, cb) {
-        const newCheckIn = new CheckIn({
-            user: reqBody._id,
-            course: reqBody.courseId
-        });
         const user = {
             username: reqBody.username,
             email: reqBody.email,
             password: reqBody.password,
-            checkIns: [newCheckIn]
+            checkIns: []
         };
         User.create(user, (err, user) => {
             const result = {err: err, res: user};
