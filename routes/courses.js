@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Course = require('../models/Course');
 const isLoggedIn = require('./loginCheck');
-const userRepo = require('../src/userRepository');
+const checkInRepo = require('../src/checkInRepository');
 
 const canEditEvents = (user) => {
     if (user === null) {
@@ -102,7 +102,7 @@ router.post('/:id/checkin',
             if (err) {
                 console.log(err);
             } else {
-                userRepo.createCheckIn(req.user._id, course._id, (result) => {
+                checkInRepo.createCheckIn(req.user, course, (result) => {
                     if (result.err) {
                         res.render('courses/show', {course: course, errorMessage: result.err, authedUser: req.user})
                     } else {

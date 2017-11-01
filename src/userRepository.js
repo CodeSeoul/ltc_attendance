@@ -26,25 +26,6 @@ module.exports = {
         });
     },
 
-    createCheckIn(userId, courseId, cb) {
-        User.findOne({_id: userId}, (err, user) => {
-            const result = {err: err, res: user};
-            if (err) {
-                cb(result);
-            } else {
-                const newCheckIn = new CheckIn({
-                    user: user._id,
-                    course: courseId
-                });
-                user.checkIns.push({_id: newCheckIn._id});
-                User.findByIdAndUpdate(user._id, user, (err, result) => {
-                    result = {err: err, res: user};
-                    cb(result);
-                });
-            }
-        });
-    },
-
     getUser(id, cb) {
         User.findById(id, (err, user) => {
             if (err) return console.log(err);

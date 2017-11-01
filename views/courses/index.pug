@@ -22,6 +22,6 @@ block content
                     button Details
                 a.card-link(href='#')
                     button Schedule
-                if authedUser
+                if authedUser && !checkedIn
                     form.course-index-checkin.card-link(method="Post" action="/courses/" + course._id + "/checkin")
                         button(type="submit") Register
