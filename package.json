@@ -1,5 +1,5 @@
 {
-  "username": "ltc-attendance",
+  "name": "ltc-attendance",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -22,11 +22,14 @@
     "mongoose": "^4.7.2",
     "mongoose-unique-validator": "^1.0.5",
     "morgan": "~1.8.1",
-    "passport": "~0.1.17",
-    "passport-local": "~0.1.6",
     "pug": "~2.0.0-beta11",
     "serve-favicon": "~2.4.2",
-    "validator": "^8.0.0"
+    "validator": "^8.0.0",
+    "passport": "~0.1.17",
+    "passport-local": "~0.1.6",
+    "bcrypt-nodejs": "latest",
+    "method-override": "~1.0.0",
+    "express-session": "~1.0.0"
   },
   "devDependencies": {
     "chai": "^4.0.2",
