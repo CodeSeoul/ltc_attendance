@@ -1,46 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const userRepo = require('../src/userRepository');
-const passport = require('passport')
-    , LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/User');
-
-passport.use(new LocalStrategy(
-    (username, password, done) => {
-        console.log('local strategy call invoked');
-        userRepo.getUserByUsername(username, (user) => {
-            console.log('passport auth getting user by username');
-            if (user.err) {
-                return done(user.err);
-            }
-
-            if (!user) {
-                return done(null, false, {message: 'Incorrect username.'});
-            }
-
-            user.comparePassword(password, (err, isMatch) => {
-                if (err) {
-                    return done(err);
-                }
-
-                if (isMatch) {
-                    return done(null, user);
-                }
-                return done(null, false, {message: 'Incorrect password.'});
-            });
-        });
-    }
-));
-
-passport.serializeUser((user, done) => {
-    done(null, user.id);
-});
-
-passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
-        done(err, user);
-    });
-});
+const passport = require('passport');
+const isLoggedIn = require('./loginCheck');
 
 router.get('/', (req, res) => {
     userRepo.getUsers(users => {
@@ -52,31 +14,11 @@ router.get('/signup', (req, res) => {
     res.render('users/signup');
 });
 
-router.post('/signup', (req, res) => {
-    console.log('signup...req.body');
-    console.log(req.body);
-    userRepo.getUserByUsername(req.body.username, cb => {
-        if (cb === null) {
-            userRepo.createUser(req.body, cb => {
-                if (cb.err) {
-                    //const error = 'Unable to create user';
-                    res.render('users/signup', {error: cb.err, course: req.body});
-                } else {
-                    //const success = 'to the class ' + req.body.username + '!';
-                    req.login(cb, (err) => {
-                        if (err) {
-                            return next(err);
-                        }
-                        return res.redirect('/users');
-                    });
-                }
-            });
-        } else {
-            //const success = 'back to class ' + req.body.username + '!';
-            res.redirect('/courses');
-        }
-    });
-});
+router.post('/signup', passport.authenticate('local-signup', {
+    successRedirect: '/courses',
+    failureRedirect: '/signup',
+    failureFlash: true
+}));
 
 router.get('/login', (req, res) => {
     res.render('users/login');
@@ -88,7 +30,7 @@ router.get('/logout', (req, res) => {
 });
 
 router.post('/login',
-    passport.authenticate('local'),
+    passport.authenticate('local-login'),
     (req, res) => {
         res.redirect('/courses');
     }
@@ -100,32 +42,41 @@ router.get('/:id', (req, res) => {
     });
 });
 
-router.get('/:id/edit', (req, res) => {
-    if (String(req.params.id) !== String(req.user._id)) {
-        res.redirect('/users');
-    } else {
-        userRepo.getUser(req.params.id, user => {
-            res.render('users/edit', {user: user, authedUser: req.user});
-        });
-    }
-});
-
-router.post('/:id', (req, res) => {
-    userRepo.updateUser(req.params.id, req.body, user => {
-        console.log('user...........');
-        console.log(user);
-        res.redirect('/users/' + req.params.id);
-    });
-});
-
-router.post('/:id/delete', (req, res) => {
-    if (req.params.id !== req.user._id) {
-        res.redirect('/users');
-    } else {
-        userRepo.deleteUser(req.params.id, () => {
+router.get('/:id/edit',
+    isLoggedIn,
+    (req, res) => {
+        if (String(req.params.id) !== String(req.user._id)) {
             res.redirect('/users');
+        } else {
+            userRepo.getUser(req.params.id, user => {
+                res.render('users/edit', {user: user, authedUser: req.user});
+            });
+        }
+    }
+);
+
+router.post('/:id',
+    isLoggedIn,
+    (req, res) => {
+        userRepo.updateUser(req.params.id, req.body, user => {
+            console.log('user...........');
+            console.log(user);
+            res.redirect('/users/' + req.params.id);
         });
     }
-});
+);
+
+router.post('/:id/delete',
+    isLoggedIn,
+    (req, res) => {
+        if (req.params.id !== req.user._id) {
+            res.redirect('/users');
+        } else {
+            userRepo.deleteUser(req.params.id, () => {
+                res.redirect('/users');
+            });
+        }
+    }
+);
 
 module.exports = router;

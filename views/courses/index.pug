@@ -18,6 +18,10 @@ block content
                 h4.card-title= course.title
                 h6.card-subtitle.mb-2.text-muted= `Created by ${course.createdBy || 'unknown'} at ${course.createdAt || 'unknown'}`
                 p.card-text= course.description
-                a.card-link(href="/courses/" + course._id) Details
-                a.card-link(href='#') Schedule
-                a.card-link(href="/courses/" + course._id + "/checkin") Register
+                a.card-link(href="/courses/" + course._id)
+                    button Details
+                a.card-link(href='#')
+                    button Schedule
+                if authedUser
+                    form.course-index-checkin.card-link(method="Post" action="/courses/" + course._id + "/checkin")
+                        button(type="submit") Register

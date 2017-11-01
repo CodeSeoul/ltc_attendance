@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const Course = require('../models/Course');
 const passport = require('passport');
+const isLoggedIn = require('./loginCheck');
 
 const canEditEvents = (user) => {
     if (user === null) {
@@ -17,7 +18,7 @@ router.get('/', function (req, res) {
 });
 
 router.get('/create',
-    passport.authenticate('local'),
+    isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
             res.render('courses/create')
@@ -28,7 +29,7 @@ router.get('/create',
 );
 
 router.post('/create',
-    passport.authenticate('local'),
+    isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
             Course.create(req.body, (err) => {
@@ -58,7 +59,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.get('/:id/edit',
-    passport.authenticate('local'),
+    isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
             Course.findById(req.params.id, (err, course) => {
@@ -77,7 +78,7 @@ router.get('/:id/edit',
 );
 
 router.post('/:id',
-    passport.authenticate('local'),
+    isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
             Course.findByIdAndUpdate(req.params.id, req.body, (err) => {
@@ -95,21 +96,21 @@ router.post('/:id',
 );
 
 router.post('/:id/checkin',
-    passport.authenticate('local'),
+    isLoggedIn,
     (req, res) => {
         Course.findById(req.params.id, (err, course) => {
             if (err) {
                 console.log(err);
             } else {
-                res.render('users/signup', {course: course, authedUser: req.user});
-                res.redirect('/courses/' + req.params.id);
+                // TODO: checkin
+                res.render('/courses/' + req.params.id, {checkedIn: true, authedUser: req.user});
             }
         });
     }
 );
 
 router.post('/:id/delete',
-    passport.authenticate('local'),
+    isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
             Course.findByIdAndRemove(req.params.id, (err) => {
