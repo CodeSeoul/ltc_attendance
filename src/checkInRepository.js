@@ -8,27 +8,37 @@ module.exports = {
             if (err) {
                 const result = {err: err, res: foundCheckIn};
                 cb(result);
-            } else if (foundCheckIn !== null) { // checkin exists
-                console.log('already checked in');
-                const result = {err: 'Already checked in', res: foundCheckIn};
-                cb(result);
             } else { // not checkin, let's checkin
-                console.log('has not checked in. checking in');
-                const newCheckIn = new CheckIn({
-                    user: user,
-                    course: course
-                });
-                CheckIn.create(newCheckIn, (err, checkIn) => {
-                    user.checkIns.push(checkIn);
-                    userRepo.updateUser(user._id, user, (result) => {
-                        if(result) {
-                            cb(checkIn);
+
+                if (foundCheckIn !== null) { // checkin exists
+                    console.log('already checked in');
+                    console.log(foundCheckIn);
+                    const result = {err: 'Already checked in', res: foundCheckIn};
+                    cb(result);
+                } else {
+                    console.log('has not checked in. checking in');
+                    const newCheckIn = new CheckIn({
+                        user: user,
+                        course: course
+                    });
+                    CheckIn.create(newCheckIn, (err, checkIn) => {
+                        if (err) {
+                            console.log(err);
+                            const result = {err: err, res: checkIn};
+                            cb(result);
                         } else {
-                            const output = {err: 'Failed to update user with checkIn', res: result};
-                            cb(output);
+                            user.checkIns.push(checkIn);
+                            userRepo.updateUser(user._id, { $push: {checkIns: checkIn} }, (result) => {
+                                if(result) {
+                                    cb(checkIn);
+                                } else {
+                                    const output = {err: 'Failed to update user with checkIn', res: result};
+                                    cb(output);
+                                }
+                            });
                         }
                     });
-                });
+                }
             }
         });
     },
