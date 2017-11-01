@@ -102,8 +102,12 @@ router.post('/:id/checkin',
             if (err) {
                 console.log(err);
             } else {
-                userRepo.createCheckIn(req.user._id, course._id, () => {
-                    res.redirect('/courses/' + req.params.id);
+                userRepo.createCheckIn(req.user._id, course._id, (result) => {
+                    if (result.err) {
+                        res.render('courses/show', {course: course, errorMessage: result.err, authedUser: req.user})
+                    } else {
+                        res.render('courses/show', {course: course, checkedIn: true, authedUser: req.user});
+                    }
                 })
             }
         });
