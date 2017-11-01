@@ -103,7 +103,7 @@ router.post('/:id/checkin',
                 console.log(err);
             } else {
                 // TODO: checkin
-                res.render('/courses/' + req.params.id, {checkedIn: true, authedUser: req.user});
+                res.redirect('/courses/' + req.params.id);
             }
         });
     }
