@@ -42,9 +42,38 @@ npm run test-watch => runs all tests each time a change is saved
 ### Collections
 #### Users
 * _id
+* username
+* password
 * email
 * level
 * name (optional)
+* website
+* hometown
+* description
+* checkIns
+
+#### Course
+* _id
+* title
+* description
+* tags
+* createdAt
+* instructors
+
+#### CheckIn
+* _id
+* user
+* course
+* date
+
+#### Session
+* _id
+* sessionOpen
+* date
+* checkIns
+* course
+
+### Unknown/Missing Collections 
 
 #### UsersClasses
 * _id
@@ -58,8 +87,3 @@ npm run test-watch => runs all tests each time a change is saved
 * time
 * location
 * url
-
-#### Course
-* _id
-* title
-* description
