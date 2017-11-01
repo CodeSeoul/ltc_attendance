@@ -26,18 +26,17 @@ module.exports = {
         });
     },
 
-    createCheckIn(data, cb) {
-        User.findOne({email: data.email}, (err, user) => {
+    createCheckIn(userId, courseId, cb) {
+        User.findOne({_id: userId}, (err, user) => {
             const result = {err: err, res: user};
             if (err) {
                 cb(result);
             } else {
                 const newCheckIn = new CheckIn({
                     user: user._id,
-                    course: data.courseId
+                    course: courseId
                 });
                 user.checkIns.push({_id: newCheckIn._id});
-                user.username = data.username;
                 User.findByIdAndUpdate(user._id, user, (err, result) => {
                     result = {err: err, res: user};
                     cb(result);

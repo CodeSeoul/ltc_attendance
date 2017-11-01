@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const Course = require('../models/Course');
-const passport = require('passport');
 const isLoggedIn = require('./loginCheck');
+const userRepo = require('../src/userRepository');
 
 const canEditEvents = (user) => {
     if (user === null) {
@@ -102,8 +102,9 @@ router.post('/:id/checkin',
             if (err) {
                 console.log(err);
             } else {
-                // TODO: checkin
-                res.redirect('/courses/' + req.params.id);
+                userRepo.createCheckIn(req.user._id, course._id, () => {
+                    res.redirect('/courses/' + req.params.id);
+                })
             }
         });
     }
