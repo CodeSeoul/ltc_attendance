@@ -101,7 +101,7 @@ router.get('/:id', (req, res) => {
 });
 
 router.get('/:id/edit', (req, res) => {
-    if (req.params.id !== req.user._id) {
+    if (String(req.params.id) !== String(req.user._id)) {
         res.redirect('/users');
     } else {
         userRepo.getUser(req.params.id, user => {

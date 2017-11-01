@@ -17,9 +17,10 @@ block content
                 tr
                     td level
                     td= user.level
-                tr
-                    td email
-                    td= user.email
+                if authedUser
+                    tr
+                        td email
+                        td= user.email
                 tr
                     td website
                     td= user.website
