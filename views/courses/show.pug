@@ -1,9 +1,10 @@
 extends ../layout
 
 block content
-  h1 course page
-  p= course
+    h1 course page
+    p= course
 
-  a(href="/courses/" + course._id + "/edit") edit
-  form(method="Post" action="/courses/" + course._id + "/delete")
-    button(type="submit") delete
+    if authedUser && (authedUser.level === 'instructor' || authedUser.level === 'admin')
+        a(href="/courses/" + course._id + "/edit") edit
+        form(method="Post" action="/courses/" + course._id + "/delete")
+            button(type="submit") delete

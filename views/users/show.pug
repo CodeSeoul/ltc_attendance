@@ -1,31 +1,28 @@
 extends ../layout
 
 block content
-  .user-profile.col-lg-8
-    .row
-      .col-md-4.col-sm-12
-        img(src='http://via.placeholder.com/180')
-      .col-sm-4
-        h1= user.username
-        h4= user.hometown
-      .col-sm-2
-        a(href="/users/" + user._id + "/edit") edit
-      hr
-      p checkins:  #{user.checkIns.length}
-      table.col-sm-8.offset-sm-4
-        tr
-          td level
-          td= user.level
-        tr
-          td email
-          td= user.email
-        tr
-          td website
-          td= user.website
-        tr
-          td description
-          td= user.description
-
-
-
-
+    .user-profile.col-lg-8
+        .row
+            .col-md-4.col-sm-12
+                img(src='http://via.placeholder.com/180')
+            .col-sm-4
+                h1= user.username
+                h4= user.hometown
+            if authedUser && (String(authedUser._id) === String(user._id) || authedUser.level === 'admin')
+                .col-sm-2
+                    a(href="/users/" + user._id + "/edit") edit
+            hr
+            p checkins:  #{user.checkIns.length}
+            table.col-sm-8.offset-sm-4
+                tr
+                    td level
+                    td= user.level
+                tr
+                    td email
+                    td= user.email
+                tr
+                    td website
+                    td= user.website
+                tr
+                    td description
+                    td= user.description

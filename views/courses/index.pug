@@ -2,21 +2,22 @@ extends ../layout
 
 block content
     h2
-      i.fa.fa-graduation-cap
-      |  Courses
+        i.fa.fa-graduation-cap
+        |  Courses
     hr
 
-    .text-right
-      a.btn.btn-primary(href='/courses/create')
-        i.fa.fa-plus
-        |  New Course
+    if authedUser && (authedUser.level === 'instructor' || authedUser.level === 'admin')
+        .text-right
+            a.btn.btn-primary(href='/courses/create')
+                i.fa.fa-plus
+                |  New Course
 
     for course in courses
-      .card.my-3
-        .card-block
-          h4.card-title= course.title
-          h6.card-subtitle.mb-2.text-muted= `Created by ${course.createdBy || 'unknown'} at ${course.createdAt || 'unknown'}`
-          p.card-text= course.description
-          a.card-link(href="/courses/" + course._id) Details
-          a.card-link(href='#') Schedule
-          a.card-link(href="/courses/" + course._id + "/checkin") Register
+        .card.my-3
+            .card-block
+                h4.card-title= course.title
+                h6.card-subtitle.mb-2.text-muted= `Created by ${course.createdBy || 'unknown'} at ${course.createdAt || 'unknown'}`
+                p.card-text= course.description
+                a.card-link(href="/courses/" + course._id) Details
+                a.card-link(href='#') Schedule
+                a.card-link(href="/courses/" + course._id + "/checkin") Register
