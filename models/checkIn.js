@@ -1,17 +1,31 @@
-const mongoose = require('mongoose')
+const bookshelf = require('../config/bookshelf').bookshelf;
 
-const checkInSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
-    },
-    course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'course'
-    },
-    date: {type: Date, default: Date.now}
-});
+class CheckIn extends bookshelf.Model {
 
-const CheckIn = mongoose.model('checkIn', checkInSchema);
+    get tableName() {
+        return 'check_in';
+    }
 
-module.exports = CheckIn;
+    get hasTimestamps() {
+        return true;
+    }
+
+    get user() {
+        return this.belongsTo('User', 'user_id');
+    }
+
+    get course() {
+        return this.belongsTo('Course', 'course_id');
+    }
+}
+
+class CheckIns extends bookshelf.Collection {
+    get model() {
+        return CheckIn;
+    }
+}
+
+module.exports = {
+    CheckIn: CheckIn,
+    CheckIns: CheckIns
+};

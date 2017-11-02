@@ -5,9 +5,10 @@ const passport = require('passport');
 const isLoggedIn = require('./loginCheck');
 
 router.get('/', (req, res) => {
-    userRepo.getUsers(users => {
-        res.render('users/index', {users: users, authedUser: req.user});
-    });
+    userRepo.getUsers()
+        .then(users => {
+            res.render('users/index', {users: users, authedUser: req.user});
+        });
 });
 
 router.get('/signup', (req, res) => {
@@ -37,9 +38,10 @@ router.post('/login',
 );
 
 router.get('/:id', (req, res) => {
-    userRepo.getUser(req.params.id, user => {
-        res.render('users/show', {user: user, authedUser: req.user});
-    });
+    userRepo.getUser(req.params.id)
+        .then(user => {
+            res.render('users/show', {user: user, authedUser: req.user});
+        });
 });
 
 router.get('/:id/edit',
@@ -48,9 +50,10 @@ router.get('/:id/edit',
         if (String(req.params.id) !== String(req.user._id)) {
             res.redirect('/users');
         } else {
-            userRepo.getUser(req.params.id, user => {
-                res.render('users/edit', {user: user, authedUser: req.user});
-            });
+            userRepo.getUser(req.params.id)
+                .then(user => {
+                    res.render('users/edit', {user: user, authedUser: req.user});
+                });
         }
     }
 );
@@ -58,11 +61,12 @@ router.get('/:id/edit',
 router.post('/:id',
     isLoggedIn,
     (req, res) => {
-        userRepo.updateUser(req.params.id, req.body, user => {
-            console.log('user...........');
-            console.log(user);
-            res.redirect('/users/' + req.params.id);
-        });
+        userRepo.updateUser(req.params.id, req.body)
+            .then(user => {
+                console.log('user...........');
+                console.log(user);
+                res.redirect('/users/' + req.params.id);
+            });
     }
 );
 
@@ -72,9 +76,10 @@ router.post('/:id/delete',
         if (req.params.id !== req.user._id) {
             res.redirect('/users');
         } else {
-            userRepo.deleteUser(req.params.id, () => {
-                res.redirect('/users');
-            });
+            userRepo.deleteUser(req.params.id)
+                .then(() => {
+                    res.redirect('/users');
+                });
         }
     }
 );

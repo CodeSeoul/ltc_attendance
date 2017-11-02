@@ -4,39 +4,22 @@ const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const configDB = require('./config/database.js');
 const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
+
+
+// database
+const bookshelfSetup = require('./config/bookshelf');
+bookshelfSetup.configureBookshelf(process.env.RUN_MODE);
+if (process.env.RUN_MODE !== 'prod') {
+    bookshelfSetup.initializeDevDb();
+}
 
 const index = require('./routes/index');
 const users = require('./routes/users');
 const courses = require('./routes/courses');
 const app = express();
-
-// database
-const mongoose = require('mongoose');
-
-mongoose.Promise = global.Promise;
-mongoose.set('debug', true);
-
-mongoose.connect(configDB.MONGO_DEV, err => {
-    if (err) {
-        console.log("# Failed to connect to MongoDB Dev:");
-    } else {
-        console.log('# Connected to MongoDB Dev:')
-    }
-});
-
-// mongoose.connect(configDB.MONGODB_URI, err => {
-//   if (err) {
-//     console.log("# Failed to connect to MongoDB :", configDB.MONGODB_URI);
-//   } else {
-//     console.log('# Connected to MongoDB :', configDB.MONGODB_URI)
-//   }
-// })
-
-// require('./config/passport')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

@@ -1,32 +1,31 @@
-const mongoose = require('mongoose');
+const bookshelf = require('../config/bookshelf').bookshelf;
 
-const courseSchema = new mongoose.Schema({
-    title: {
-        type: String,
-        required: [true, 'Title is required'],
-        validate: {
-            validator: (title) => title.length > 1 && title.length < 100,
-            message: 'Title must be valid length'
-        }
-    },
-    description: {
-        type: String,
-        validate: {
-            validator: (description) =>
-                description.length > 2 && description.length < 10000,
-            message: 'Description must be valid length'
-        }
-    },
-    tags: [String],
-    createdAt: {type: Date, default: Date.now},
-    instructors: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'user'
-        }
-    ]
-});
+class Course extends bookshelf.Model {
 
-const Course = mongoose.model('course', courseSchema)
+    get tableName() {
+        return 'course';
+    }
 
-module.exports = Course
+    get hasTimestamps() {
+        return true;
+    }
+
+    get checkIns() {
+        return this.hasMany('CheckIn', 'course_id');
+    }
+
+    get instructors() {
+        return this.belongsToMany('User', 'course_instructor', 'course_id');
+    }
+}
+
+class Courses extends bookshelf.Collection {
+    get model() {
+        return Course;
+    }
+}
+
+module.exports = {
+    Course: Course,
+    Courses: Courses
+};

@@ -15,6 +15,8 @@ router.get('/', function (req, res) {
         if (err) return console.log(err);
         res.render('courses/index', {courses: courses, authedUser: req.user});
     });
+
+    return Course.forge().orderBy('created_at', 'DESC').fetchAll();
 });
 
 router.get('/create',

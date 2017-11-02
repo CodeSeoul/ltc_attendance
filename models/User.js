@@ -1,102 +1,77 @@
-const mongoose = require('mongoose');
+const bookshelf = require('../config/bookshelf').bookshelf;
 const validator = require('validator');
+const checkit = require('checkit');
 const bcrypt = require('bcrypt');
-const uniqueValidator = require('mongoose-unique-validator');
 const SALT_WORK_FACTOR = 10;
+const CheckIn = require('./checkIn');
 
 // http://devsmash.com/blog/password-authentication-with-mongoose-and-bcrypt
 
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        validate: {
-            validator: (name) => name.length > 2 && name.length < 100,
-            message: 'Username must be valid length'
-        },
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    name: {
-        type: String,
-        validate: {
-            validator: (name) => name.length > 2 && name.length < 100,
-            message: 'Name must be valid length'
-        }
-    },
-    email: {
-        type: String,
-        unique: [true, 'Email must be unique'],
-        validate: {
-            validator: (email) => validator.isEmail(email),
-            message: 'Email must be valid'
-        }
-    },
-    level: {
-        type: String,
-        default: 'student',
-        enum: ['student', 'instructor', 'admin']
-    },
-    website: {
-        type: String,
-        validate: {
-            validator: (website) => validator.isURL(website),
-            message: 'Website must be valid url'
-        }
-    },
-    hometown: {
-        type: String,
-        default: 'hometown',
-        validate: {
-            validator: (hometown) => hometown.length < 100,
-            message: 'Hometown must be less than 100 characters'
-        }
-    },
-    description: {
-        type: String,
-        validate: {
-            validator: (description) => description.length < 1000,
-            message: 'Description must be less than 1000 characters'
-        }
-    },
-    checkIns: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'checkIn'
-        }
-    ]
-});
+class User extends bookshelf.Model {
 
-// Mongoose middleware is not invoked on update() operations, so you must use a save() if you want to update user passwords.
-userSchema.pre('save', function(next) {
-    const user = this;
+    constructor() {
+        super();
+        this.on('saving', this.hashPassword);
+    }
 
-    if (!user.isModified('password')) return next();
+    get tableName() {
+        return 'user';
+    }
 
-    bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-        if (err) return next(err);
+    get hasTimestamps() {
+        return true;
+    }
 
-        bcrypt.hash(user.password, salt, function(err, hash) {
-            if (err) return next(err);
+    get hidden() {
+        return ['password'];
+    }
 
-            user.password = hash;
-            next();
-        });
-    });
-});
+    get checkIns() {
+        return this.hasMany('CheckIn', 'user_id');
+    }
 
-// add a comparePassword method with callback to our user model
-userSchema.methods.comparePassword = function(candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-        if (err) return cb(err);
-        cb(null, isMatch);
-    });
+    get instructingCourses() {
+        return this.belongsToMany('Course', 'course_instructor', 'user_id');
+    }
+
+    get virtuals() {
+        return {
+            countCheckIns: () => {
+                return this.get('checkIns').count();
+            }
+        }
+    }
+
+    hashPassword() {
+        const user = this;
+
+        if (!user.hasChanged('password')) return;
+
+        bcrypt.genSalt(SALT_WORK_FACTOR)
+            .then(salt => {
+                return bcrypt.hash(user.password, salt);
+            })
+            .then(hashedPassword => {
+                user.password = hashedPassword;
+            })
+            .catch(err => {
+                console.log('Error salting and hashing password:', err);
+                throw err;
+            });
+    }
+
+    comparePassword(candidatePassword) {
+        return bcrypt.compare(candidatePassword, this.password);
+    };
+}
+
+class Users extends bookshelf.Collection {
+    get model() {
+        return User;
+    }
+}
+
+module.exports = {
+    User: User,
+    Users: Users
 };
-
-userSchema.plugin(uniqueValidator);
-
-const User = mongoose.model('user', userSchema);
-
-module.exports = User;
