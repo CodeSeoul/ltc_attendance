@@ -11,8 +11,8 @@ module.exports = {
 
   createUser(reqBody, cb) {
     const newCheckIn = new CheckIn({
-      user: reqBody._id, 
-      course: reqBody.courseId
+      user: reqBody._id,
+      event: reqBody.eventId
     });
     const user = {
       name: reqBody.name,
@@ -33,7 +33,7 @@ module.exports = {
       } else {
         const newCheckIn = new CheckIn({
           user: user._id, 
-          course: data.courseId
+          event: data.eventId
         });
         user.checkIns.push({_id: newCheckIn._id})
         user.name = data.name;

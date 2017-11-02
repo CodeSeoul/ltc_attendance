@@ -1,0 +1,9 @@
+extends ../layout
+
+block content
+  h1 Event Page
+  p= event
+
+  a(href="/events/" + event._id + "/edit") edit
+  form(method="Post" action="/events/" + event._id + "/delete")
+    button(type="submit") delete

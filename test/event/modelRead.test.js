@@ -1,14 +1,14 @@
-const Course = require('../../models/Course');
+const Event = require('../../models/Event');
 const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('Course modelRead', () => {
+describe('Event modelRead', () => {
 
-  it('Should find a Course by _id', (done) => {
-    const sql = new Course({title: 'sql'});
+  it('Should find a Event by _id', (done) => {
+    const sql = new Event({title: 'sql'});
     sql.save()
-      .then(() => Course.findOne({_id: sql._id}))
+      .then(() => Event.findOne({_id: sql._id}))
       .then((result) => {
         assert(String(result._id) === String(sql._id));
         done()
