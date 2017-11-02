@@ -5,8 +5,7 @@ const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
 const CheckIn = require('./checkIn');
 
-// http://devsmash.com/blog/password-authentication-with-mongoose-and-bcrypt
-
+// TODO: Add validations
 class User extends bookshelf.Model {
 
     constructor() {
