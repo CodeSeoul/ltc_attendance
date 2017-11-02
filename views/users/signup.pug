@@ -7,7 +7,7 @@ block content
       div(class="col-md-8")
         h2 I attended 
           strong
-            em #{course.title}
+            em #{event.title}
         container.alert-wrap
           - if(success) {
           .alert.alert-success
@@ -23,7 +23,7 @@ block content
             input(class="form-control" type="text" name="name" id="name")
             label(for="email") Email
             input(class="form-control" type="email" name="email" id="email")
-            input(type="text" name="courseId" value=course._id hidden)
-            input(type="text" name="courseTitle" value=course.title hidden)
+            input(type="text" name="eventId" value=event._id hidden)
+            input(type="text" name="eventTitle" value=event.title hidden)
             input(class="btn btn-success" type="submit")
       div(class="col-md-2")

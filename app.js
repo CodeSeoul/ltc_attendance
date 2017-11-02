@@ -11,7 +11,7 @@ const session = require('express-session');
 
 const index = require('./routes/index');
 const users = require('./routes/users');
-const courses = require('./routes/courses');
+const events = require('./routes/events');
 const app = express();
 
 // database
@@ -52,7 +52,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/courses', courses);
+app.use('/events', events);
 
 // required for passport
 app.use(session({ secret: 'thisneedstobehidden' }));

@@ -7,8 +7,8 @@ mongoose.createConnection(config.MONGODB_URI);
 mongoose.Promise = global.Promise;
 
 beforeEach((done) => {
-  const { users, courses } = mongoose.connection.collections;
+  const { users, events } = mongoose.connection.collections;
   users.drop(() => {
-    courses.drop(() => done());
+    events.drop(() => done());
   });
 });

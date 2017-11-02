@@ -5,9 +5,9 @@ const checkInSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
-  course: {
+  event: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'course'
+    ref: 'event'
   },
   date: { type: Date, default: Date.now }
 });

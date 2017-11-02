@@ -22,13 +22,13 @@ router.post('/signup', (req, res) => {
       userRepo.createUser(req.body, cb => {
         if (cb.err) {
           const error = 'Unable to create user';
-          res.render('users/signup', {error: cb.err, course: req.body});
-        } else { 
+          res.render('users/signup', {error: cb.err, event: req.body});
+        } else {
           const success = 'to the class ' + req.body.name + '!';
           res.redirect('/users');
         }
       });
-    } else { 
+    } else {
       userRepo.createCheckIn(req.body, cb => {
         const success = 'back to class ' + req.body.name + '!';
         res.redirect('/users');

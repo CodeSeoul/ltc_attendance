@@ -1,5 +1,5 @@
 const User = require('../../models/User');
-const Course = require('../../models/Course');
+const Event = require('../../models/Event');
 const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
@@ -14,7 +14,7 @@ describe('User modelDestroy', () => {
   });
   afterEach((done) => {
     User.collection.drop();
-    Course.collection.drop();
+    Event.collection.drop();
     done();
   });
 
