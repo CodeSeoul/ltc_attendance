@@ -13,12 +13,16 @@ module.exports = {
     },
 
     createUser(reqBody) {
-        return new User({
+        const newUser = new User({
             username: reqBody.username,
             email: reqBody.email,
-            password: reqBody.password,
-            checkIns: []
-        }).save();
+            password: reqBody.password
+        });
+
+        console.log('new user model:');
+        console.log(newUser);
+
+        return newUser.save();
     },
 
     getUser(id) {

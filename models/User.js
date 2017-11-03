@@ -8,9 +8,9 @@ const CheckIn = require('./checkIn');
 // TODO: Add validations
 class User extends bookshelf.Model {
 
-    constructor() {
-        super();
-        this.on('saving', this.hashPassword);
+    constructor(...args) {
+        super(...args);
+        this.on('saving', this.hashPassword, this);
     }
 
     get tableName() {
@@ -41,22 +41,21 @@ class User extends bookshelf.Model {
         }
     }
 
-    hashPassword() {
-        const user = this;
+    // https://wesleytsai.io/2015/07/28/bookshelf-bcrpyt-password-hashing/
+    hashPassword(model, attrs, options) {
+        return new Promise((resolve, reject) => {
+            if (!model.hasChanged('password')) return resolve.model.attributes.password;
 
-        if (!user.hasChanged('password')) return;
-
-        bcrypt.genSalt(SALT_WORK_FACTOR)
-            .then(salt => {
-                return bcrypt.hash(user.password, salt);
-            })
-            .then(hashedPassword => {
-                user.password = hashedPassword;
-            })
-            .catch(err => {
-                console.log('Error salting and hashing password:', err);
-                throw err;
-            });
+            bcrypt.hash(model.attributes.password, SALT_WORK_FACTOR)
+                .then(hashedPassword => {
+                    model.set('password', hashedPassword);
+                    resolve(hashedPassword);
+                })
+                .catch(err => {
+                    console.log('Error salting and hashing password:', err);
+                    reject(err);
+                });
+        });
     }
 
     comparePassword(candidatePassword) {

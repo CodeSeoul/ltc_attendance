@@ -10,11 +10,11 @@ class Course extends bookshelf.Model {
         return true;
     }
 
-    get checkIns() {
+    checkIns() {
         return this.hasMany('CheckIn', 'course_id');
     }
 
-    get instructors() {
+    instructors() {
         return this.belongsToMany('User', 'course_instructor', 'course_id');
     }
 }

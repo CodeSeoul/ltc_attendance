@@ -42,22 +42,26 @@ module.exports = (passport) => {
             passReqToCallback: true
         },
         (req, username, password, done) => {
-            process.nextTick(() => {
-                userRepo.getUserByUsername(username)
-                    .then(existingUser => {
-                        if (existingUser) {
-                            return done(null, false, req.flash('signupMessage', 'That username is already in use'));
-                        } else {
-                            return userRepo.createUser(req.body);
-                        }
-                    })
-                    .then(newUser => {
-                        return done(null, newUser);
-                    })
-                    .catch(err => {
-                        return done(err)
-                    });
-            });
+            userRepo.getUserByUsername(username)
+                .then(existingUser => {
+                    console.log('sign-up existingUser');
+                    console.log(existingUser);
+                    if (existingUser) {
+                        return done(null, false, req.flash('signupMessage', 'That username is already in use'));
+                    } else {
+                        return userRepo.createUser(req.body);
+                    }
+                })
+                .then(newUser => {
+                    console.log('new user');
+                    console.log(newUser);
+                    return done(null, newUser);
+                })
+                .catch(err => {
+                    console.log('error');
+                    console.log(err);
+                    return done(err)
+                });
         })
     );
 
