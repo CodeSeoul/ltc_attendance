@@ -64,7 +64,11 @@ class User extends bookshelf.Model {
     }
 
     comparePassword(candidatePassword) {
-        return bcrypt.compare(candidatePassword, this.get('password'));
+        console.log('candidatePassword:', candidatePassword);
+        console.log('this password:', this.get('password'));
+        const result = bcrypt.compare(candidatePassword, this.get('password'));
+        console.log('bcrypt compare result:', result);
+        return result;
     };
 }
 

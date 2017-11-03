@@ -18,6 +18,8 @@ module.exports = {
             email: reqBody.email,
             password: reqBody.password
         });
+        console.log('createUser newUser');
+        console.log(newUser);
 
         return newUser.save();
     },

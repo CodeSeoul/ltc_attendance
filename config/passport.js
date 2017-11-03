@@ -1,5 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/User');
+const User = require('../models/User').User;
 const userRepo = require('../src/userRepository');
 
 module.exports = (passport) => {
@@ -12,19 +12,20 @@ module.exports = (passport) => {
             const user = userRepo.getUserByUsername(username)
 
             const passwordCompare = user.then(u => {
-                return u.comparePassword(password)
+                console.log('password compare user then promise');
+                const result = u.comparePassword(password);
+                console.log('result:', result);
+                return result;
             });
 
-            return Promise.all([user, passwordCompare]).then((userResult, passwordResult) => {
+            return Promise.all([user, passwordCompare]).then((promiseResult) => {
 
-                console.log('userResult:');
-                console.log(userResult);
-                console.log('passwordResult:');
-                console.log(passwordResult);
+                const userResult = promiseResult[0];
+                const passwordResult = promiseResult[1];
 
                 if (!userResult) {
                     console.log('calling done no user');
-                    return done(null, false, req.flash('loginMessage', 'Incorrect username.'));
+                    return done(null, false, {message: 'Incorrect username.'});
                 }
 
                 if (passwordResult) {
@@ -33,7 +34,7 @@ module.exports = (passport) => {
                 }
 
                 console.log('calling done is not password compare match');
-                return done(null, false, req.flash('loginMessage', 'Incorrect password.'));
+                return done(null, false, {message:'Incorrect password.'});
 
             }).catch(err => {
                 console.log('error logging in');
@@ -44,35 +45,49 @@ module.exports = (passport) => {
     ));
 
 // https://scotch.io/tutorials/easy-node-authentication-setup-and-local
+    // TODO: get flash to work nicely
+    // see this https://stackoverflow.com/questions/26403853/node-js-authentication-with-passport-how-to-flash-a-message-if-a-field-is-missi
     passport.use('local-signup', new LocalStrategy({
             passReqToCallback: true
         },
         (req, username, password, done) => {
+            console.log('starting signup');
             userRepo.getUserByUsername(username)
                 .then(existingUser => {
+                    console.log('got existing user');
                     if (existingUser) {
-                        return done(null, false, req.flash('signupMessage', 'That username is already in use'));
+                        console.log('user exists');
+                        return done(null, false, {message: 'That username is already in use'});
                     } else {
+                        console.log('returning createUser promise');
                         return userRepo.createUser(req.body);
                     }
                 })
                 .then(newUser => {
-                    if (typeof newUser === User) {
+                    console.log('working on createUser promise');
+                    if (newUser instanceof User) {
+                        console.log('we got newly created user');
+                        console.log(newUser);
                         return done(null, newUser);
                     } else {
+                        console.log('we got something that wasn\'t User');
+                        console.log(typeof newUser);
+                        console.log(newUser instanceof User);
+                        console.log(newUser);
                         return newUser;
                     }
                 })
                 .catch(err => {
+                    console.log('error signing up:', err);
                     return done(err)
                 });
         })
     );
 
-    /*passport.serializeUser((user, done) => {
+    passport.serializeUser((user, done) => {
         console.log('calling done serialize');
         return done(null, user.id);
-    });*/
+    });
 
     passport.deserializeUser((id, done) => {
         return userRepo.getUser(id)

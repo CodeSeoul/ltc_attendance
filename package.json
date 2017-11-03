@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "start": "RUN_MODE=prod node ./bin/www",
-    "dev": "RUN_MODE=dev nodemon ./bin/www",
-    "test": "RUN_MODE=dev mocha --recursive",
-    "test-watch": "RUN_MODE=dev nodemon --exec 'npm test'"
+    "dev": "RUN_MODE=dev nodemon $NODE_DEBUG_OPTION ./bin/www",
+    "test": "RUN_MODE=dev mocha $NODE_DEBUG_OPTION --recursive",
+    "test-watch": "RUN_MODE=dev nodemon $NODE_DEBUG_OPTION --exec 'npm test'"
   },
   "dependencies": {
     "bcrypt": "^1.0.3",
