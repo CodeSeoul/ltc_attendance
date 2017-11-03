@@ -14,7 +14,7 @@ const canEditEvents = (user) => {
 router.get('/', function (req, res) {
     return courseRepo.getCourses()
         .then(courses => {
-            res.render('courses/index', {courses: courses, authedUser: req.user});
+            res.render('courses/index', {courses: courses.models, authedUser: req.user});
         });
 });
 

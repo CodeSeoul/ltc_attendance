@@ -44,8 +44,6 @@ module.exports = (passport) => {
         (req, username, password, done) => {
             userRepo.getUserByUsername(username)
                 .then(existingUser => {
-                    console.log('sign-up existingUser');
-                    console.log(existingUser);
                     if (existingUser) {
                         return done(null, false, req.flash('signupMessage', 'That username is already in use'));
                     } else {
@@ -53,13 +51,9 @@ module.exports = (passport) => {
                     }
                 })
                 .then(newUser => {
-                    console.log('new user');
-                    console.log(newUser);
                     return done(null, newUser);
                 })
                 .catch(err => {
-                    console.log('error');
-                    console.log(err);
                     return done(err)
                 });
         })

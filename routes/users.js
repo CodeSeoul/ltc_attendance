@@ -7,7 +7,7 @@ const isLoggedIn = require('./loginCheck');
 router.get('/', (req, res) => {
     userRepo.getUsers()
         .then(users => {
-            res.render('users/index', {users: users, authedUser: req.user});
+            res.render('users/index', {users: users.models, authedUser: req.user});
         });
 });
 
@@ -47,7 +47,7 @@ router.get('/:id', (req, res) => {
 router.get('/:id/edit',
     isLoggedIn,
     (req, res) => {
-        if (String(req.params.id) !== String(req.user._id)) {
+        if (String(req.params.id) !== String(req.user.id)) {
             res.redirect('/users');
         } else {
             userRepo.getUser(req.params.id)
@@ -73,7 +73,7 @@ router.post('/:id',
 router.post('/:id/delete',
     isLoggedIn,
     (req, res) => {
-        if (req.params.id !== req.user._id) {
+        if (req.params.id !== req.user.id) {
             res.redirect('/users');
         } else {
             userRepo.deleteUser(req.params.id)

@@ -36,7 +36,12 @@ class User extends bookshelf.Model {
     get virtuals() {
         return {
             countCheckIns: () => {
-                return this.get('checkIns').count();
+                const checkIns = this.get('checkIns');
+                if (checkIns) {
+                    return checkIns.count();
+                } else {
+                    return 0;
+                }
             }
         }
     }

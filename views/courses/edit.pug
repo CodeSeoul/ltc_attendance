@@ -2,9 +2,9 @@ extends ../layout
 
 block content
   h1 edit
-  form(method="Post" action="/courses/" + course._id)
+  form(method="Post" action="/courses/" + course.get('id'))
     label(for="title") Title
-    input(type="text" name="title" id="title" value=course.title)
+    input(type="text" name="title" id="title" value=course.get('title'))
     label(for="description") Description
-    textarea(type="text" name="description" id="description") #{course.description}
+    textarea(type="text" name="description" id="description") #{course.get('description')}
     input(type="submit")

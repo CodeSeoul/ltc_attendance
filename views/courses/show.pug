@@ -4,7 +4,7 @@ block content
     h1 course page
     p= course
 
-    if authedUser && (authedUser.level === 'instructor' || authedUser.level === 'admin')
-        a(href="/courses/" + course._id + "/edit") edit
-        form(method="Post" action="/courses/" + course._id + "/delete")
+    if authedUser && (authedUser.get('level') === 'instructor' || authedUser.get('level') === 'admin')
+        a(href="/courses/" + course.get('id') + "/edit") edit
+        form(method="Post" action="/courses/" + course.get('id') + "/delete")
             button(type="submit") delete

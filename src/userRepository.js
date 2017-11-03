@@ -4,7 +4,7 @@ const Users = require('../models/User').Users;
 module.exports = {
     getUsers() {
         return Users.query(queryBuilder => {
-            queryBuilder.join('check_in', 'user.id', 'check_in.user_id');
+            queryBuilder.leftJoin('check_in', 'user.id', 'check_in.user_id');
             queryBuilder.groupBy('user.id');
             queryBuilder.select('user.*');
             queryBuilder.count('* as check_in_count');
@@ -18,9 +18,6 @@ module.exports = {
             email: reqBody.email,
             password: reqBody.password
         });
-
-        console.log('new user model:');
-        console.log(newUser);
 
         return newUser.save();
     },

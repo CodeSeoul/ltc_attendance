@@ -6,24 +6,24 @@ block content
             .col-md-4.col-sm-12
                 img(src='http://via.placeholder.com/180')
             .col-sm-4
-                h1= user.username
-                h4= user.hometown
-            if authedUser && (String(authedUser._id) === String(user._id) || authedUser.level === 'admin')
+                h1= user.get('username')
+                h4= user.get('hometown')
+            if authedUser && (authedUser.get('id') === user.get('id') || authedUser.get('level') === 'admin')
                 .col-sm-2
-                    a(href="/users/" + user._id + "/edit") edit
+                    a(href="/users/" + user.get('id') + "/edit") edit
             hr
-            p checkins:  #{user.checkIns.length}
+            p checkins: #{user.get('countCheckIns')}
             table.col-sm-8.offset-sm-4
                 tr
                     td level
-                    td= user.level
+                    td= user.get('level')
                 if authedUser
                     tr
                         td email
-                        td= user.email
+                        td= user.get('email')
                 tr
                     td website
-                    td= user.website
+                    td= user.get('website')
                 tr
                     td description
-                    td= user.description
+                    td= user.get('description')

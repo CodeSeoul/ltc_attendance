@@ -4,7 +4,7 @@ const userRepo = require('./userRepository');
 module.exports = {
 
     createCheckIn(user, course, cb) {
-        CheckIn.findOne({user: user._id, course: course._id}, (err, foundCheckIn) => {
+        CheckIn.findOne({user: user.id, course: course.id}, (err, foundCheckIn) => {
             if (err) {
                 const result = {err: err, res: foundCheckIn};
                 cb(result);
@@ -28,7 +28,7 @@ module.exports = {
                             cb(result);
                         } else {
                             user.checkIns.push(checkIn);
-                            userRepo.updateUser(user._id, { $push: {checkIns: checkIn} }, (result) => {
+                            userRepo.updateUser(user.id, { $push: {checkIns: checkIn} }, (result) => {
                                 if(result) {
                                     cb(checkIn);
                                 } else {

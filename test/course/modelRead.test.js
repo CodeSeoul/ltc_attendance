@@ -8,9 +8,9 @@ describe('Course modelRead', () => {
   it('Should find a Course by _id', (done) => {
     const sql = new Course({title: 'sql'});
     sql.save()
-      .then(() => Course.findOne({_id: sql._id}))
+      .then(() => Course.findOne({_id: sql.id}))
       .then((result) => {
-        assert(String(result._id) === String(sql._id));
+        assert(String(result._id) === String(sql.id));
         done()
       });
   });

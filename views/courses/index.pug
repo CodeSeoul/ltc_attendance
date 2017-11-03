@@ -6,7 +6,7 @@ block content
         |  Courses
     hr
 
-    if authedUser && (authedUser.level === 'instructor' || authedUser.level === 'admin')
+    if authedUser && (authedUser.get('level') === 'instructor' || authedUser.get('level') === 'admin')
         .text-right
             a.btn.btn-primary(href='/courses/create')
                 i.fa.fa-plus
@@ -15,13 +15,13 @@ block content
     for course in courses
         .card.my-3
             .card-block
-                h4.card-title= course.title
-                h6.card-subtitle.mb-2.text-muted= `Created by ${course.createdBy || 'unknown'} at ${course.createdAt || 'unknown'}`
-                p.card-text= course.description
-                a.card-link(href="/courses/" + course._id)
+                h4.card-title= course.get('title')
+                h6.card-subtitle.mb-2.text-muted= `Created by ${course.get('createdBy') || 'unknown'} at ${course.get('createdAt') || 'unknown'}`
+                p.card-text= course.get('description')
+                a.card-link(href="/courses/" + course.get('id'))
                     button Details
                 a.card-link(href='#')
                     button Schedule
                 if authedUser && !checkedIn
-                    form.course-index-checkin.card-link(method="Post" action="/courses/" + course._id + "/checkin")
+                    form.course-index-checkin.card-link(method="Post" action="/courses/" + course.get('id') + "/checkin")
                         button(type="submit") Register
