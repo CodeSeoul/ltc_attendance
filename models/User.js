@@ -49,9 +49,9 @@ class User extends bookshelf.Model {
     // https://wesleytsai.io/2015/07/28/bookshelf-bcrpyt-password-hashing/
     hashPassword(model, attrs, options) {
         return new Promise((resolve, reject) => {
-            if (!model.hasChanged('password')) return resolve.model.attributes.password;
+            if (!model.hasChanged('password')) return resolve(model.get('password'));
 
-            bcrypt.hash(model.attributes.password, SALT_WORK_FACTOR)
+            bcrypt.hash(model.get('password'), SALT_WORK_FACTOR)
                 .then(hashedPassword => {
                     model.set('password', hashedPassword);
                     resolve(hashedPassword);
@@ -64,7 +64,7 @@ class User extends bookshelf.Model {
     }
 
     comparePassword(candidatePassword) {
-        return bcrypt.compare(candidatePassword, this.password);
+        return bcrypt.compare(candidatePassword, this.get('password'));
     };
 }
 

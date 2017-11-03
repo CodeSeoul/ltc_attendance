@@ -30,12 +30,13 @@ router.get('/logout', (req, res) => {
     res.render('users/logout')
 });
 
-router.post('/login',
-    passport.authenticate('local-login'),
-    (req, res) => {
-        res.redirect('/courses');
+// https://stackoverflow.com/questions/13557256/passport-js-cant-set-headers-after-they-are-sent
+router.post('/login', passport.authenticate('local-login', {
+        successRedirect: '/courses',
+        failureRedirect: '/users/login',
+        failureFlash: true
     }
-);
+));
 
 router.get('/:id', (req, res) => {
     userRepo.getUser(req.params.id)

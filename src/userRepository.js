@@ -31,6 +31,7 @@ module.exports = {
     },
 
     getUserByUsername(username) {
+        console.log('getting user by username');
         return User.where('username', username).fetch();
     },
 

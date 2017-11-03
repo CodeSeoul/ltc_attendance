@@ -10,30 +10,36 @@ module.exports = (passport) => {
         (req, username, password, done) => {
             console.log('local strategy call invoked');
             const user = userRepo.getUserByUsername(username)
-                .then(user => {
-                    console.log('passport auth getting user by username');
 
-                    if (!user) {
-                        return done(null, false, req.flash('loginMessage', 'Incorrect username.'));
-                    }
+            const passwordCompare = user.then(u => {
+                return u.comparePassword(password)
+            });
 
-                    return user;
-                })
-                .catch(err => {
-                    return done(err)
-                });
+            return Promise.all([user, passwordCompare]).then((userResult, passwordResult) => {
 
-            if (typeof user !== User) {
-                return user;
-            }
+                console.log('userResult:');
+                console.log(userResult);
+                console.log('passwordResult:');
+                console.log(passwordResult);
 
-            user.comparePassword(password)
-                .then(isMatch => {
-                    if (isMatch) {
-                        return done(null, user);
-                    }
-                    return done(null, false, req.flash('loginMessage', 'Incorrect password.'));
-                });
+                if (!userResult) {
+                    console.log('calling done no user');
+                    return done(null, false, req.flash('loginMessage', 'Incorrect username.'));
+                }
+
+                if (passwordResult) {
+                    console.log('calling done compare password match');
+                    return done(null, user);
+                }
+
+                console.log('calling done is not password compare match');
+                return done(null, false, req.flash('loginMessage', 'Incorrect password.'));
+
+            }).catch(err => {
+                console.log('error logging in');
+                console.log(err);
+                return done(err);
+            });
         }
     ));
 
@@ -51,7 +57,11 @@ module.exports = (passport) => {
                     }
                 })
                 .then(newUser => {
-                    return done(null, newUser);
+                    if (typeof newUser === User) {
+                        return done(null, newUser);
+                    } else {
+                        return newUser;
+                    }
                 })
                 .catch(err => {
                     return done(err)
@@ -59,16 +69,21 @@ module.exports = (passport) => {
         })
     );
 
-    passport.serializeUser((user, done) => {
-        done(null, user.id);
-    });
+    /*passport.serializeUser((user, done) => {
+        console.log('calling done serialize');
+        return done(null, user.id);
+    });*/
 
     passport.deserializeUser((id, done) => {
-        userRepo.getUser(id)
+        return userRepo.getUser(id)
             .then(user => {
-                done(null, user);
+                console.log('calling done deserialize success');
+                return done(null, user);
             })
-            .catch(err => done(err, null));
+            .catch(err => {
+                console.log('calling done deserialize fail');
+                return done(err, null)
+            });
     });
 }
 ;
