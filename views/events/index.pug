@@ -16,6 +16,7 @@ block content
         .card-block
           h4.card-title= event.title
           h6.card-subtitle.mb-2.text-muted= `Created by ${event.createdBy || 'unknown'} at ${event.createdAt || 'unknown'}`
+          p.card-text= event.type
           p.card-text= event.description
           a.card-link(href="/events/" + event._id) Details
           a.card-link(href='#') Schedule
