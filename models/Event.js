@@ -9,6 +9,9 @@ const eventSchema = new mongoose.Schema({
       message: 'Title must be valid length'
     }
   },
+  type: {
+    type: String
+  },
   description: {
     type: String,
     validate: {

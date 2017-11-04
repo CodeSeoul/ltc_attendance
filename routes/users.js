@@ -10,6 +10,12 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/api', (req, res) => {
+  userRepo.getUsers(users => {
+    res.send({ users: users });
+  });
+});
+
 router.get('/signup', (req, res) => {
   res.render('users/signup');
 });
