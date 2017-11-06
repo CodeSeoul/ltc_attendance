@@ -30,7 +30,7 @@ module.exports = (passport) => {
 
                 if (passwordResult) {
                     console.log('calling done compare password match');
-                    return done(null, user);
+                    return done(null, userResult);
                 }
 
                 console.log('calling done is not password compare match');
@@ -86,7 +86,7 @@ module.exports = (passport) => {
 
     passport.serializeUser((user, done) => {
         console.log('calling done serialize');
-        return done(null, user.id);
+        return done(null, user.get('id'));
     });
 
     passport.deserializeUser((id, done) => {
