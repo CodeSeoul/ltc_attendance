@@ -8,7 +8,7 @@ const canEditEvents = (user) => {
     if (user === null) {
         return false;
     }
-    return user.level === 'instructor' || user.level === 'admin';
+    return user.get('level') === 'instructor' || user.get('level') === 'admin';
 };
 
 router.get('/', function (req, res) {
@@ -21,11 +21,7 @@ router.get('/', function (req, res) {
 router.get('/create',
     isLoggedIn,
     (req, res) => {
-        if (canEditEvents(req.user)) {
-            res.render('courses/create')
-        } else {
-            res.status(res.unauthorized).send();
-        }
+        res.render('courses/create', {canEdit: canEditEvents(req.user), authedUser: req.user});
     }
 );
 
@@ -42,7 +38,7 @@ router.post('/create',
                     res.redirect('/courses/create');
                 });
         } else {
-            res.status(res.unauthorized).send();
+            res.send(403);
         }
     }
 );
@@ -71,7 +67,7 @@ router.get('/:id/edit',
                     res.redirect('/');
                 });
         } else {
-            res.status(res.unauthorized).send();
+            res.send(403);
         }
     }
 );
@@ -89,7 +85,7 @@ router.post('/:id',
                     res.redirect('/');
                 });
         } else {
-            res.status(res.unauthorized).send();
+            res.send(403);
         }
     }
 );
@@ -128,7 +124,7 @@ router.post('/:id/delete',
                     res.redirect('/');
                 });
         } else {
-            res.status(res.unauthorized).send();
+            res.send(403);
         }
     }
 );
