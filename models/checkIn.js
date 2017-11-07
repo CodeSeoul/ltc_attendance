@@ -1,29 +1,42 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
 
-class CheckIn extends bookshelf.Model {
+const CheckIn = bookshelf.Model.extend({
 
-    get tableName() {
-        return 'check_in';
-    }
+    tableName: 'check_in',
+    hasTimestamps: true,
 
-    get hasTimestamps() {
-        return true;
-    }
-
-    get user() {
+    user: () => {
         return this.belongsTo('User', 'user_id');
-    }
+    },
 
-    get course() {
+    course: () => {
         return this.belongsTo('Course', 'course_id');
-    }
-}
+    },
 
-class CheckIns extends bookshelf.Collection {
-    get model() {
-        return CheckIn;
+    virtuals: {
+
+        createdAt: {
+            get: () => {
+                return this.get('created_at');
+            },
+            set: newDate => {
+                this.set('created_at', newDate);
+            }
+        },
+        updatedAt: {
+            get: () => {
+                return this.get('updated_at');
+            },
+            set: newDate => {
+                this.set('updated_at', newDate)
+            }
+        }
     }
-}
+});
+
+const CheckIns = bookshelf.Collection.extend({
+    model: CheckIn
+});
 
 module.exports = {
     CheckIn: CheckIn,

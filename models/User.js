@@ -1,53 +1,64 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
-const validator = require('validator');
-const checkit = require('checkit');
 const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
 const CheckIn = require('./checkIn');
 
 // TODO: Add validations
-class User extends bookshelf.Model {
+const User = bookshelf.Model.extend({
 
-    constructor(...args) {
-        super(...args);
-        this.on('saving', this.hashPassword, this);
-    }
+    tableName: 'user',
+    hasTimestamps: true,
+    hidden: ['password'],
 
-    get tableName() {
-        return 'user';
-    }
+    initialize: function () {
+        console.log('this:', this);
+        console.log('this.on:', this.on);
+        this.on('save', this.hashPassword, this);
+    },
 
-    get hasTimestamps() {
-        return true;
-    }
-
-    get hidden() {
-        return ['password'];
-    }
-
-    get checkIns() {
+    checkIns: function () {
         return this.hasMany('CheckIn', 'user_id');
-    }
+    },
 
-    get instructingCourses() {
+    instructingCourses: function () {
         return this.belongsToMany('Course', 'course_instructor', 'user_id');
-    }
+    },
 
-    get virtuals() {
-        return {
-            countCheckIns: () => {
-                const checkIns = this.get('checkIns');
-                if (checkIns) {
-                    return checkIns.count();
-                } else {
-                    return 0;
-                }
+    createdCourses: function () {
+        return this.hasMany('Course', 'created_by');
+    },
+
+    virtuals: {
+        countCheckIns: function () {
+            const checkIns = this.get('checkIns');
+            if (checkIns) {
+                return checkIns.count();
+            } else {
+                return 0;
+            }
+        },
+        createdAt: {
+            get: function () {
+                return this.get('created_at');
+            },
+
+            set: function (newDate) {
+                this.set('created_at', newDate);
+            }
+        },
+        updatedAt: {
+            get: function () {
+                return this.get('updated_at');
+            },
+
+            set: function (newDate) {
+                this.set('updated_at', newDate);
             }
         }
-    }
+    },
 
     // https://wesleytsai.io/2015/07/28/bookshelf-bcrpyt-password-hashing/
-    hashPassword(model, attrs, options) {
+    hashPassword: function (model, attrs, options) {
         return new Promise((resolve, reject) => {
             if (!model.hasChanged('password')) return resolve(model.get('password'));
 
@@ -61,22 +72,20 @@ class User extends bookshelf.Model {
                     reject(err);
                 });
         });
-    }
+    },
 
-    comparePassword(candidatePassword) {
+    comparePassword: function (candidatePassword) {
         console.log('candidatePassword:', candidatePassword);
         console.log('this password:', this.get('password'));
         const result = bcrypt.compare(candidatePassword, this.get('password'));
         console.log('bcrypt compare result:', result);
         return result;
-    };
-}
-
-class Users extends bookshelf.Collection {
-    get model() {
-        return User;
     }
-}
+});
+
+const Users = bookshelf.Collection.extend({
+    model: User
+});
 
 module.exports = {
     User: User,
