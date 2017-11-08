@@ -18,12 +18,12 @@ const User = bookshelf.Model.extend({
         return this.hasMany('CheckIn', 'user_id');
     },
 
-    instructingCourses: function () {
-        return this.belongsToMany('Course', 'course_instructor', 'user_id');
+    instructingEvents: function () {
+        return this.belongsToMany('Event', 'event_instructor', 'user_id');
     },
 
-    createdCourses: function () {
-        return this.hasMany('Course', 'created_by');
+    createdEvents: function () {
+        return this.hasMany('Event', 'created_by');
     },
 
     virtuals: {
