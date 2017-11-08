@@ -53,7 +53,8 @@ module.exports = {
             table.increments();
             table.string('title');
             table.string('description');
-            table.string('created_by');
+            table.string('type');
+            table.integer('created_by');
             table.timestamps();
         }).createTableIfNotExists('check_in', (table) => {
             table.increments();

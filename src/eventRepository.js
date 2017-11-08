@@ -9,6 +9,7 @@ module.exports = {
         return new Event().save({
             title: reqBody.title,
             description: reqBody.description,
+            type: reqBody.type,
             created_by: creator
         });
     },
