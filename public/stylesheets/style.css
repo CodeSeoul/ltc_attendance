@@ -165,3 +165,20 @@ input[type="submit"] {
 .course-index-checkin {
     display: inline-block;
 }
+
+/********************************************/
+/* course display styles */
+/********************************************/
+.course-subscript {
+    font-size: small;
+}
+
+.course-subscript ul {
+    display: inline-block;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.course-instructor-list {
+    display: inline-block;
+}

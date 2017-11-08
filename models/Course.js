@@ -11,7 +11,7 @@ const Course = bookshelf.Model.extend({
     },
 
     instructors: function () {
-        return this.belongsToMany('User', 'course_instructor', 'course_id');
+        return this.belongsToMany('User', 'course_instructor');
     },
 
     createdBy: function () {
@@ -19,6 +19,16 @@ const Course = bookshelf.Model.extend({
     },
 
     virtuals: {
+
+        countCheckIns: function () {
+            const checkIns = this.get('checkIns');
+            if (checkIns) {
+                return checkIns.count();
+            } else {
+                return 0;
+            }
+        },
+
         createdAt: {
             get: function () {
                 return moment(this.get('created_at')).format('YYYY-MM-DD HH:mm:ss');

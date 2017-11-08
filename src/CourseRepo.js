@@ -17,6 +17,10 @@ module.exports = {
         return Course.where('id', id).fetch();
     },
 
+    getCourseWithFullDetails(id) {
+        return Course.where('id', id).fetch({withRelated: ['instructors', 'createdBy']});
+    },
+
     updateCourse(id, course) {
         return Course.where('id', id).save(course, {patch: true});
     },

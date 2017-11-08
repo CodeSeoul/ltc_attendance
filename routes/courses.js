@@ -45,9 +45,20 @@ router.post('/create',
 );
 
 router.get('/:id', (req, res) => {
-    courseRepo.getCourse(req.params.id)
+    courseRepo.getCourseWithFullDetails(req.params.id)
         .then(course => {
-            res.render('courses/show', {course: course, authedUser: req.user});
+            console.log('course.instructors:', course.instructors());
+            course.instructors().fetch()
+                .then(instructors => {
+                    console.log('after promise');
+                    console.log(instructors);
+                    res.render('courses/show', {course: course, instructors: instructors, authedUser: req.user});
+                })
+                .catch(err => {
+                    console.log('err retrieving instructors for course id', req.params.id, '. err:', err);
+                    res.render('courses/show', {course: course, authedUser: req.user});
+                });
+
         })
         .catch(err => {
             console.log(err);
