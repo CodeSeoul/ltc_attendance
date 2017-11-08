@@ -53,6 +53,7 @@ module.exports = {
             table.increments();
             table.string('title');
             table.string('description');
+            table.string('created_by');
             table.timestamps();
         }).createTableIfNotExists('check_in', (table) => {
             table.increments();
@@ -64,7 +65,9 @@ module.exports = {
             table.integer('course_id');
             table.integer('user_id');
             table.timestamps();
-        }).toString();
-        console.log('created tables');
+        }).then(() => {
+            console.log('created tables');
+        });
+
     }
 };

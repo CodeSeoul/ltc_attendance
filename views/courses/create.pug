@@ -8,7 +8,7 @@ block content
             div(class="col-md-8")
                 h2 Register a new course
 
-                if (canEdit)
+                if canEdit
                     form(method="Post" action="/courses/create")
                         div(class="form-group")
                             label(for="title") Name

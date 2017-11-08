@@ -1,4 +1,5 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
+const moment = require('moment');
 
 const Course = bookshelf.Model.extend({
 
@@ -20,7 +21,7 @@ const Course = bookshelf.Model.extend({
     virtuals: {
         createdAt: {
             get: function () {
-                return this.get('created_at');
+                return moment(this.get('created_at')).format('YYYY-MM-DD HH:mm:ss');
             },
             set: function (newDate) {
                 this.set('created_at', newDate);
@@ -29,19 +30,10 @@ const Course = bookshelf.Model.extend({
 
         updatedAt: {
             get: function () {
-                return this.get('updated_at');
+                return moment(this.get('updated_at')).format('YYYY-MM-DD HH:mm:ss');
             },
             set: function (newDate) {
                 this.set('updated_at', newDate)
-            }
-        },
-
-        createdBy: {
-            get: function () {
-                return this.get('created_by');
-            },
-            set: function (user) {
-                this.set('created_by', user)
             }
         }
     },
@@ -52,6 +44,6 @@ const Courses = bookshelf.Collection.extend({
 });
 
 module.exports = {
-    Course: Course,
+    Course: bookshelf.model('Course', Course),
     Courses: Courses
 };

@@ -51,29 +51,19 @@ module.exports = (passport) => {
             passReqToCallback: true
         },
         (req, username, password, done) => {
-            console.log('starting signup');
             userRepo.getUserByUsername(username)
                 .then(existingUser => {
-                    console.log('got existing user');
                     if (existingUser) {
-                        console.log('user exists');
                         return done(null, false, {message: 'That username is already in use'});
                     } else {
-                        console.log('returning createUser promise');
                         return userRepo.createUser(req.body);
                     }
                 })
                 .then(newUser => {
-                    console.log('working on createUser promise');
                     if (newUser instanceof User) {
-                        console.log('we got newly created user');
-                        console.log(newUser);
                         return done(null, newUser);
                     } else {
-                        console.log('we got something that wasn\'t User');
-                        console.log(typeof newUser);
-                        console.log(newUser instanceof User);
-                        console.log(newUser);
+                        ;
                         return newUser;
                     }
                 })
@@ -92,11 +82,10 @@ module.exports = (passport) => {
     passport.deserializeUser((id, done) => {
         return userRepo.getUser(id)
             .then(user => {
-                console.log('calling done deserialize success');
                 return done(null, user);
             })
             .catch(err => {
-                console.log('calling done deserialize fail');
+                console.log('calling done deserialize fail. err:', err);
                 return done(err, null)
             });
     });

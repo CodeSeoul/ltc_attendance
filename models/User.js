@@ -11,8 +11,6 @@ const User = bookshelf.Model.extend({
     hidden: ['password'],
 
     initialize: function () {
-        console.log('this:', this);
-        console.log('this.on:', this.on);
         this.on('save', this.hashPassword, this);
     },
 
@@ -75,10 +73,7 @@ const User = bookshelf.Model.extend({
     },
 
     comparePassword: function (candidatePassword) {
-        console.log('candidatePassword:', candidatePassword);
-        console.log('this password:', this.get('password'));
         const result = bcrypt.compare(candidatePassword, this.get('password'));
-        console.log('bcrypt compare result:', result);
         return result;
     }
 });
@@ -88,6 +83,6 @@ const Users = bookshelf.Collection.extend({
 });
 
 module.exports = {
-    User: User,
+    User: bookshelf.model('User', User),
     Users: Users
 };

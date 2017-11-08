@@ -16,7 +16,7 @@ block content
         .card.my-3
             .card-block
                 h4.card-title= course.get('title')
-                h6.card-subtitle.mb-2.text-muted= `Created by ${course.get('createdBy') || 'unknown'} at ${course.get('createdAt') || 'unknown'}`
+                h6.card-subtitle.mb-2.text-muted= `Created by ${course.related('createdBy').get('name') || 'unknown'} at ${course.get('createdAt') || 'unknown'}`
                 p.card-text= course.get('description')
                 a.card-link(href="/courses/" + course.get('id'))
                     button Details

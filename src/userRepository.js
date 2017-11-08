@@ -13,15 +13,11 @@ module.exports = {
     },
 
     createUser(reqBody) {
-        const newUser = new User({
+        return new User().save({
             username: reqBody.username,
             email: reqBody.email,
             password: reqBody.password
         });
-        console.log('createUser newUser');
-        console.log(newUser);
-
-        return newUser.save();
     },
 
     getUser(id) {

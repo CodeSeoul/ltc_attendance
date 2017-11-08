@@ -2,14 +2,15 @@ const Course = require('../models/Course').Course;
 
 module.exports = {
     getCourses() {
-        return Course.forge().orderBy('created_at', 'DESC').fetchAll();
+        return Course.forge().orderBy('created_at', 'DESC').fetchAll({withRelated: ['createdBy']});
     },
 
-    createCourse(reqBody) {
-        return new Course({
+    createCourse(reqBody, creator) {
+        return new Course().save({
             title: reqBody.title,
-            description: reqBody.description
-        }).save();
+            description: reqBody.description,
+            created_by: creator
+        });
     },
 
     getCourse(id) {

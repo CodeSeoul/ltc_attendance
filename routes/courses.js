@@ -29,8 +29,9 @@ router.post('/create',
     isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
-            courseRepo.createCourse(req.body)
+            courseRepo.createCourse(req.body, req.user.get('id'))
                 .then(() => {
+                    console.log('created course successfully');
                     res.redirect('/courses');
                 })
                 .catch(err => {
