@@ -1,17 +1,17 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
 const moment = require('moment');
 
-const Events = bookshelf.Model.extend({
+const Event = bookshelf.Model.extend({
 
-    tableName: 'course',
+    tableName: 'event',
     hasTimestamps: true,
 
     checkIns: function () {
-        return this.hasMany('CheckIn', 'course_id');
+        return this.hasMany('CheckIn', 'event_id');
     },
 
     instructors: function () {
-        return this.belongsToMany('User', 'course_instructor');
+        return this.belongsToMany('User', 'event_instructor');
     },
 
     createdBy: function () {

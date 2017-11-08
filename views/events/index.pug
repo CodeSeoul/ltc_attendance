@@ -2,22 +2,25 @@ extends ../layout
 
 block content
     h2
-      i.fa.fa-graduation-cap
-      |  Events
+        i.fa.fa-graduation-cap
+        |  Events
     hr
 
     .text-right
-      a.btn.btn-primary(href='/events/create')
-        i.fa.fa-plus
-        |  New Event
+        a.btn.btn-primary(href='/events/create')
+            i.fa.fa-plus
+            |  New Event
 
     for event in events
-      .card.my-3
-        .card-block
-          h4.card-title= event.title
-          h6.card-subtitle.mb-2.text-muted= `Created by ${event.createdBy || 'unknown'} at ${event.createdAt || 'unknown'}`
-          p.card-text= event.type
-          p.card-text= event.description
-          a.card-link(href="/events/" + event._id) Details
-          a.card-link(href='#') Schedule
-          a.card-link(href="/events/" + event._id + "/checkin") Register
+        .card.my-3
+            .card-block
+                h4.card-title= event.get('title')
+                h6.card-subtitle.mb-2.text-muted= `Created by ${event.related('createdBy').get('name') || 'unknown'} at ${event.get('createdAt') || 'unknown'}`
+                p.card-text= event.get('description')
+                a.card-link(href = "/events/" + event.get('id'))
+                    button Details
+                a.card-link(href='#')
+                    button Schedule
+                if authedUser && !checkedIn
+                    form.event-index-checkin.card-link(method="Post" action="/events/" + event.get('id') + "/checkin")
+                        button(type="submit") Register

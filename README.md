@@ -51,39 +51,21 @@ npm run test-watch => runs all tests each time a change is saved
 * hometown
 * description
 * checkIns
+* createdAt
+* updatedAt
 
 #### Event
 * _id
 * title
 * description
 * tags
-* createdAt
 * instructors
+* createdAt
+* updatedAt
 
 #### CheckIn
 * _id
 * user
-* course
-* date
-
-### Unknown/Missing Collections 
-
-#### UsersClasses
-* _id
-* user_id
-* course_id
-* date
-
-#### Lecture
-* _id
-* course_id
-* time
-* location
-* url
-
-#### Session
-* _id
-* sessionOpen
-* date
-* checkIns
-* course
+* event
+* createdAt
+* updatedAt

@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const isLoggedIn = require('./loginCheck');
-const eventRepo = require('../src/eventRepo');
 const checkInRepo = require('../src/checkInRepository');
+const eventRepo = require('../src/eventRepository');
 
 // TODO: convert to middleware
 const canEditEvents = (user) => {
@@ -12,16 +12,16 @@ const canEditEvents = (user) => {
 };
 
 router.get('/', function (req, res) {
-    return courseRepo.getEvents()
-        .then(courses => {
-            res.render('courses/index', {courses: courses.models, authedUser: req.user});
+    return eventRepo.getEvents()
+        .then(events => {
+            res.render('events/index', {events: events.models, authedUser: req.user});
         });
 });
 
 router.get('/create',
     isLoggedIn,
     (req, res) => {
-        res.render('courses/create', {canEdit: canEditEvents(req.user), authedUser: req.user});
+        res.render('events/create', {canEdit: canEditEvents(req.user), authedUser: req.user});
     }
 );
 
@@ -29,14 +29,14 @@ router.post('/create',
     isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
-            courseRepo.createCourse(req.body, req.user.get('id'))
+            eventRepo.createEvent(req.body, req.user.get('id'))
                 .then(() => {
-                    console.log('created course successfully');
-                    res.redirect('/courses');
+                    console.log('created event successfully');
+                    res.redirect('/events');
                 })
                 .catch(err => {
                     console.log(err);
-                    res.redirect('/courses/create');
+                    res.redirect('/events/create');
                 });
         } else {
             res.send(403);
@@ -45,18 +45,18 @@ router.post('/create',
 );
 
 router.get('/:id', (req, res) => {
-    courseRepo.getCourseWithFullDetails(req.params.id)
-        .then(course => {
-            console.log('course.instructors:', course.instructors());
-            course.instructors().fetch()
+    eventRepo.getEventWithFullDetails(req.params.id)
+        .then(event => {
+            console.log('event.instructors:', event.instructors());
+            event.instructors().fetch()
                 .then(instructors => {
                     console.log('after promise');
                     console.log(instructors);
-                    res.render('courses/show', {course: course, instructors: instructors, authedUser: req.user});
+                    res.render('events/show', {event: event, instructors: instructors, authedUser: req.user});
                 })
                 .catch(err => {
-                    console.log('err retrieving instructors for course id', req.params.id, '. err:', err);
-                    res.render('courses/show', {course: course, authedUser: req.user});
+                    console.log('err retrieving instructors for event id', req.params.id, '. err:', err);
+                    res.render('events/show', {event: event, authedUser: req.user});
                 });
 
         })
@@ -70,9 +70,9 @@ router.get('/:id/edit',
     isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
-            courseRepo.getCourse(req.params.id)
-                .then(course => {
-                    res.render('courses/edit', {course: course, authedUser: req.user});
+            eventRepo.getEvent(req.params.id)
+                .then(event => {
+                    res.render('events/edit', {event: event, authedUser: req.user});
                 })
                 .catch(err => {
                     console.log(err);
@@ -88,9 +88,9 @@ router.post('/:id',
     isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
-            courseRepo.updateCourse(req.params.id, req.body)
+            eventRepo.updateEvent(req.params.id, req.body)
                 .then(() => {
-                    res.redirect('/courses/' + req.params.id);
+                    res.redirect('/events/' + req.params.id);
                 })
                 .catch(err => {
                     console.log(err);
@@ -105,20 +105,20 @@ router.post('/:id',
 router.post('/:id/checkin',
     isLoggedIn,
     (req, res) => {
-        const course = courseRepo.getCourse(req.params.id)
-            .then(course => course)
+        const event = eventRepo.getEvent(req.params.id)
+            .then(event => event)
             .catch(err => {
                 console.log(err);
-                res.render('courses/show', {course: null, errorMessage: err, authedUser: req.user})
+                res.render('events/show', {event: null, errorMessage: err, authedUser: req.user})
             });
 
-        checkInRepo.createCheckIn(req.user, course)
+        checkInRepo.createCheckIn(req.user, event)
             .then(() => {
-                res.render('courses/show', {course: course, checkedIn: true, authedUser: req.user});
+                res.render('events/show', {event: event, checkedIn: true, authedUser: req.user});
             })
             .catch(err => {
                 console.log(err);
-                res.render('courses/show', {course: course, errorMessage: err, authedUser: req.user})
+                res.render('events/show', {event: event, errorMessage: err, authedUser: req.user})
             });
     }
 );
@@ -127,9 +127,9 @@ router.post('/:id/delete',
     isLoggedIn,
     (req, res) => {
         if (canEditEvents(req.user)) {
-            courseRepo.deleteCourse(req.params.id)
+            eventRepo.deleteEvent(req.params.id)
                 .then(() => {
-                    res.redirect('/courses');
+                    res.redirect('/events');
                 })
                 .catch(err => {
                     console.log(err);

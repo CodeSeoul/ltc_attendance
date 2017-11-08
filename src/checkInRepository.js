@@ -3,8 +3,8 @@ const userRepo = require('./userRepository');
 
 module.exports = {
 
-    createCheckIn(user, course, cb) {
-        CheckIn.findOne({user: user.id, course: course.id}, (err, foundCheckIn) => {
+    createCheckIn(user, event, cb) {
+        CheckIn.findOne({user: user.id, event: event.get('id')}, (err, foundCheckIn) => {
             if (err) {
                 const result = {err: err, res: foundCheckIn};
                 cb(result);
@@ -19,7 +19,7 @@ module.exports = {
                     console.log('has not checked in. checking in');
                     const newCheckIn = new CheckIn({
                         user: user,
-                        course: course
+                        event: event
                     });
                     CheckIn.create(newCheckIn, (err, checkIn) => {
                         if (err) {
@@ -43,8 +43,8 @@ module.exports = {
         });
     },
 
-    getCheckInByUserIdAndCourseId(userId, courseId, cb) {
-        CheckIn.findOne({user: userId, course: courseId}, (err, checkIn) => {
+    getCheckInByUserIdAndEventId(userId, eventId, cb) {
+        CheckIn.findOne({user: userId, event: eventId}, (err, checkIn) => {
             const result = {err: err, res: checkIn};
             cb(result);
         });

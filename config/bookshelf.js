@@ -49,7 +49,7 @@ module.exports = {
             table.string('hometown');
             table.string('description');
             table.timestamps();
-        }).createTableIfNotExists('course', (table) => {
+        }).createTableIfNotExists('event', (table) => {
             table.increments();
             table.string('title');
             table.string('description');
@@ -58,11 +58,11 @@ module.exports = {
         }).createTableIfNotExists('check_in', (table) => {
             table.increments();
             table.integer('user_id');
-            table.integer('course_id');
+            table.integer('event_id');
             table.timestamps();
-        }).createTableIfNotExists('course_instructor', (table) => {
+        }).createTableIfNotExists('event_instructor', (table) => {
             table.increments();
-            table.integer('course_id');
+            table.integer('event_id');
             table.integer('user_id');
             table.timestamps();
         }).then(() => {
