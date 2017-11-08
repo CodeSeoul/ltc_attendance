@@ -105,20 +105,21 @@ router.post('/:id',
 router.post('/:id/checkin',
     isLoggedIn,
     (req, res) => {
-        const event = eventRepo.getEvent(req.params.id)
-            .then(event => event)
-            .catch(err => {
-                console.log(err);
-                res.render('events/show', {event: null, errorMessage: err, authedUser: req.user})
-            });
-
-        checkInRepo.createCheckIn(req.user, event)
-            .then(() => {
-                res.render('events/show', {event: event, checkedIn: true, authedUser: req.user});
+        eventRepo.getEvent(req.params.id)
+            .then(event => {
+                checkInRepo.createCheckIn(req.user, event)
+                    .then(checkIn => {
+                        //console.log('checkIn: ', checkIn);
+                        res.render('events/show', {event: event, checkedIn: true, authedUser: req.user});
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.render('events/show', {event: event, errorMessage: err, authedUser: req.user})
+                    });
             })
             .catch(err => {
                 console.log(err);
-                res.render('events/show', {event: event, errorMessage: err, authedUser: req.user})
+                res.render('events/show', {event: null, errorMessage: err, authedUser: req.user})
             });
     }
 );

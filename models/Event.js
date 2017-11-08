@@ -1,4 +1,5 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
+const CheckIn = require('./checkIn').CheckIn;
 const moment = require('moment');
 
 const Event = bookshelf.Model.extend({
@@ -21,12 +22,9 @@ const Event = bookshelf.Model.extend({
     virtuals: {
 
         countCheckIns: function () {
-            const checkIns = this.get('checkIns');
-            if (checkIns) {
-                return checkIns.count();
-            } else {
-                return 0;
-            }
+            return CheckIn.Model.query()
+                .where('user_id', this.get('id'))
+                .count();
         },
 
         createdAt: {

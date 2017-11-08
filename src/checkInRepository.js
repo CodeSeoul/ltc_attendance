@@ -1,13 +1,14 @@
 const CheckIn = require('../models/checkIn').CheckIn;
-const userRepo = require('./userRepository');
 
 module.exports = {
 
     createCheckIn(user, event) {
+        console.log('user:', user);
+        console.log('event:', event);
         return new CheckIn()
             .save({
-                user: user,
-                event: event
+                user_id: user.get('id'),
+                event_id: event.get('id')
             });
     },
 
@@ -15,7 +16,7 @@ module.exports = {
         return CheckIn.where({
             'user': user,
             'event': event
-        });
+        }).fetch();
     },
 
 };
