@@ -1,7 +1,7 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
 const moment = require('moment');
 
-const Course = bookshelf.Model.extend({
+const Events = bookshelf.Model.extend({
 
     tableName: 'course',
     hasTimestamps: true,
@@ -49,11 +49,11 @@ const Course = bookshelf.Model.extend({
     },
 });
 
-const Courses = bookshelf.Collection.extend({
-    model: Course
+const Events = bookshelf.Collection.extend({
+    model: Event
 });
 
 module.exports = {
-    Course: bookshelf.model('Course', Course),
-    Courses: Courses
+    Event: bookshelf.model('Event', Event),
+    Events: Events
 };

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const isLoggedIn = require('./loginCheck');
-const courseRepo = require('../src/CourseRepo');
+const eventRepo = require('../src/eventRepo');
 const checkInRepo = require('../src/checkInRepository');
 
 // TODO: convert to middleware
@@ -12,7 +12,7 @@ const canEditEvents = (user) => {
 };
 
 router.get('/', function (req, res) {
-    return courseRepo.getCourses()
+    return courseRepo.getEvents()
         .then(courses => {
             res.render('courses/index', {courses: courses.models, authedUser: req.user});
         });

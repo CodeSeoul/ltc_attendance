@@ -9,7 +9,7 @@ const CheckIn = bookshelf.Model.extend({
         return this.belongsTo('User', 'user_id');
     },
 
-    course: () => {
+    event: () => {
         return this.belongsTo('Course', 'course_id');
     },
 
@@ -32,7 +32,6 @@ const CheckIn = bookshelf.Model.extend({
             }
         }
     }
-});
 
 const CheckIns = bookshelf.Collection.extend({
     model: CheckIn
