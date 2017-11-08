@@ -20,6 +20,10 @@ router.get('/signup', (req, res) => {
   res.render('users/signup');
 });
 
+router.get('/badge', (req, res) => {
+  res.render('users/badge');
+})
+
 router.post('/signup', (req, res) => {
   console.log('signup...req.body')
   console.log(req.body)

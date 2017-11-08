@@ -14,4 +14,10 @@ document.addEventListener("DOMContentLoaded", function() {
   	 $("#dropdownMenuButton").html(e.target.innerHTML)
      $("#type").val(e.target.innerHTML)
   });
+
+  $(".dropdown-menu").click((e) => {
+    $("#exampleButton").html(e.target.innerHTML)
+    $("#type").val(e.target.innerHTML)
+  });
+
 });
