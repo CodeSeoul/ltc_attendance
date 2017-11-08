@@ -1,5 +1,5 @@
 const User = require('../../models/User');
-const Course = require('../../models/Course');
+const Event = require('../../models/Event');
 const assert = require('assert');
 
 describe('User modelDestroy', () => {
@@ -16,7 +16,7 @@ describe('User modelDestroy', () => {
     });
     afterEach((done) => {
         User.collection.drop();
-        Course.collection.drop();
+        Event.collection.drop();
         done();
     });
 

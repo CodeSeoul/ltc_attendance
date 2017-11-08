@@ -18,7 +18,7 @@ if (process.env.RUN_MODE !== 'prod') {
 
 const index = require('./routes/index');
 const users = require('./routes/users');
-const courses = require('./routes/courses');
+const events = require('./routes/events');
 const app = express();
 
 // view engine setup
@@ -35,7 +35,9 @@ app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));\
 
 // required for passport
 app.use(session({secret: 'thisneedstobehidden'}));
@@ -45,7 +47,7 @@ app.use(flash());
 
 app.use('/', index);
 app.use('/users', users);
-app.use('/courses', courses);
+app.use('/events', events);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

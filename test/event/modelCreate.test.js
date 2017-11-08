@@ -1,29 +1,29 @@
-const Course = require('../../models/Course');
+const Event = require('../../models/Event');
 const User = require('../../models/User');
 const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
 
-describe('Course modelCreate', () => {
+describe('Event modelCreate', () => {
   let sql;
 
   beforeEach((done) => {
-    sql = new Course({title: 'sql'})
+    sql = new Event({title: 'sql'})
     sql.save()
       .then(() => done());
   });
   afterEach((done) => {
     User.collection.drop();
-    Course.collection.drop();
+    Event.collection.drop();
     done();
   });
 
-  it('Should create a new Course record', (done) => {
+  it('Should create a new Event record', (done) => {
     assert(!sql.isNew);
     done();
   });
 
-  it('Should be able to set Course Description', (done) => {
+  it('Should be able to set Event Description', (done) => {
     sql.description = "beginner sql";
     sql.save()
       .then((result) => {
@@ -32,10 +32,10 @@ describe('Course modelCreate', () => {
       })
   });
 
-  it('Should be able to set Course Tags', (done) => {
+  it('Should be able to set Event Tags', (done) => {
     sql.tags = ['sql', 'beginner']
     sql.save()
-      .then(() => Course.findOne({title: 'sql'}))
+      .then(() => Event.findOne({title: 'sql'}))
       .then((result) => {
         assert(result.tags[0] === 'sql');
         assert(result.tags[1] === 'beginner');
@@ -52,7 +52,7 @@ describe('Course modelCreate', () => {
     const joe = new User({});
     sql.instructors.push({_id: joe._id})
     sql.save()
-      .then(() => Course.findOne({title: 'sql'}))
+      .then(() => Event.findOne({title: 'sql'}))
       .then((result) => {
         assert(String(result.instructors) === String(joe._id));
         done();
