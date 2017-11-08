@@ -39,6 +39,6 @@ const CheckIns = bookshelf.Collection.extend({
 });
 
 module.exports = {
-    CheckIn: CheckIn,
+    CheckIn: bookshelf.model('CheckIn', CheckIn),
     CheckIns: CheckIns
 };
