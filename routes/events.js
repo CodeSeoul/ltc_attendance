@@ -47,11 +47,8 @@ router.post('/create',
 router.get('/:id', (req, res) => {
     eventRepo.getEventWithFullDetails(req.params.id)
         .then(event => {
-            console.log('event.instructors:', event.instructors());
             event.instructors().fetch()
                 .then(instructors => {
-                    console.log('after promise');
-                    console.log(instructors);
                     res.render('events/show', {event: event, instructors: instructors, authedUser: req.user});
                 })
                 .catch(err => {
@@ -108,7 +105,7 @@ router.post('/:id/checkin',
         eventRepo.getEvent(req.params.id)
             .then(event => {
                 checkInRepo.createCheckIn(req.user, event)
-                    .then(checkIn => {
+                    .then(() => {
                         //console.log('checkIn: ', checkIn);
                         res.render('events/show', {event: event, checkedIn: true, authedUser: req.user});
                     })

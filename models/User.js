@@ -1,7 +1,6 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
 const bcrypt = require('bcrypt');
 const SALT_WORK_FACTOR = 10;
-const CheckIns = require('./checkIn').CheckIns;
 
 // TODO: Add validations
 const User = bookshelf.Model.extend({
@@ -27,9 +26,9 @@ const User = bookshelf.Model.extend({
     },
 
     virtuals: {
-        countCheckIns: async function () {
-            return await this.related('checkIns')
-                .count();
+        countCheckIns: function () {
+            // this property exists due our query in userRepository
+            return this.get('check_in_count');
         },
         createdAt: {
             get: function () {
@@ -69,8 +68,7 @@ const User = bookshelf.Model.extend({
     },
 
     comparePassword: function (candidatePassword) {
-        const result = bcrypt.compare(candidatePassword, this.get('password'));
-        return result;
+        return bcrypt.compare(candidatePassword, this.get('password'));
     }
 });
 
