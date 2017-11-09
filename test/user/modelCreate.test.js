@@ -1,8 +1,10 @@
-const User = require('../../models/User');
-const CheckIn = require('../../models/checkIn');
-const assert = require('assert');
-
 describe('User modelCreate', () => {
+    const bookshelf = require('../../config/bookshelf').bookshelf;
+    console.log('bookshelf:', bookshelf);
+    const User = require('../../models/User');
+    const CheckIn = require('../../models/checkIn');
+    const assert = require('assert');
+
     let joe;
 
     beforeEach((done) => {
