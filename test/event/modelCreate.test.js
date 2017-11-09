@@ -63,7 +63,7 @@ describe('Event modelCreate', () => {
 
     it('Should be able to set CreatedBy', (done) => {
         const joe = new User();
-        baseEvent.instructors.push({id: joe.id})
+        baseEvent.instructors().push({id: joe.id})
         baseEvent.save()
             .then(() => Event.where({title: 'Test Event'}).fetch())
             .then(result => {

@@ -1,6 +1,6 @@
 require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
-const User = require('../../models/User').CheckIn;
+const User = require('../../models/User').User;
 const CheckIn = require('../../models/checkIn').CheckIn;
 const assert = require('assert');
 

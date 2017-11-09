@@ -2,7 +2,7 @@ require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
 const User = require('../../models/User').User;
 const CheckIn = require('../../models/checkIn').CheckIn;
-const Event = require('../../models/checkIn').Event;
+const Event = require('../../models/Event').Event;
 const assert = require('assert');
 
 describe('User modelUpdate', () => {
@@ -23,12 +23,13 @@ describe('User modelUpdate', () => {
                 }).save()
                     .then(event => {
                         return new CheckIn().save({
-                            'userid': user.id,
-                            'eventid': event.id
+                            'user_id': user.id,
+                            'event_id': event.id
                         });
                     })
                     .then(checkIn => {
-                        user.checkIns.add(checkIn)
+                        console.log('user:', user);
+                        user.checkIns().push(checkIn);
                     })
                     .catch(err => done(err));
             })
