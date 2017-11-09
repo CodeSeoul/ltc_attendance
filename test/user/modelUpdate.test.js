@@ -28,7 +28,6 @@ describe('User modelUpdate', () => {
                         });
                     })
                     .then(checkIn => {
-                        console.log('user:', user);
                         user.checkIns().push(checkIn);
                     })
                     .catch(err => done(err));
