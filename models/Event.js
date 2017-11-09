@@ -22,9 +22,7 @@ const Event = bookshelf.Model.extend({
     virtuals: {
 
         countCheckIns: function () {
-            return CheckIn.Model.query()
-                .where('user_id', this.get('id'))
-                .count();
+            return this.related('checkIns').length;
         },
 
         createdAt: {
