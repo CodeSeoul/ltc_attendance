@@ -1,21 +1,19 @@
 const bookshelfSetup = require('../config/bookshelf');
 
-console.log('before');
 bookshelfSetup.configureBookshelf('dev');
 bookshelfSetup.initializeDevDb();
 
-const CheckIns = require('../models/checkIn').CheckIns;
-const Users = require('../models/User').Users;
-const Events = require('../models/Event').Events;
-
 beforeEach(done => {
-    console.log('beforeEach');
-    CheckIns.destroy()
+    const knex = bookshelfSetup.knex;
+    knex('check_in').truncate()
         .then(() => {
-            return Users.destroy();
+            knex('event_instructor').truncate();
         })
         .then(() => {
-            Events.destroy();
+            knex('event').truncate();
+        })
+        .then(() => {
+            knex('user').truncate();
             done();
-        })
+        });
 });
