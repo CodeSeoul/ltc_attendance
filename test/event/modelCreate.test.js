@@ -69,8 +69,6 @@ describe('Event modelCreate', () => {
         baseEvent.save()
             .then(() => Event.where({title: 'Test Event'}).fetch())
             .then(result => {
-                //console.log('result:', result);
-                //console.log('result.instructors():', result.instructors());
                 assert(String(result.instructors().id) === String(joe.id));
                 done();
             })

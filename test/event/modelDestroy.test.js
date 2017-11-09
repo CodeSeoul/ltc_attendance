@@ -19,11 +19,16 @@ describe('Event modelDestroy', () => {
     it('Should destroy event record', (done) => {
         const ruby = new Event({title: 'ruby'});
         ruby.save()
-            .then(Event.remove({title: 'Test Event'}))
-            .then(Event.forge().fetchAll())
-            .then((results) => {
+            .then(() => {
+                return Event.where({title: 'Test Event'}).fetch()
+            })
+            .then(event => {
+                return event.destroy()
+            })
+            .then(() => Event.forge().fetchAll())
+            .then(results => {
                 assert(results.length === 1);
-                assert(results[0].title === 'ruby');
+                assert(results.at(0).get('title') === 'ruby');
                 done()
             })
             .catch(err => done(err));
