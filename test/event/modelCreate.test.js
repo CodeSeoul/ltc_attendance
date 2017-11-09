@@ -1,61 +1,77 @@
 require('../test_helper.test');
-const Event = require('../../models/Event');
-const User = require('../../models/User');
+const knex = require('../../config/bookshelf').knex;
+const Event = require('../../models/Event').Event;
+const User = require('../../models/User').User;
 const assert = require('assert');
 
 describe('Event modelCreate', () => {
 
-    let sql;
+    let baseEvent;
 
     beforeEach((done) => {
-        sql = new Event({title: 'sql'})
-        sql.save()
-            .then(() => done());
+        baseEvent = new Event({
+            title: 'Test Event',
+            description: 'the best event evar',
+            type: 'Workshop',
+            created_by: '1'
+        });
+
+        baseEvent.save().then(() => done()).catch(err => done(err));
     });
+
     afterEach((done) => {
-        User.collection.drop();
-        Event.collection.drop();
-        done();
+        knex('user').truncate()
+            .then(() => knex('event').truncate())
+            .then(() => done())
+            .catch(err => done(err));
     });
 
     it('Should create a new Event record', (done) => {
-        assert(!sql.isNew);
+        assert(!baseEvent.isNew);
         done();
     });
 
     it('Should be able to set Event Description', (done) => {
-        sql.description = "beginner sql";
-        sql.save()
-            .then((result) => {
+        baseEvent.description = "beginner sql";
+        baseEvent.save()
+            .then(result => {
                 assert(result.description === "beginner sql");
                 done();
             })
+            .catch(err => {
+                done(err);
+            });
     });
 
-    it('Should be able to set Event Tags', (done) => {
-        sql.tags = ['sql', 'beginner']
-        sql.save()
-            .then(() => Event.findOne({title: 'sql'}))
-            .then((result) => {
-                assert(result.tags[0] === 'sql');
-                assert(result.tags[1] === 'beginner');
+    it('Should be able to set Event Type', (done) => {
+        baseEvent.type = 'Workshop';
+        baseEvent.save()
+            .then(() => Event.where({title: 'Test Event'}).fetch())
+            .then(result => {
+                assert(result.type === 'Workshop');
                 done();
+            })
+            .catch(err => {
+                done(err);
             });
     });
 
     it('Should set CreatedAt timestamp by default', (done) => {
-        assert(sql.createdAt instanceof Date);
+        assert(baseEvent.createdAt instanceof Date);
         done();
     });
 
     it('Should be able to set CreatedBy', (done) => {
-        const joe = new User({});
-        sql.instructors.push({_id: joe._id})
-        sql.save()
-            .then(() => Event.findOne({title: 'sql'}))
-            .then((result) => {
-                assert(String(result.instructors) === String(joe._id));
+        const joe = new User();
+        baseEvent.instructors.push({id: joe.id})
+        baseEvent.save()
+            .then(() => Event.where({title: 'Test Event'}).fetch())
+            .then(result => {
+                assert(String(result.instructors) === String(joe.id));
                 done();
+            })
+            .catch(err => {
+                done(err);
             });
     });
 
