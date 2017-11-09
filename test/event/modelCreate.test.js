@@ -1,3 +1,4 @@
+require('../test_helper.test');
 const Event = require('../../models/Event');
 const User = require('../../models/User');
 const assert = require('assert');

@@ -1,3 +1,4 @@
+require('../test_helper.test');
 const Repo = require('../../src/userRepository');
 const User = require('../../models/User');
 const chai = require('chai');
