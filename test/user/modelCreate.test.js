@@ -1,8 +1,10 @@
 require('../test_helper.test');
+const knex = require('../../config/bookshelf').knex;
+const User = require('../../models/User').CheckIn;
+const CheckIn = require('../../models/checkIn').CheckIn;
+const assert = require('assert');
+
 describe('User modelCreate', () => {
-    const User = require('../../models/User');
-    const CheckIn = require('../../models/checkIn');
-    const assert = require('assert');
 
     let joe;
 
@@ -13,13 +15,14 @@ describe('User modelCreate', () => {
         });
         joe.save()
             .then(() => done())
-            .catch(done);
+            .catch(err => done(err));
     });
 
     afterEach((done) => {
-        User.collection.drop();
-        CheckIn.collection.drop();
-        done();
+        knex('user').truncate()
+            .then(() => knex('check_in').truncate())
+            .then(() => done())
+            .catch(err => done(err));
     });
 
     it('Should create a new User record', (done) => {
@@ -30,67 +33,67 @@ describe('User modelCreate', () => {
     it('Should be able to set Username', (done) => {
         joe.username = 'joe';
         joe.save()
-            .then(() => User.findOne({_id: joe._id}))
-            .then((result) => {
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
                 assert(result.username === 'joe');
                 done()
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 
     it('Should be able to set Name', (done) => {
         joe.name = 'joe billy bob';
         joe.save()
-            .then(() => User.findOne({_id: joe._id}))
-            .then((result) => {
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
                 assert(result.name === 'joe billy bob');
                 done()
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 
     it('Should be able to set Description', (done) => {
         joe.description = 'I like to surf';
         joe.save()
-            .then(() => User.findOne({_id: joe._id}))
-            .then((result) => {
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
                 assert(result.description === 'I like to surf');
                 done()
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 
     it('Should be able to set Email', (done) => {
         joe.email = 'mail@mail.com';
         joe.save()
-            .then(() => User.findOne({_id: joe._id}))
-            .then((result) => {
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
                 assert(result.email === 'mail@mail.com');
                 done()
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 
     it('Should be able to set Hometown', (done) => {
         joe.hometown = 'Detroit';
         joe.save()
-            .then(() => User.findOne({_id: joe._id}))
-            .then((result) => {
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
                 assert(result.hometown === 'Detroit');
                 done()
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 
     it('Should be able to set Website', (done) => {
         joe.website = 'mail.com';
         joe.save()
-            .then(() => User.findOne({_id: joe._id}))
-            .then((result) => {
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
                 assert(result.website === 'mail.com');
                 done()
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 
     it('Should set Level to student by default', (done) => {
@@ -107,11 +110,11 @@ describe('User modelCreate', () => {
         const firstCheckIn = new CheckIn({});
         joe.checkIns.push(firstCheckIn);
         joe.save()
-            .then(() => User.findOne({_id: joe._id}))
-            .then((result) => {
-                assert(String(result.checkIns) === String(firstCheckIn._id));
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
+                assert(String(result.checkIns) === String(firstCheckIn.id));
                 done()
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 });

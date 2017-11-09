@@ -1,68 +1,59 @@
 require('../test_helper.test');
-const Event = require('../../models/Event');
-const User = require('../../models/User');
+const knex = require('../../config/bookshelf').knex;
+const Event = require('../../models/Event').Event;
 const assert = require('assert');
 
 describe('Event modelUpdate', () => {
-    let sql;
+    let baseEvent;
 
     beforeEach((done) => {
-        const joe = new User({});
-        sql = new Event({
-            title: 'sql',
+        baseEvent = new Event({
+            title: 'Test Event',
             description: 'beginner sql',
-            tags: ['beginner', 'sql'],
-            instructors: [{_id: joe._id}]
+            type: 'Workshop'
         });
-        sql.save()
-            .then(() => done());
+        baseEvent.save()
+            .then(() => done())
+            .catch(err => done(err));
     });
 
     afterEach((done) => {
-        Event.collection.drop();
-        User.collection.drop();
-        done();
+        knex('event').truncate()
+            .then(() => knex('user').truncate())
+            .then(() => done())
+            .catch(err => done(err));
     });
 
     it('Should update Title', (done) => {
-        sql.title = 'ruby';
-        sql.save()
-            .then(() => Event.findOne({_id: sql._id}))
-            .then((result) => {
+        baseEvent.title = 'ruby';
+        baseEvent.save()
+            .then(() => Event.where({id: baseEvent.id}).fetch())
+            .then(result => {
                 assert(result.title === 'ruby');
                 done();
-            });
+            })
+            .catch(err => done(err));
     });
 
     it('Should update Description', (done) => {
-        sql.description = 'beginner ruby';
-        sql.save()
-            .then(() => Event.findOne({_id: sql._id}))
-            .then((result) => {
+        baseEvent.description = 'beginner ruby';
+        baseEvent.save()
+            .then(() => Event.where({id: baseEvent.id}).fetch())
+            .then(result => {
                 assert(result.description === 'beginner ruby');
                 done();
-            });
+            })
+            .catch(err => done(err));
     });
 
-    it('Should update Tags', (done) => {
-        sql.tags = ['beginner', 'ruby']
-        sql.save()
-            .then(() => Event.findOne({_id: sql._id}))
-            .then((result) => {
-                assert(result.tags[0] === 'beginner');
-                assert(result.tags[1] === 'ruby');
+    it('Should update Type', (done) => {
+        baseEvent.type = 'Hack Night';
+        baseEvent.save()
+            .then(() => Event.where({id: baseEvent.id}).fetch())
+            .then(result => {
+                assert(result.type === 'Hack Night');
                 done();
-            });
-    });
-
-    it('Should update Instructors', (done) => {
-        const jane = new User({});
-        sql.instructors = {_id: jane._id};
-        sql.save()
-            .then(() => Event.findOne({_id: sql._id}))
-            .then((result) => {
-                assert(String(result.instructors[0]) === String(jane._id));
-                done();
-            });
+            })
+            .catch(err => done(err));
     });
 });

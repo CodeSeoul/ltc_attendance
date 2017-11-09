@@ -1,5 +1,5 @@
 require('../test_helper.test');
-const User = require('../../models/User');
+const User = require('../../models/User').User;
 const assert = require('assert');
 
 describe('User modelRead', () => {
@@ -10,11 +10,11 @@ describe('User modelRead', () => {
             password: 'mypass'
         });
         joe.save()
-            .then(() => User.findOne({_id: joe._id}))
-            .then((result) => {
-                assert(String(result._id) === String(joe._id));
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
+                assert(String(result.id) === String(joe.id));
                 done();
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 });

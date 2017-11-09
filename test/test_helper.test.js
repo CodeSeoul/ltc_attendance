@@ -14,6 +14,8 @@ beforeEach(done => {
         })
         .then(() => {
             knex('user').truncate();
+        })
+        .then(() => {
             done();
         });
 });

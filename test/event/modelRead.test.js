@@ -1,17 +1,18 @@
 require('../test_helper.test');
-const Event = require('../../models/Event');
+const Event = require('../../models/Event').Event;
 const assert = require('assert');
 
 describe('Event modelRead', () => {
 
     it('Should find a Event by _id', (done) => {
-        const sql = new Event({title: 'sql'});
-        sql.save()
-            .then(() => Event.findOne({_id: sql.id}))
-            .then((result) => {
-                assert(String(result._id) === String(sql.id));
+        const baseEvent = new Event({title: 'Test Event'});
+        baseEvent.save()
+            .then(() => Event.where({id: baseEvent.id}).fetch())
+            .then(result => {
+                assert(result.id === baseEvent.id);
                 done()
-            });
+            })
+            .catch(err => done(err));
     });
 
 });

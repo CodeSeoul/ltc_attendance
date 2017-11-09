@@ -1,6 +1,6 @@
 require('../test_helper.test');
-const User = require('../../models/User');
-const Event = require('../../models/Event');
+const knex = require('../../config/bookshelf').knex;
+const User = require('../../models/User').User;
 const assert = require('assert');
 
 describe('User modelDestroy', () => {
@@ -13,12 +13,13 @@ describe('User modelDestroy', () => {
         });
         joe.save()
             .then(() => done())
-            .catch(done);
+            .catch(err => done(err));
     });
     afterEach((done) => {
-        User.collection.drop();
-        Event.collection.drop();
-        done();
+        knex('user').truncate()
+            .then(() => knex('event').truncate())
+            .then(() => done())
+            .catch(err => done(err))
     });
 
     it('Should destroy User record', (done) => {
@@ -27,13 +28,13 @@ describe('User modelDestroy', () => {
             password: 'otherpass'
         });
         jane.save()
-            .then(() => User.remove({_id: joe._id}))
-            .then(() => User.find({}))
-            .then((results) => {
+            .then(() => new User({id: joe.id}.destroy()))
+            .then(() => User.fetchAll())
+            .then(results => {
                 assert(results.length === 1);
-                assert(String(results[0]._id) === String(jane._id));
+                assert(results[0].id === jane.id);
                 done()
             })
-            .catch(done);
+            .catch(err => done(err));
     });
 });

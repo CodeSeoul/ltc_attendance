@@ -1,6 +1,7 @@
 require('../test_helper.test');
+const knex = require('../../config/bookshelf').knex;
 const Repo = require('../../src/userRepository');
-const User = require('../../models/User');
+const User = require('../../models/User').User;
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);
@@ -28,12 +29,13 @@ describe('User Repo routes', () => {
             })
             .then(() => {
                 done();
-            });
+            })
+            .catch(err => done(err));
     });
 
     afterEach((done) => {
-        User.collection.drop();
-        done();
+        knex('user').truncate()
+            .then(() => done());
     });
 
     it('should list all users with getUsers()', (done) => {
@@ -56,14 +58,11 @@ describe('User Repo routes', () => {
                 expect(isMatch).to.eql(true);
                 done();
             })
-            .catch(err => {
-                expect(err).to.eql(null);
-                done();
-            });
+            .catch(err => done(err));
     });
 
     it('should add new user with createUser()', (done) => {
-        const jane = new User({username: 'jane', email: 'jane@mail.com', password: 'roflcopter'});
+        const jane = {username: 'jane', email: 'jane@mail.com', password: 'roflcopter'};
         Repo.createUser(jane)
             .then(newUser => {
                 expect(newUser.res).to.have.property('username').eql('jane');
@@ -74,7 +73,8 @@ describe('User Repo routes', () => {
                 expect(users).to.be.a('array');
                 expect(users.length).to.be.eql(3);
                 done();
-            });
+            })
+            .catch(err => done(err));
     });
 
     it('should list single user with getUser()', (done) => {
@@ -82,11 +82,12 @@ describe('User Repo routes', () => {
             .then(result => {
                 expect(result).to.have.property('username').eql('joe');
                 done()
-            });
+            })
+            .catch(err => done(err));
     });
 
     it('should update existing user with updateUser()', (done) => {
-        const jane = new User({username: 'jane', email: 'jane@mail.com', password: 'datpass'});
+        const jane = {username: 'jane', email: 'jane@mail.com', password: 'datpass'};
         let toBeUpdated = new User({email: 'thadious@m.com'});
         Repo.createUser(jane)
             .then(() => {
@@ -98,7 +99,8 @@ describe('User Repo routes', () => {
             .then(user => {
                 expect(user.email).to.eql('thadious@m.com');
                 done();
-            });
+            })
+            .catch(err => done(err));
     });
 });
 
@@ -114,5 +116,6 @@ it('should delete existing user with deleteUser()', (done) => {
         .then(users => {
             expect(users.length).to.eql(1);
             done();
-        });
+        })
+        .catch(err => done(err));
 });
