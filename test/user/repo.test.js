@@ -102,20 +102,20 @@ describe('User Repo routes', () => {
             })
             .catch(err => done(err));
     });
-});
 
-it('should delete existing user with deleteUser()', (done) => {
-    Repo.getUsers()
-        .then(users => {
-            expect(users.length).to.eql(2);
-            return Repo.deleteUser(joe._id)
-        })
-        .then(() => {
-            return Repo.getUsers()
-        })
-        .then(users => {
-            expect(users.length).to.eql(1);
-            done();
-        })
-        .catch(err => done(err));
+    it('should delete existing user with deleteUser()', (done) => {
+        Repo.getUsers()
+            .then(users => {
+                expect(users.length).to.eql(2);
+                return Repo.deleteUser(joe._id)
+            })
+            .then(() => {
+                return Repo.getUsers()
+            })
+            .then(users => {
+                expect(users.length).to.eql(1);
+                done();
+            })
+            .catch(err => done(err));
+    });
 });
