@@ -22,7 +22,9 @@ describe('Event modelCreate', () => {
 
     afterEach((done) => {
         knex('user').truncate()
-            .then(() => knex('event').truncate())
+            .then(() => {
+                return knex('event').truncate()
+            })
             .then(() => done())
             .catch(err => done(err));
     });
