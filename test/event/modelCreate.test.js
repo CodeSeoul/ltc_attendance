@@ -2,6 +2,7 @@ require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
 const Event = require('../../models/Event').Event;
 const User = require('../../models/User').User;
+const moment = require('moment');
 const assert = require('assert');
 
 describe('Event modelCreate', () => {
@@ -27,7 +28,7 @@ describe('Event modelCreate', () => {
     });
 
     it('Should create a new Event record', (done) => {
-        assert(!baseEvent.isNew);
+        assert(!baseEvent.isNew());
         done();
     });
 
@@ -48,7 +49,7 @@ describe('Event modelCreate', () => {
         baseEvent.save()
             .then(() => Event.where({title: 'Test Event'}).fetch())
             .then(result => {
-                assert(result.type === 'Workshop');
+                assert(result.get('type') === 'Workshop');
                 done();
             })
             .catch(err => {
@@ -57,22 +58,23 @@ describe('Event modelCreate', () => {
     });
 
     it('Should set CreatedAt timestamp by default', (done) => {
-        assert(baseEvent.createdAt instanceof Date);
+        const createdAt = moment(baseEvent.get('createdAt'), 'YYYY-MM-DD HH:mm:ss');
+        assert(createdAt instanceof moment);
         done();
     });
 
     it('Should be able to set CreatedBy', (done) => {
         const joe = new User();
-        baseEvent.instructors().push({id: joe.id})
+        baseEvent.instructors().push({id: joe.id});
         baseEvent.save()
             .then(() => Event.where({title: 'Test Event'}).fetch())
             .then(result => {
-                assert(String(result.instructors) === String(joe.id));
+                //console.log('result:', result);
+                //console.log('result.instructors():', result.instructors());
+                assert(String(result.instructors().id) === String(joe.id));
                 done();
             })
-            .catch(err => {
-                done(err);
-            });
+            .catch(err => done(err));
     });
 
 });
