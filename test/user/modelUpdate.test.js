@@ -38,7 +38,12 @@ describe('User modelUpdate', () => {
 
     afterEach((done) => {
         knex('check_in').truncate()
-            .then(knex('user').truncate())
+            .then(() => {
+                return knex('user').truncate()
+            })
+            .then(() => {
+                return knex('event').truncate()
+            })
             .then(done())
             .catch(err => done(err));
     });

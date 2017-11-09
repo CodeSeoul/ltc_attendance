@@ -19,7 +19,9 @@ describe('Event modelUpdate', () => {
 
     afterEach((done) => {
         knex('event').truncate()
-            .then(() => knex('user').truncate())
+            .then(() => {
+                return knex('user').truncate()
+            })
             .then(() => done())
             .catch(err => done(err));
     });
