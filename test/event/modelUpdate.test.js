@@ -25,33 +25,39 @@ describe('Event modelUpdate', () => {
     });
 
     it('Should update Title', (done) => {
-        baseEvent.title = 'ruby';
+        baseEvent.set('title', 'ruby');
         baseEvent.save()
-            .then(() => Event.where({id: baseEvent.id}).fetch())
+            .then(() => {
+                return Event.where({id: baseEvent.get('id')}).fetch()
+            })
             .then(result => {
-                assert(result.title === 'ruby');
+                assert(result.get('title') === 'ruby');
                 done();
             })
             .catch(err => done(err));
     });
 
     it('Should update Description', (done) => {
-        baseEvent.description = 'beginner ruby';
+        baseEvent.set('description', 'beginner ruby');
         baseEvent.save()
-            .then(() => Event.where({id: baseEvent.id}).fetch())
+            .then(() => {
+                return Event.where({id: baseEvent.get('id')}).fetch()
+            })
             .then(result => {
-                assert(result.description === 'beginner ruby');
+                assert(result.get('description') === 'beginner ruby');
                 done();
             })
             .catch(err => done(err));
     });
 
     it('Should update Type', (done) => {
-        baseEvent.type = 'Hack Night';
+        baseEvent.set('type', 'Hack Night');
         baseEvent.save()
-            .then(() => Event.where({id: baseEvent.id}).fetch())
+            .then(() => {
+                return Event.where({id: baseEvent.get('id')}).fetch()
+            })
             .then(result => {
-                assert(result.type === 'Hack Night');
+                assert(result.get('type') === 'Hack Night');
                 done();
             })
             .catch(err => done(err));
