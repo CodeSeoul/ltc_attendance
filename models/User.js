@@ -10,7 +10,7 @@ const User = bookshelf.Model.extend({
     hidden: ['password'],
 
     initialize: function () {
-        this.on('save', this.hashPassword, this);
+        this.on('saving', this.hashPassword, this);
     },
 
     checkIns: function () {

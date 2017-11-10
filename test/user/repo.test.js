@@ -41,17 +41,17 @@ describe('User Repo routes', () => {
     it('should list all users with getUsers()', (done) => {
         Repo.getUsers()
             .then(users => {
-                const sortedUsers = users.sort(function (a, b) {
-                    if (a.username.toUpperCase() < b.username.toUpperCase()) return -1;
-                    if (a.username.toUpperCase() > b.username.toUpperCase()) return 1;
+                const sortedUsers = users.models.sort(function (a, b) {
+                    if (a.get('username').toUpperCase() < b.get('username').toUpperCase()) return -1;
+                    if (a.get('username').toUpperCase() > b.get('username').toUpperCase()) return 1;
                     return 0;
                 });
                 expect(sortedUsers).to.be.a('array');
                 expect(sortedUsers.length).to.be.eql(2);
-                expect(sortedUsers[0]).to.have.property('_id');
-                expect(sortedUsers[0]).to.have.property('username').eql('joe');
-                expect(sortedUsers[0]).to.have.property('email').eql('joe@mail.com');
-                expect(sortedUsers[0]).to.have.property('level').eql('student');
+                expect(sortedUsers[0].toJSON()).to.have.property('id');
+                expect(sortedUsers[0].toJSON()).to.have.property('username').eql('joe');
+                expect(sortedUsers[0].toJSON()).to.have.property('email').eql('joe@mail.com');
+                expect(sortedUsers[0].toJSON()).to.have.property('level').eql('student');
                 return sortedUsers[0].comparePassword('somepass');
             })
             .then(isMatch => {
@@ -65,12 +65,12 @@ describe('User Repo routes', () => {
         const jane = {username: 'jane', email: 'jane@mail.com', password: 'roflcopter'};
         Repo.createUser(jane)
             .then(newUser => {
-                expect(newUser.res).to.have.property('username').eql('jane');
-                expect(newUser.res).to.have.property('email').eql('jane@mail.com');
+                expect(newUser.toJSON()).to.have.property('username').eql('jane');
+                expect(newUser.toJSON()).to.have.property('email').eql('jane@mail.com');
                 return Repo.getUsers();
             })
             .then(users => {
-                expect(users).to.be.a('array');
+                expect(users.models).to.be.a('array');
                 expect(users.length).to.be.eql(3);
                 done();
             })
@@ -78,9 +78,9 @@ describe('User Repo routes', () => {
     });
 
     it('should list single user with getUser()', (done) => {
-        Repo.getUser(joe._id)
+        Repo.getUser(joe.get('id'))
             .then(result => {
-                expect(result).to.have.property('username').eql('joe');
+                expect(result.toJSON()).to.have.property('username').eql('joe');
                 done()
             })
             .catch(err => done(err));
@@ -91,13 +91,13 @@ describe('User Repo routes', () => {
         let toBeUpdated = new User({email: 'thadious@m.com'});
         Repo.createUser(jane)
             .then(() => {
-                return Repo.updateUser(tad._id, toBeUpdated);
+                return Repo.updateUser(tad.get('id'), toBeUpdated);
             })
             .then(() => {
-                return Repo.getUser(tad._id)
+                return Repo.getUser(tad.get('id'));
             })
             .then(user => {
-                expect(user.email).to.eql('thadious@m.com');
+                expect(user.toJSON()).to.have.property('email').eql('thadious@m.com');
                 done();
             })
             .catch(err => done(err));
@@ -107,7 +107,7 @@ describe('User Repo routes', () => {
         Repo.getUsers()
             .then(users => {
                 expect(users.length).to.eql(2);
-                return Repo.deleteUser(joe._id)
+                return Repo.deleteUser(joe.get('id'));
             })
             .then(() => {
                 return Repo.getUsers()
