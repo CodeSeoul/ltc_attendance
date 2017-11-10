@@ -23,16 +23,15 @@ describe('User modelUpdate', () => {
                 }).save()
                     .then(event => {
                         return new CheckIn().save({
-                            'user_id': user.id,
-                            'event_id': event.id
-                        });
-                    })
-                    .then(checkIn => {
-                        user.checkIns().push(checkIn);
+                            'user_id': user.get('id'),
+                            'event_id': event.get('id')
+                        })
+                            .then(() => {
+                                done();
+                            });
                     })
                     .catch(err => done(err));
             })
-            .then(done())
             .catch(err => done(err));
     });
 
@@ -126,13 +125,28 @@ describe('User modelUpdate', () => {
     });
 
     it('Should update CheckIns', (done) => {
-        const checkIn2 = new CheckIn({});
-        joe.checkIns = [{id: checkIn2.id}];
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
-            .then((result) => {
-                assert(String(result.checkIns) === String(checkIn2.id));
-                done();
+        //const user = User.forge
+
+        User.where({username: 'joe'}).fetch({withRelated: 'checkIns'})
+            .then(user => {
+                return user.checkIns().create({})
+                    .then(newCheckIn => {
+                        // const checkInUser = newCheckIn.user();
+                        // const relatedUser = newCheckIn.related('user');
+                        // assert(newCheckIn.user().get('id') === user.get('id'));
+                        // return newCheckIn.user();
+                        return newCheckIn.refresh({withRelated: 'user'});
+                    })
+                    .then(updatedCheckIn => {
+                        assert(updatedCheckIn.user().get('id') === user.get('id'));
+                        assert(updatedCheckIn.user().checkIns().length === 2);
+                        return updatedCheckIn.user();
+                    })
+                    .then(user => {
+                        assert(user.checkIns().length === 2);
+                        done();
+                    })
+                    .catch(err => done(err));
             })
             .catch(err => done(err));
     });
