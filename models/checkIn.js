@@ -5,29 +5,29 @@ const CheckIn = bookshelf.Model.extend({
     tableName: 'check_in',
     hasTimestamps: true,
 
-    user: () => {
+    user: function () {
         return this.belongsTo('User', 'user_id');
     },
 
-    event: () => {
+    event: function () {
         return this.belongsTo('Event', 'event_id');
     },
 
     virtuals: {
 
         createdAt: {
-            get: () => {
+            get: function () {
                 return this.get('created_at');
             },
-            set: newDate => {
+            set: function (newDate) {
                 this.set('created_at', newDate);
             }
         },
         updatedAt: {
-            get: () => {
+            get: function () {
                 return this.get('updated_at');
             },
-            set: newDate => {
+            set: function (newDate) {
                 this.set('updated_at', newDate)
             }
         }
