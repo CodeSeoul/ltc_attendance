@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  h1 edit
+  form(method="Post" action="/events/" + event._id)
+    label(for="title") Title
+    input(type="text" name="title" id="title" value=event.title)
+    label(for="description") Description
+    textarea(type="text" name="description" id="description") #{event.description}
+    input(type="submit")

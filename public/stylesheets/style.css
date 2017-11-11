@@ -1,5 +1,5 @@
 body {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Arial', sans-serif;
   color: #333;
 }
 /********************************************/
@@ -121,6 +121,8 @@ input[type="submit"] {
 .user-profile a:hover {
   text-decoration: none;
 }
+
+
 /********************************************/
 /* user-profile-edit styles */
 /********************************************/

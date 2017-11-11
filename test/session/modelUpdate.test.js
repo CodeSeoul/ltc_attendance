@@ -1,6 +1,6 @@
 const Session = require('../../models/session');
 const CheckIn = require('../../models/checkIn');
-const Course = require('../../models/Course');
+const Event = require('../../models/Event');
 const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
@@ -11,9 +11,9 @@ describe('Session modelUpdate', () => {
   beforeEach((done) => {
     firstSession = new Session({});
     firstCheckIn = new CheckIn({});
-    sql = new Course({title: 'sql'});
+    sql = new Event({title: 'sql'});
     firstSession.checkIns = [{_id: firstCheckIn._id}];
-    firstSession.course = {_id: sql._id};
+    firstSession.event = {_id: sql._id};
 
     firstSession.save()
       .then(() => done());
@@ -21,7 +21,7 @@ describe('Session modelUpdate', () => {
   afterEach((done) => {
     Session.collection.drop();
     CheckIn.collection.drop();
-    Course.collection.drop();
+    Event.collection.drop();
     done();
   });
 
@@ -44,13 +44,13 @@ describe('Session modelUpdate', () => {
       done();
     });
   });
-  it('Should update a Session course', (done) => {
-    const ruby = new Course({title: 'ruby'});
-    firstSession.course = {_id: ruby._id};
+  it('Should update a Session event', (done) => {
+    const ruby = new Event({title: 'ruby'});
+    firstSession.event = {_id: ruby._id};
     firstSession.save()
       .then(() => Session.findOne({_id: firstSession._id}))
       .then((result) => {
-        assert(String(result.course) === String(ruby._id));
+        assert(String(result.event) === String(ruby._id));
       done();
     });
   });

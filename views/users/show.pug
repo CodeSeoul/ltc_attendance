@@ -1,6 +1,8 @@
 extends ../layout
 
 block content
+
+        
   .user-profile.col-lg-8
     .row
       .col-md-4.col-sm-12
@@ -25,7 +27,7 @@ block content
         tr
           td description
           td= user.description
-
-
-
-
+  hr
+  .text-right
+    a.btn.btn-primary(href='badge')
+      | Request Badge

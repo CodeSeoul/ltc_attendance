@@ -10,9 +10,19 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/api', (req, res) => {
+  userRepo.getUsers(users => {
+    res.send({ users: users });
+  });
+});
+
 router.get('/signup', (req, res) => {
   res.render('users/signup');
 });
+
+router.get('/badge', (req, res) => {
+  res.render('users/badge');
+})
 
 router.post('/signup', (req, res) => {
   console.log('signup...req.body')
@@ -22,13 +32,13 @@ router.post('/signup', (req, res) => {
       userRepo.createUser(req.body, cb => {
         if (cb.err) {
           const error = 'Unable to create user';
-          res.render('users/signup', {error: cb.err, course: req.body});
-        } else { 
+          res.render('users/signup', {error: cb.err, event: req.body});
+        } else {
           const success = 'to the class ' + req.body.name + '!';
           res.redirect('/users');
         }
       });
-    } else { 
+    } else {
       userRepo.createCheckIn(req.body, cb => {
         const success = 'back to class ' + req.body.name + '!';
         res.redirect('/users');

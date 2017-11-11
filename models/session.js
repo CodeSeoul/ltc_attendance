@@ -9,9 +9,9 @@ const sessionSchema = new mongoose.Schema({
       ref: 'checkIn'
     }
   ],
-  course: {
+  event: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'course'
+      ref: 'event'
     }
 });
 

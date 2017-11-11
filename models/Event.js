@@ -1,18 +1,21 @@
 const mongoose = require('mongoose');
 
-const courseSchema = new mongoose.Schema({
+const eventSchema = new mongoose.Schema({
   title: {
-    type: String, 
+    type: String,
     required: [true, 'Title is required'],
     validate: {
       validator: (title) => title.length > 1 && title.length < 100,
       message: 'Title must be valid length'
     }
   },
+  type: {
+    type: String
+  },
   description: {
-    type: String, 
+    type: String,
     validate: {
-      validator: (description) => 
+      validator: (description) =>
       description.length > 2 && description.length < 10000,
       message: 'Description must be valid length'
     }
@@ -27,6 +30,6 @@ const courseSchema = new mongoose.Schema({
   ]
 });
 
-const Course = mongoose.model('course', courseSchema)
+const Event = mongoose.model('event', eventSchema)
 
-module.exports = Course
+module.exports = Event

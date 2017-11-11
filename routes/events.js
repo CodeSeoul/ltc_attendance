@@ -1,80 +1,80 @@
 const router = require('express').Router();
-const Course = require('../models/Course')
+const Event = require('../models/Event')
 
 router.get('/', function(req, res, next) {
-  Course.find({}).sort({createdAt: -1}).exec((err, courses) => {
+  Event.find({}).sort({createdAt: -1}).exec((err, events) => {
     if (err) return console.log(err);
-    res.render('courses/index', { courses: courses });
+    res.render('events/index', { events: events });
   });
 });
 
 router.get('/create', (req, res)=>{
-  res.render('courses/create')
+  res.render('events/create')
 })
 
 router.post('/create', (req, res) => {
-  Course.create(req.body, (err, newCourse) => {
+  Event.create(req.body, (err, newEvent) => {
     console.log("this is the post request");
     if (err) {
       console.log(err);
-      res.redirect('/courses/create');
+      res.redirect('/events/create');
     } else {
-      res.redirect('/courses');
+      res.redirect('/events');
     }
   });
 });
 
 router.get('/:id', (req, res) => {
-  Course.findById(req.params.id, (err, course) => {
+  Event.findById(req.params.id, (err, event) => {
     if (err) {
       console.log(err);
       res.redirect('/');
     } else {
-      res.render('courses/show', {course: course});
+      res.render('events/show', {event: event});
     }
   });
 });
 
 router.get('/:id/edit', (req, res) => {
-  Course.findById(req.params.id, (err, course) => {
+  Event.findById(req.params.id, (err, event) => {
     console.log("in id/edit of " + req.params.id);
     if (err) {
       console.log(err);
       res.redirect('/');
     } else {
-      res.render('courses/edit', {course: course});
+      res.render('events/edit', {event: event});
     }
   });
 });
 
 router.post('/:id', (req, res) => {
-  Course.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
+  Event.findByIdAndUpdate(req.params.id, req.body, (err, result) => {
     if (err) {
       console.log(err);
       res.redirect('/');
     } else {
-      res.redirect('/courses/' + req.params.id);
+      res.redirect('/events/' + req.params.id);
     }
   });
 });
 
 router.get('/:id/checkin', (req, res) => {
-  Course.findById(req.params.id, (err, course) => {
+  Event.findById(req.params.id, (err, event) => {
     if (err) {
-      console.log(err); 
+      console.log(err);
     } else {
-      res.render('users/signup', {course: course})
+      res.render('users/signup', {event: event})
     }
   });
 });
 
 router.post('/:id/delete', (req, res) => {
-  Course.findByIdAndRemove(req.params.id, (err, result) => {
+  Event.findByIdAndRemove(req.params.id, (err, result) => {
     if (err) {
       console.log(err);
       res.redirect('/');
     } else {
-      res.redirect('/courses');
+      res.redirect('/events');
     }
   });
 });

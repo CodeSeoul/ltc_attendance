@@ -1,5 +1,5 @@
 const Session = require('../../models/session');
-const Course = require('../../models/Course');
+const Event = require('../../models/Event');
 const config = require('../config.test.js');
 const assert = require('assert');
 const mongoose = require('mongoose');
@@ -14,7 +14,7 @@ describe('Session modelDestroy', () => {
   });
   afterEach((done) => {
     Session.collection.drop();
-    Course.collection.drop();
+    Event.collection.drop();
     done();
   });
 
