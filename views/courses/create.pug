@@ -11,7 +11,7 @@ block content
         form(method="Post" action="/courses/create" data-parsley-validate="")
           div(class="form-group")
             label(for="title") Name
-            input(class="form-control" type="text" name="title" id="title" required="" data-parsley-minlength="10" data-parsley-maxlength="40")
+            input(class="form-control" type="text" name="title" id="title" required="" data-parsley-minlength="5" data-parsley-maxlength="40" data-parsley-minlength-message="Name must be longer than 5 characters.")
             label(for="description") Description
-            textarea(class="form-control" name="description" id="description" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message="Come on! You need to enter at least a 20 character comment.." data-parsley-validation-threshold="10")
+            textarea(class="form-control" name="description" id="description" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message="Description must be longer than 20 characters." data-parsley-validation-threshold="10")
             input(class="btn btn-success" type="submit")
