@@ -17,12 +17,12 @@ block content
             strong Error! #{error}          
           - }
         
-        form(method="Post" action="/users/signup" data-parsley-validate="")
+        form(method="Post" action="/users/signup")
           div(class="form-group")
             label(for="name") Username
-            input(class="form-control" type="text" name="name" data-parsley-minlength="5" data-parsley-maxlength="40" data-parsley-minlength-message="Username must be longer than 5 characters." required="")
+            input(class="form-control" type="text" name="name")
             label(for="email") Email
-            input(class="form-control" type="email" name="email" id="email" required="" data-parsley-trigger="change")
+            input(class="form-control" type="email" name="email" id="email")
             input(type="text" name="courseId" value=course._id hidden)
             input(type="text" name="courseTitle" value=course.title hidden)
             input(class="btn btn-success" type="submit")
