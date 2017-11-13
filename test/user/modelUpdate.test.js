@@ -130,20 +130,12 @@ describe('User modelUpdate', () => {
         User.where({username: 'joe'}).fetch({withRelated: 'checkIns'})
             .then(user => {
                 return user.checkIns().create({})
-                    .then(newCheckIn => {
-                        // const checkInUser = newCheckIn.user();
-                        // const relatedUser = newCheckIn.related('user');
-                        // assert(newCheckIn.user().get('id') === user.get('id'));
-                        // return newCheckIn.user();
-                        return newCheckIn.refresh({withRelated: 'user'});
+                    .then(checkIn => {
+                        return checkIn.related('user').fetch({withRelated: 'checkIns'});
                     })
-                    .then(updatedCheckIn => {
-                        assert(updatedCheckIn.user().get('id') === user.get('id'));
-                        assert(updatedCheckIn.user().checkIns().length === 2);
-                        return updatedCheckIn.user();
-                    })
-                    .then(user => {
-                        assert(user.checkIns().length === 2);
+                    .then(checkedInUser => {
+                        assert(checkedInUser.get('id') === user.get('id'));
+                        assert(checkedInUser.related('checkIns').length === 2);
                         done();
                     })
                     .catch(err => done(err));
