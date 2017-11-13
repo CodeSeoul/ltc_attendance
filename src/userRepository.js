@@ -33,8 +33,8 @@ module.exports = {
         return User.where('username', username).fetch();
     },
 
-    updateUser(id, user) {
-        return User.where('id', id).save(user, {patch: true});
+    updateUser(id, attributesToUpdate) {
+        return new User({id: id}).save(attributesToUpdate, {patch: true});
     },
 
     deleteUser(id) {

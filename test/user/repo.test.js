@@ -88,7 +88,8 @@ describe('User Repo routes', () => {
 
     it('should update existing user with updateUser()', (done) => {
         const jane = {username: 'jane', email: 'jane@mail.com', password: 'datpass'};
-        let toBeUpdated = new User({email: 'thadious@m.com'});
+        //let toBeUpdated = new User({email: 'thadious@m.com'});
+        let toBeUpdated = {email: 'thadious@m.com'};
         Repo.createUser(jane)
             .then(() => {
                 return Repo.updateUser(tad.get('id'), toBeUpdated);

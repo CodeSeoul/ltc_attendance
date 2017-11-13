@@ -22,8 +22,8 @@ module.exports = {
         return Event.where('id', id).fetch({withRelated: ['instructors', 'createdBy', 'checkIns']});
     },
 
-    updateEvent(id, event) {
-        return Event.where('id', id).save(event, {patch: true});
+    updateEvent(id, attributesToUpdate) {
+        return new Event({'id': id}).save(attributesToUpdate, {patch: true});
     },
 
     deleteEvent(id) {
