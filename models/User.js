@@ -11,6 +11,7 @@ const User = bookshelf.Model.extend({
 
     initialize: function () {
         this.on('saving', this.hashPassword, this);
+        this.on('saving', this.setDefaults, this);
     },
 
     checkIns: function () {
@@ -69,6 +70,12 @@ const User = bookshelf.Model.extend({
 
     comparePassword: function (candidatePassword) {
         return bcrypt.compare(candidatePassword, this.get('password'));
+    },
+
+    setDefaults: function (model, attrs, options) {
+        if (!attrs.level && !model.level) {
+            model.set('level', 'student');
+        }
     }
 });
 
