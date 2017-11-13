@@ -48,77 +48,91 @@ describe('User modelUpdate', () => {
     });
 
     it('Should update Username', (done) => {
-        joe.username = 'jane';
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
-            .then((result) => {
-                assert(result.username === 'jane');
+
+        User.where({username: 'joe'}).fetch()
+            .then(user => {
+                return user.save({username: 'jane'});
+            })
+            .then(user => {
+                assert(user.get('username') === 'jane');
                 done();
             })
             .catch(err => done(err));
     });
 
     it('Should update Name', (done) => {
-        joe.name = 'jane smith';
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
-            .then((result) => {
-                assert(result.name === 'jane smith');
+
+        User.where({username: 'joe'}).fetch()
+            .then(user => {
+                return user.save({name: 'jane smith'});
+            })
+            .then(user => {
+                assert(user.get('name') === 'jane smith');
                 done();
             })
             .catch(err => done(err));
     });
 
     it('Should update Email', (done) => {
-        joe.email = 'm@m.com';
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
-            .then((result) => {
-                assert(result.email === 'm@m.com');
+
+        User.where({username: 'joe'}).fetch()
+            .then(user => {
+                return user.save({email: 'm@m.com'});
+            })
+            .then(user => {
+                assert(user.get('email') === 'm@m.com');
                 done();
             })
             .catch(err => done(err));
     });
 
     it('Should update Level', (done) => {
-        joe.level = 'instructor';
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
-            .then((result) => {
-                assert(result.level === 'instructor');
+
+        User.where({username: 'joe'}).fetch()
+            .then(user => {
+                return user.save({level: 'instructor'});
+            })
+            .then(user => {
+                assert(user.get('level') === 'instructor');
                 done();
             })
             .catch(err => done(err));
     });
 
     it('Should update Website', (done) => {
-        joe.website = 'www.github.com';
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
-            .then((result) => {
-                assert(result.website === 'www.github.com');
+
+        User.where({username: 'joe'}).fetch()
+            .then(user => {
+                return user.save({website: 'www.github.com'});
+            })
+            .then(user => {
+                assert(user.get('website') === 'www.github.com');
                 done();
             })
             .catch(err => done(err));
     });
 
     it('Should update Hometown', (done) => {
-        joe.hometown = 'Capetown, South Africa';
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
-            .then((result) => {
-                assert(result.hometown === 'Capetown, South Africa');
+
+        User.where({username: 'joe'}).fetch()
+            .then(user => {
+                return user.save({hometown: 'Capetown, South Africa'});
+            })
+            .then(user => {
+                assert(user.get('hometown') === 'Capetown, South Africa');
                 done();
             })
             .catch(err => done(err));
     });
 
     it('Should update Description', (done) => {
-        joe.description = 'I like to play guitar';
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
-            .then((result) => {
-                assert(result.description === 'I like to play guitar');
+
+        User.where({username: 'joe'}).fetch()
+            .then(user => {
+                return user.save({description: 'I like to play guitar'});
+            })
+            .then(user => {
+                assert(user.get('description') === 'I like to play guitar');
                 done();
             })
             .catch(err => done(err));
