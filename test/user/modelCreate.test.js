@@ -105,12 +105,15 @@ describe('User modelCreate', () => {
     });
 
     it('Should be able to set CheckIns', (done) => {
-        const firstCheckIn = new CheckIn({});
-        joe.checkIns.push(firstCheckIn);
-        joe.save()
-            .then(() => User.where({id: joe.id}).fetch())
+        const firstCheckIn = new CheckIn();
+        firstCheckIn.save()
+            .then(savedCheckIn => {
+                return joe.checkIns().create(savedCheckIn);
+            })
+            .then(updatedUser => User.where({id: joe.get('id')}).fetch({withRelated: 'checkIns'}))
             .then(result => {
-                assert(String(result.checkIns) === String(firstCheckIn.id));
+                assert(result.related('checkIns').length === 1);
+                assert(result.related('checkIns').at(0).get('id') === firstCheckIn.get('id'));
                 done()
             })
             .catch(err => done(err));

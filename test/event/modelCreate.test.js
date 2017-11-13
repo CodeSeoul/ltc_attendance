@@ -63,9 +63,10 @@ describe('Event modelCreate', () => {
         done();
     });
 
+    // TODO: verify test is valid. I think maybe it should be failing
     it('Should be able to set CreatedBy', (done) => {
         const joe = new User();
-        baseEvent.instructors().push({id: joe.id});
+        baseEvent.instructors().push({id: joe.get('id')});
         baseEvent.save()
             .then(() => Event.where({title: 'Test Event'}).fetch())
             .then(result => {
