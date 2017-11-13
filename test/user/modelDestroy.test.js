@@ -28,12 +28,17 @@ describe('User modelDestroy', () => {
             password: 'otherpass'
         });
         jane.save()
-            .then(() => new User({id: joe.id}.destroy()))
-            .then(() => User.fetchAll())
+            .then(() => {
+                return User.where({username: 'joe'}).fetch();
+            })
+            .then(user => {
+                user.destroy();
+            })
+            .then(() => User.forge().fetchAll())
             .then(results => {
                 assert(results.length === 1);
-                assert(results[0].id === jane.id);
-                done()
+                assert(results.at(0).get('username') === 'jane');
+                done();
             })
             .catch(err => done(err));
     });
