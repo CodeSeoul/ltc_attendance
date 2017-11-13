@@ -35,10 +35,9 @@ describe('Event modelCreate', () => {
     });
 
     it('Should be able to set Event Description', (done) => {
-        baseEvent.description = "beginner sql";
-        baseEvent.save()
+        baseEvent.save({description: 'beginner sql'})
             .then(result => {
-                assert(result.description === "beginner sql");
+                assert(result.get('description') === 'beginner sql');
                 done();
             })
             .catch(err => {
@@ -47,8 +46,7 @@ describe('Event modelCreate', () => {
     });
 
     it('Should be able to set Event Type', (done) => {
-        baseEvent.type = 'Workshop';
-        baseEvent.save()
+        baseEvent.save({type: 'Workshop'})
             .then(() => Event.where({title: 'Test Event'}).fetch())
             .then(result => {
                 assert(result.get('type') === 'Workshop');

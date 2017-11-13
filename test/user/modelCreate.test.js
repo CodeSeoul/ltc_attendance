@@ -33,72 +33,74 @@ describe('User modelCreate', () => {
     });
 
     it('Should be able to set Username', (done) => {
-        joe.username = 'joe';
-        joe.save()
+        joe.save({username: 'joe'})
             .then(result => {
-                assert(result.username === 'joe');
+                assert(result.get('username') === 'joe');
+                done()
+            })
+            .catch(err => done(err));
+    });
+
+    it('Should hash password', (done) => {
+        joe.save({password: 'newpass'})
+            .then(result => {
+                assert(result.get('password') !== 'newpass');
+                return result.comparePassword('newpass');
+            })
+            .then(result => {
+                assert(result);
                 done()
             })
             .catch(err => done(err));
     });
 
     it('Should be able to set Name', (done) => {
-        joe.name = 'joe billy bob';
-        joe.save()
+        joe.save({name: 'joe billy bob'})
             .then(result => {
-                assert(result.name === 'joe billy bob');
+                assert(result.get('name') === 'joe billy bob');
                 done()
             })
             .catch(err => done(err));
     });
 
     it('Should be able to set Description', (done) => {
-        joe.description = 'I like to surf';
-        joe.save()
+        joe.save({description: 'I like to surf'})
             .then(result => {
-                assert(result.description === 'I like to surf');
+                assert(result.get('description') === 'I like to surf');
                 done()
             })
             .catch(err => done(err));
     });
 
     it('Should be able to set Email', (done) => {
-        joe.email = 'mail@mail.com';
-        joe.save()
+        joe.save({email: 'mail@mail.com'})
             .then(result => {
-                assert(result.email === 'mail@mail.com');
+                assert(result.get('email') === 'mail@mail.com');
                 done()
             })
             .catch(err => done(err));
     });
 
     it('Should be able to set Hometown', (done) => {
-        joe.hometown = 'Detroit';
-        joe.save()
+        joe.save({hometown: 'Detroit'})
             .then(result => {
-                assert(result.hometown === 'Detroit');
+                assert(result.get('hometown') === 'Detroit');
                 done()
             })
             .catch(err => done(err));
     });
 
     it('Should be able to set Website', (done) => {
-        joe.website = 'mail.com';
-        joe.save()
+        joe.save({website: 'mail.com'})
             .then(result => {
-                assert(result.website === 'mail.com');
+                assert(result.get('website') === 'mail.com');
                 done()
             })
             .catch(err => done(err));
     });
 
     it('Should set Level to student by default', (done) => {
-        assert(joe.level === 'student');
-        done()
-    });
-
-    it('Should set Hometown to hometown by default', (done) => {
-        assert(joe.hometown === 'hometown');
+        assert(joe.get('level') === 'student');
         done()
     });
 
