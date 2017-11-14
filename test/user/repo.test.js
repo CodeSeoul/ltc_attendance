@@ -1,99 +1,122 @@
-const config = require('../config.test.js')
+require('../test_helper.test');
+const knex = require('../../config/bookshelf').knex;
 const Repo = require('../../src/userRepository');
-const User = require('../../models/User');
+const User = require('../../models/User').User;
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const mongoose = require('mongoose');
-const should = chai.should();
 chai.use(chaiHttp);
-
-mongoose.connect(config.MONGODB_URI)
+const expect = chai.expect;
 
 describe('User Repo routes', () => {
-  let joe;
+    let joe, tad;
 
-  beforeEach( (done) => {
-    joe = new User({
-      name: 'joe',
-      email: 'joe@mail.com'
-    });
-
-    tad = new User({
-      name: 'tad',
-      email: 'tad@mail.com'
-    });
-
-    joe.save( () => {
-      tad.save( () => {
-        done();
-      });
-    });
-  });
-
-  afterEach( (done) => {
-    User.collection.drop();
-    done();
-  });
-
-  it('should list all users with getUsers()', (done) => {
-    Repo.getUsers(users => {
-      const sortedUsers = users.sort(function(a, b) {
-        if (a.name.toUpperCase() < b.name.toUpperCase()) return -1;
-        if (a.name.toUpperCase() > b.name.toUpperCase()) return 1;
-        return 0;
-      });
-      sortedUsers.should.be.a('array');
-      sortedUsers[0].should.have.property('_id');
-      sortedUsers[0].should.have.property('name').eql('joe');
-      sortedUsers[0].should.have.property('email').eql('joe@mail.com');
-      sortedUsers[0].should.have.property('level').eql('student');
-      sortedUsers.length.should.be.eql(2);
-      done();
-    });
-  });
-
-  it('should add new user with createUser()', (done) => {
-    const jane = new User({name: 'jane', email: 'jane@mail.com'});
-    Repo.createUser(jane, newUser => {
-      newUser.res.should.have.property('name').eql('jane');
-      newUser.res.should.have.property('email').eql('jane@mail.com');
-      Repo.getUsers(users => {
-        users.should.be.a('array');
-        users.length.should.be.eql(3);
-        done();
-      });
-    });
-  });
-
-  it('should list single user with getUser()', (done) => {
-    Repo.getUser(joe._id, result => {
-      result.should.have.property('name').eql('joe');
-      done()
-    });
-  });
-
-  it('should update existing user with updateUser()', (done) => {
-    const jane = new User({name: 'jane', email: 'jane@mail.com'});
-    let toBeUpdated = {email: 'thadious@m.com'}
-    Repo.createUser(jane, newUser => {
-      Repo.updateUser(tad._id, toBeUpdated, result => {
-        Repo.getUser(tad._id, user => {
-          user.email.should.be.equal('thadious@m.com');
-          done();
+    beforeEach((done) => {
+        joe = new User({
+            username: 'joe',
+            email: 'joe@mail.com',
+            password: 'somepass'
         });
-      })
-    });
-  });
 
-  it('should delete existing user with deleteUser()', (done) => {
-    Repo.getUsers(users => {
-      users.length.should.be.eql(2);
-      Repo.deleteUser(joe._id, result => {
-        Repo.getUsers(users => {
-          users.length.should.be.eql(1);
-          done();
+        tad = new User({
+            username: 'tad',
+            email: 'tad@mail.com',
+            password: 'otherpass'
         });
-      });
+
+        joe.save()
+            .then(() => {
+                return tad.save();
+            })
+            .then(() => {
+                done();
+            })
+            .catch(err => done(err));
     });
-  });
+
+    afterEach((done) => {
+        knex('user').truncate()
+            .then(() => done());
+    });
+
+    it('should list all users with getUsers()', (done) => {
+        Repo.getUsers()
+            .then(users => {
+                const sortedUsers = users.models.sort(function (a, b) {
+                    if (a.get('username').toUpperCase() < b.get('username').toUpperCase()) return -1;
+                    if (a.get('username').toUpperCase() > b.get('username').toUpperCase()) return 1;
+                    return 0;
+                });
+                expect(sortedUsers).to.be.a('array');
+                expect(sortedUsers.length).to.be.eql(2);
+                expect(sortedUsers[0].toJSON()).to.have.property('id');
+                expect(sortedUsers[0].toJSON()).to.have.property('username').eql('joe');
+                expect(sortedUsers[0].toJSON()).to.have.property('email').eql('joe@mail.com');
+                expect(sortedUsers[0].toJSON()).to.have.property('level').eql('student');
+                return sortedUsers[0].comparePassword('somepass');
+            })
+            .then(isMatch => {
+                expect(isMatch).to.eql(true);
+                done();
+            })
+            .catch(err => done(err));
+    });
+
+    it('should add new user with createUser()', (done) => {
+        const jane = {username: 'jane', email: 'jane@mail.com', password: 'roflcopter'};
+        Repo.createUser(jane)
+            .then(newUser => {
+                expect(newUser.toJSON()).to.have.property('username').eql('jane');
+                expect(newUser.toJSON()).to.have.property('email').eql('jane@mail.com');
+                return Repo.getUsers();
+            })
+            .then(users => {
+                expect(users.models).to.be.a('array');
+                expect(users.length).to.be.eql(3);
+                done();
+            })
+            .catch(err => done(err));
+    });
+
+    it('should list single user with getUser()', (done) => {
+        Repo.getUser(joe.get('id'))
+            .then(result => {
+                expect(result.toJSON()).to.have.property('username').eql('joe');
+                done()
+            })
+            .catch(err => done(err));
+    });
+
+    it('should update existing user with updateUser()', (done) => {
+        const jane = {username: 'jane', email: 'jane@mail.com', password: 'datpass'};
+        //let toBeUpdated = new User({email: 'thadious@m.com'});
+        let toBeUpdated = {email: 'thadious@m.com'};
+        Repo.createUser(jane)
+            .then(() => {
+                return Repo.updateUser(tad.get('id'), toBeUpdated);
+            })
+            .then(() => {
+                return Repo.getUser(tad.get('id'));
+            })
+            .then(user => {
+                expect(user.toJSON()).to.have.property('email').eql('thadious@m.com');
+                done();
+            })
+            .catch(err => done(err));
+    });
+
+    it('should delete existing user with deleteUser()', (done) => {
+        Repo.getUsers()
+            .then(users => {
+                expect(users.length).to.eql(2);
+                return Repo.deleteUser(joe.get('id'));
+            })
+            .then(() => {
+                return Repo.getUsers()
+            })
+            .then(users => {
+                expect(users.length).to.eql(1);
+                done();
+            })
+            .catch(err => done(err));
+    });
 });

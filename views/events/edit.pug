@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  h1 edit
+  form(method="Post" action="/events/" + events.get('id'))
+    label(for="title") Title
+    input(type="text" name="title" id="title" value=events.get('title'))
+    label(for="description") Description
+    textarea(type="text" name="description" id="description") #{events.get('description')}
+    input(type="submit")

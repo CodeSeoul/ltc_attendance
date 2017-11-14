@@ -1,31 +1,33 @@
 extends ../layout
 
 block content
-  .user-profile.col-lg-8
-    .row
-      .col-md-4.col-sm-12
-        img(src='http://via.placeholder.com/180')
-      .col-sm-4
-        h1= user.name
-        h4= user.hometown
-      .col-sm-2
-        a(href="/users/" + user._id + "/edit") edit
-      hr
-      p checkins:  #{user.checkIns.length}
-      table.col-sm-8.offset-sm-4
-        tr
-          td level
-          td= user.level
-        tr
-          td email
-          td= user.email
-        tr
-          td website
-          td= user.website
-        tr
-          td description
-          td= user.description
-
-
-
-
+    .user-profile.col-lg-8
+        .row
+            .col-md-4.col-sm-12
+                img(src='http://via.placeholder.com/180')
+            .col-sm-4
+                h1= user.get('username')
+                h4= user.get('hometown')
+            if authedUser && (authedUser.get('id') === user.get('id') || authedUser.get('level') === 'admin')
+                .col-sm-2
+                    a(href="/users/" + user.get('id') + "/edit") edit
+            hr
+            p checkins: #{user.get('countCheckIns')}
+            table.col-sm-8.offset-sm-4
+                tr
+                    td level
+                    td= user.get('level')
+                if authedUser
+                    tr
+                        td email
+                        td= user.get('email')
+                tr
+                    td website
+                    td= user.get('website')
+                tr
+                    td description
+                    td= user.get('description')
+    hr
+    .text-right
+        a.btn.btn-primary(href='badge')
+            | Request Badge

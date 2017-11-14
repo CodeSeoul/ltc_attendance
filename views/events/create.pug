@@ -1,0 +1,29 @@
+extends ../layout
+
+block content
+
+    div(class="container form")
+        div(class="row")
+            div(class="col-md-2")
+            div(class="col-md-8")
+                h2 Register a new event
+
+                form(method="Post" action="/events/create")
+                    div(class="form-group")
+                        label(for="title") Name
+                        input(class="form-control" type="text" name="title" id="title")
+                        label(for="type") Type
+                        input(type="hidden" name="type" id="type")
+                        div(class="dropdown")
+                            button(class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Select
+                            div(class="dropdown-menu" aria-labelledby="dropdownMenuButton")
+                                a(class="dropdown-item" href="#") Event
+                                a(class="dropdown-item" href="#") Workshop
+                                a(class="dropdown-item" href="#") Study Group
+                                a(class="dropdown-item" href="#") Hack Night
+                                a(class="dropdown-item" href="#") Special Event
+                        label(for="description") Description
+                        textarea(class="form-control" name="description" id="description")
+                        input(class="btn btn-success" type="submit")
+
+  

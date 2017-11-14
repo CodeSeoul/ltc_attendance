@@ -1,14 +1,21 @@
-const mongoose = require('mongoose');
-const config = require('./config.test.js')
+const bookshelfSetup = require('../config/bookshelf');
 
-mongoose.set('debug', true);
-mongoose.createConnection(config.MONGODB_URI);
+bookshelfSetup.configureBookshelf('dev');
+bookshelfSetup.initializeDevDb();
 
-mongoose.Promise = global.Promise;
-
-beforeEach((done) => {
-  const { users, courses } = mongoose.connection.collections;
-  users.drop(() => {
-    courses.drop(() => done());
-  });
+beforeEach(done => {
+    const knex = bookshelfSetup.knex;
+    knex('check_in').truncate()
+        .then(() => {
+            knex('event_instructor').truncate();
+        })
+        .then(() => {
+            knex('event').truncate();
+        })
+        .then(() => {
+            knex('user').truncate();
+        })
+        .then(() => {
+            done();
+        });
 });

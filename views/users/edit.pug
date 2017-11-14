@@ -7,7 +7,7 @@ block content
         .col-md-2
         .col-md-8
           
-          form(method="Post" action="/users/" + user._id)
+          form(method="Post" action="/users/" + user.get('id'))
             .form-group
               label(for="name") Name
               input(
@@ -15,7 +15,7 @@ block content
                 type="text" 
                 name="name" 
                 id="name" 
-                value=user.name)
+                value=user.get('username'))
 
               label(for="email") Email
               input(
@@ -23,7 +23,7 @@ block content
                 type="email"
                 name="email"
                 id="email"
-                value=user.email)
+                value=user.get('email'))
 
               label(for="hometown") Hometown
               input(
@@ -31,7 +31,7 @@ block content
                 type="text"
                 name="hometown"
                 id="hometown"
-                value=user.hometown)
+                value=user.get('hometown'))
 
               label(for="website") Website
               input(
@@ -39,14 +39,14 @@ block content
                 type="text"
                 name="website"
                 id="website"
-                value=user.website)
+                value=user.get('website'))
 
               label(for="description") Description
               textarea(
                 class="form-control" 
                 name="description"
-                id="description") #{user.description}
+                id="description") #{user.get('description')}
               input(class="btn btn-success" type="submit")
-              form(method="Post" action="/users/" + user._id + "/delete") 
+              form(method="Post" action="/users/" + user.get('id') + "/delete")
                   input(type="submit" id="delete-user" value="")
         .col-md-2

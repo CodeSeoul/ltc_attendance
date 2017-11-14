@@ -1,60 +1,89 @@
-const mongoose = require('mongoose')
-const validator = require('validator');
-const uniqueValidator = require('mongoose-unique-validator')
+const bookshelf = require('../config/bookshelf').bookshelf;
+const bcrypt = require('bcrypt');
+const SALT_WORK_FACTOR = 10;
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    validate: {
-      validator: (name) => name.length > 2 && name.length < 100,
-      message: 'Name must be valid length'
+// TODO: Add validations
+const User = bookshelf.Model.extend({
+
+    tableName: 'user',
+    hasTimestamps: true,
+    hidden: ['password'],
+
+    initialize: function () {
+        this.on('saving', this.hashPassword, this);
+        this.on('saving', this.setDefaults, this);
+    },
+
+    checkIns: function () {
+        return this.hasMany('CheckIn', 'user_id');
+    },
+
+    instructingEvents: function () {
+        return this.belongsToMany('Event', 'event_instructor', 'user_id');
+    },
+
+    createdEvents: function () {
+        return this.hasMany('Event', 'created_by');
+    },
+
+    virtuals: {
+        countCheckIns: function () {
+            // this property exists due our query in userRepository
+            return this.get('check_in_count');
+        },
+        createdAt: {
+            get: function () {
+                return this.get('created_at');
+            },
+
+            set: function (newDate) {
+                this.set('created_at', newDate);
+            }
+        },
+        updatedAt: {
+            get: function () {
+                return this.get('updated_at');
+            },
+
+            set: function (newDate) {
+                this.set('updated_at', newDate);
+            }
+        }
+    },
+
+    // https://wesleytsai.io/2015/07/28/bookshelf-bcrpyt-password-hashing/
+    hashPassword: function (model, attrs, options) {
+        return new Promise((resolve, reject) => {
+            if (!model.hasChanged('password')) return resolve(model.get('password'));
+
+            bcrypt.hash(model.get('password'), SALT_WORK_FACTOR)
+                .then(hashedPassword => {
+                    model.set('password', hashedPassword);
+                    resolve(hashedPassword);
+                })
+                .catch(err => {
+                    console.log('Error salting and hashing password:', err);
+                    reject(err);
+                });
+        });
+    },
+
+    comparePassword: function (candidatePassword) {
+        return bcrypt.compare(candidatePassword, this.get('password'));
+    },
+
+    setDefaults: function (model, attrs, options) {
+        if (!attrs.level && !model.level) {
+            model.set('level', 'student');
+        }
     }
-  },
-  email: { 
-    type: String, 
-    unique: [true, 'Email must be unique'],
-    validate: {
-      validator: (email) => validator.isEmail(email),
-      message: 'Email must be valid'
-    }
-  },
-  level: { 
-    type: String, 
-    default: 'student',
-    enum: ['student', 'instructor', 'admin']
-  },
-  website: {
-    type: String,
-    validate: {
-      validator: (website) => validator.isURL(website),
-      message: 'Website must be valid url'
-    }
-  },
-  hometown: {
-    type: String,
-    default: 'hometown',
-    validate: {
-      validator: (hometown) => hometown.length < 100,
-      message: 'Hometown must be less than 100 characters'
-    }
-  },
-  description: {
-    type: String,
-    validate: {
-      validator: (description) => description.length < 1000,
-      message: 'Description must be less than 1000 characters'
-    }
-  },
-  checkIns: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'checkIn'
-    }
-  ]
 });
 
-userSchema.plugin(uniqueValidator);
+const Users = bookshelf.Collection.extend({
+    model: User
+});
 
-const User = mongoose.model('user', userSchema)
-
-module.exports = User;
+module.exports = {
+    User: bookshelf.model('User', User),
+    Users: Users
+};

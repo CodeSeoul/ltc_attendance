@@ -2,43 +2,66 @@
 
 
 # Learn Teach Code Attendance Tracker
-## Track Attendance
+This is a tool to help Learn Teach Code track and manage attendance to meetup events.
 
-## Award Badges
+See Issues for the features we're working on.
 
-## Display Leaderboard
+The application is not yet ready for production, but the core features of event creation and attendance marking are there. 
 
-## Basic live messaging
+## Setup instructions
 
-Collections ->
+We'll assume you have no experience with NodeJS or the ecosystem.
+### Mac
+1. [Install brew](https://brew.sh/)
+    * `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+2. [Install NodeJS](https://nodejs.org/en/download/package-manager/#macos)
+    * `brew install node`
+3. Update SQLite3
+    * `brew install sqlite3`
+4. Install dependencies
+    * In the project directory, `npm install`
+5. Setup config files
+    1. Copy config/database.template.js to config/database.dev.js
+    2. Remove HOST, USER, PASSWORD, DATABASE (Optional, but cleaner)
+6. Run in dev mode
+    * `npm run dev`
 
-[Users]
--_id
--email
--level
--name (optional)
+The server runs on port 3000, so you can visit it at [`http://localhost:3000`](http://localhost:3000)
 
-[UsersClasses]
--_id
--user_id
--course_id
--date
-
-[Lecture]
--_id
--course_id
--time
--location
--url
-
-[Course]
--_id
--title
--description
-
-## Testing instructions
-testing database is set to mongodb://localhost/test-database
-so mongo needs to be running in order to run tests
+## Testing
 
 npm test           => runs all tests once
 npm run test-watch => runs all tests each time a change is saved
+
+
+
+## Application Design
+### Collections
+#### Users
+* id
+* username
+* password
+* email
+* level
+* name (optional)
+* website
+* hometown
+* description
+* checkIns
+* createdAt
+* updatedAt
+
+#### Event
+* id
+* title
+* description
+* instructors
+* createdAt
+* updatedAt
+
+#### CheckIn
+* id
+* user
+* event
+* createdAt
+* updatedAt

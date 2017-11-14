@@ -1,4 +1,4 @@
 language: node_js
 node_js: '7'
-services:
-  - mongodb
+before_script:
+  - cp config/database.template.js config/database.dev.js
