@@ -31,6 +31,7 @@
     "passport-local": "~0.1.6",
     "pg": "^7.3.0",
     "pug": "~2.0.0-beta11",
+    "requirejs": "^2.3.5",
     "serve-favicon": "~2.4.2",
     "validator": "^8.0.0"
   },
