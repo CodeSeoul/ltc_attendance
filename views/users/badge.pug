@@ -1,0 +1,44 @@
+extends ../layout
+
+block content
+  
+  .container
+    .row
+      .col-sm-6
+        h1 Request a Badge | 
+          .span.badge.badge-pill.badge-default#exampleButton Example
+    
+    
+        form(method="Post" action="users/badge")
+          div(class="form-group")
+            label(for="type") Badge Type
+            input(type="hidden" name="type" id="type")
+            div(class="dropdown")
+              button(class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") Select
+              div(class="dropdown-menu" aria-labelledby="dropdownMenuButtonUser")
+                a(class="dropdown-item" href="#") Angular
+                a(class="dropdown-item" href="#") Back-End
+                a(class="dropdown-item" href="#") C
+                a(class="dropdown-item" href="#") C#
+                a(class="dropdown-item" href="#") C++
+                a(class="dropdown-item" href="#") C(Objective)
+                a(class="dropdown-item" href="#") CSS
+                a(class="dropdown-item" href="#") Front-End  
+                a(class="dropdown-item" href="#") Full-Stack
+                a(class="dropdown-item" href="#") Git
+                a(class="dropdown-item" href="#") Full-Stack
+                a(class="dropdown-item" href="#") Java
+                a(class="dropdown-item" href="#") JavaScript
+                a(class="dropdown-item" href="#") Node.js
+                a(class="dropdown-item" href="#") React.js
+                a(class="dropdown-item" href="#") PHP
+                a(class="dropdown-item" href="#") Python
+                a(class="dropdown-item" href="#") Ruby
+                a(class="dropdown-item" href="#") Ruby on Rails
+                a(class="dropdown-item" href="#") SaSS
+                a(class="dropdown-item" href="#") Scala
+                a(class="dropdown-item" href="#") Shell
+                a(class="dropdown-item" href="#") SQL
+                a(class="dropdown-item" href="#") Swift
+            label(for="info") Additional Information
+            textarea(class="form-control" name="info" id="info")

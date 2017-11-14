@@ -21,6 +21,10 @@ router.get('/signup', (req, res) => {
     res.render('users/signup');
 });
 
+router.get('/badge', (req, res) => {
+    res.render('users/badge');
+})
+
 router.post('/signup', passport.authenticate('local-signup', {
     successRedirect: '/events',
     failureRedirect: '/users/signup',
