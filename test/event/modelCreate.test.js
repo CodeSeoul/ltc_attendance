@@ -1,7 +1,7 @@
 require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
-const Event = require('../../models/Event').Event;
-const User = require('../../models/User').User;
+const Event = require('../../models/event').Event;
+const User = require('../../models/user').User;
 const moment = require('moment');
 const assert = require('assert');
 

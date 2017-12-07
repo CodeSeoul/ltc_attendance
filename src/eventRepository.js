@@ -1,4 +1,4 @@
-const Event = require('../models/Event').Event;
+const Event = require('../models/event').Event;
 
 module.exports = {
     getEvents() {

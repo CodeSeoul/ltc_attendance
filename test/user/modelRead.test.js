@@ -1,5 +1,5 @@
 require('../test_helper.test');
-const User = require('../../models/User').User;
+const User = require('../../models/user').User;
 const assert = require('assert');
 
 describe('User modelRead', () => {

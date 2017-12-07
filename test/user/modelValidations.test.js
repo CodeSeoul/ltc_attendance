@@ -1,5 +1,5 @@
 require('../test_helper.test');
-const User = require('../../models/User');
+const User = require('../../models/user');
 const assert = require('assert');
 
 // TODO: validations

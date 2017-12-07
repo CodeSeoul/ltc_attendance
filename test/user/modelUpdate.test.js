@@ -1,8 +1,8 @@
 require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
-const User = require('../../models/User').User;
+const User = require('../../models/user').User;
 const CheckIn = require('../../models/checkIn').CheckIn;
-const Event = require('../../models/Event').Event;
+const Event = require('../../models/event').Event;
 const assert = require('assert');
 
 describe('User modelUpdate', () => {

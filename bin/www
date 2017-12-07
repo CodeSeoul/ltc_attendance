@@ -10,7 +10,7 @@ const http = require('http');
 /**
  * Get port from environment and store in Express.
  */
-let port = normalizePort(process.env.PORT || '3000');
+const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
@@ -79,7 +79,7 @@ function onError(error) {
  */
 
 function onListening() {
-    let addr = server.address();
+    const addr = server.address();
     const bind = typeof addr === 'string'
         ? 'pipe ' + addr
         : 'port ' + addr.port;

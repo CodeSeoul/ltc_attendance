@@ -1,5 +1,5 @@
 require('../test_helper.test');
-const Event = require('../../models/Event').Event;
+const Event = require('../../models/event').Event;
 const assert = require('assert');
 
 // TODO: validations

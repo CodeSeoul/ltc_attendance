@@ -1,5 +1,5 @@
 const LocalStrategy = require('passport-local').Strategy;
-const User = require('../models/User').User;
+const User = require('../models/user').User;
 const userRepo = require('../src/userRepository');
 
 module.exports = (passport) => {
@@ -9,7 +9,7 @@ module.exports = (passport) => {
         },
         (req, username, password, done) => {
             console.log('local strategy call invoked');
-            const user = userRepo.getUserByUsername(username)
+            const user = userRepo.getUserByUsername(username);
 
             const passwordCompare = user.then(u => {
                 console.log('password compare user then promise');
@@ -63,7 +63,6 @@ module.exports = (passport) => {
                     if (newUser instanceof User) {
                         return done(null, newUser);
                     } else {
-                        ;
                         return newUser;
                     }
                 })

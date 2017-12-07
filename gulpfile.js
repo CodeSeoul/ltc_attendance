@@ -1,5 +1,5 @@
-var gulp = require('gulp')
-var cleancss = require('gulp-clean-css')
+const gulp = require('gulp');
+const cleancss = require('gulp-clean-css');
 
 gulp.task('css', function() {
   return gulp.src("public/stylesheets/style.css")

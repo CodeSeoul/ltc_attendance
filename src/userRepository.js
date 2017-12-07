@@ -1,5 +1,5 @@
-const User = require('../models/User').User;
-const Users = require('../models/User').Users;
+const User = require('../models/user').User;
+const Users = require('../models/user').Users;
 
 module.exports = {
     getUsers() {
@@ -22,10 +22,6 @@ module.exports = {
 
     getUser(id) {
         return User.where('id', id).fetch();
-    },
-
-    getUserByEmail(email) {
-        return User.where('email', email).fetch();
     },
 
     getUserByUsername(username) {

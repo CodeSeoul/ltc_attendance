@@ -1,7 +1,7 @@
 require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
 const Repo = require('../../src/userRepository');
-const User = require('../../models/User').User;
+const User = require('../../models/user').User;
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 chai.use(chaiHttp);

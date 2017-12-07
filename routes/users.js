@@ -23,7 +23,7 @@ router.get('/signup', (req, res) => {
 
 router.get('/badge', (req, res) => {
     res.render('users/badge');
-})
+});
 
 router.post('/signup', passport.authenticate('local-signup', {
     successRedirect: '/events',
