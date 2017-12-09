@@ -75,3 +75,7 @@ Session.vim
 tags
 
 # End of https://www.gitignore.io/api/node
+.idea/
+config/database.dev.js
+config/database.prod.js
+*.sqlite

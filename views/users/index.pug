@@ -1,23 +1,19 @@
 extends ../layout
 
 block content
-  h1 Leaderboard
+    h1 Leaderboard
 
-  .container.leaderboard
-    for user in users
-      a(href="/users/" + user._id) 
-        .container.leader
-          img(src="http://via.placeholder.com/60" alt="profile image")
-          h2= user.name
-          if user.hometown
-            h4= user.hometown.toUpperCase()
-          h3.counter= user.checkIns.length
-          h3 Check Ins 
-          if user.level === 'teacher'
-            p.teacher= user.level
-          else 
-            p= user.level
-
-
-    
-
+    .container.leaderboard
+        for user in users
+            a(href="/users/" + user.get('id'))
+                .container.leader
+                    img(src="http://via.placeholder.com/60" alt="profile image")
+                    h2= user.get('username')
+                    if user.get('hometown')
+                        h4= user.get('hometown').toUpperCase()
+                    h3.counter= user.get('countCheckIns')
+                    h3 Check Ins
+                    if user.get('level') === 'teacher'
+                        p.teacher= user.get('level')
+                    else
+                        p= user.get('level')

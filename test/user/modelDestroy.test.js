@@ -1,32 +1,45 @@
-const User = require('../../models/User');
-const Course = require('../../models/Course');
-const config = require('../config.test.js');
+require('../test_helper.test');
+const knex = require('../../config/bookshelf').knex;
+const User = require('../../models/user').User;
 const assert = require('assert');
-const mongoose = require('mongoose');
 
 describe('User modelDestroy', () => {
-  let joe;
+    let joe;
 
-  beforeEach((done) => {
-    joe = new User({});
-    joe.save()
-      .then(() => done());
-  });
-  afterEach((done) => {
-    User.collection.drop();
-    Course.collection.drop();
-    done();
-  });
+    beforeEach((done) => {
+        joe = new User({
+            username: 'joe',
+            password: 'mypass'
+        });
+        joe.save()
+            .then(() => done())
+            .catch(err => done(err));
+    });
+    afterEach((done) => {
+        knex('user').truncate()
+            .then(() => knex('event').truncate())
+            .then(() => done())
+            .catch(err => done(err))
+    });
 
-  it('Should destroy User recorde', (done) => {
-    const jane = new User({})
-      jane.save()
-      .then(() => User.remove({_id: joe._id}))
-      .then(() => User.find({}))
-      .then((results) => {
-        assert(results.length === 1);
-        assert(String(results[0]._id) === String(jane._id));
-        done()
-      });
-  });
+    it('Should destroy User record', (done) => {
+        const jane = new User({
+            username: 'jane',
+            password: 'otherpass'
+        });
+        jane.save()
+            .then(() => {
+                return User.where({username: 'joe'}).fetch();
+            })
+            .then(user => {
+                user.destroy();
+            })
+            .then(() => User.forge().fetchAll())
+            .then(results => {
+                assert(results.length === 1);
+                assert(results.at(0).get('username') === 'jane');
+                done();
+            })
+            .catch(err => done(err));
+    });
 });

@@ -1,17 +1,20 @@
-const User = require('../../models/User');
-const config = require('../config.test.js');
+require('../test_helper.test');
+const User = require('../../models/user').User;
 const assert = require('assert');
-const mongoose = require('mongoose');
 
 describe('User modelRead', () => {
 
-  it('Should find a User record by _id', (done) => {
-    const joe = new User({})
-    joe.save()
-      .then(() => User.findOne({_id: joe._id}))
-    .then((result) => {
-      assert(String(result._id) === String(joe._id));
-      done();
+    it('Should find a User record by _id', (done) => {
+        const joe = new User({
+            username: 'joe',
+            password: 'mypass'
+        });
+        joe.save()
+            .then(() => User.where({id: joe.id}).fetch())
+            .then(result => {
+                assert(String(result.id) === String(joe.id));
+                done();
+            })
+            .catch(err => done(err));
     });
-  });
 });
