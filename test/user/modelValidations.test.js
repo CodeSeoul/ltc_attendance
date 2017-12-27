@@ -11,7 +11,8 @@ describe('User modelValidations', () => {
         joe = new User({
             username: 'joe',
             email: 'mail@mail.com',
-            password: 'mypass'
+            password: 'mypass',
+            level: 'student'
         });
         joe.save()
             .then(() => done())
@@ -28,7 +29,7 @@ describe('User modelValidations', () => {
     });
 
     it('Should require unique email', (done) => {
-        new User({username: 'jane', email: 'mail@mail.com', password: 'otherpass'})
+        new User({username: 'jane', email: 'mail@mail.com', password: 'otherpass', level: 'student'})
             .save()
             .then(() => {
                 assert.fail('Should not allow saving a duplicate email');
@@ -43,18 +44,21 @@ describe('User modelValidations', () => {
     });
 
     it('Should require valid email', (done) => {
-        const jane = new User({
+        new User({
             username: 'jane',
-            email: 'mm.'
+            email: 'mm.',
+            password: 'lol',
+            level: 'student'
         }).save()
             .then(() => {
-
+                assert.fail('Should not permit an invalid email address');
                 done()
             })
             .catch(err => {
-                const validationResult = jane.validateSync();
-                const message = validationResult.errors.email.message;
-                assert(message === 'Email must be valid');
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The email must be a valid email address');
+                });
                 done()
             });
 

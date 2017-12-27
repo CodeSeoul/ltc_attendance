@@ -12,7 +12,8 @@ describe('User modelUpdate', () => {
         joe = new User({
             username: 'joe',
             email: 'mail@mail.com',
-            password: 'mypass'
+            password: 'mypass',
+            level: 'student'
         });
         joe.save()
             .then(user => {

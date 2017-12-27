@@ -3,18 +3,17 @@ const bcrypt = require('bcrypt');
 const CheckIt = require('checkit');
 
 const SALT_WORK_FACTOR = 10;
-;
 
 const User = bookshelf.Model.extend({
 
     tableName: 'user',
     hasTimestamps: true,
-    hidden: ['password'],
+    // hidden: ['password'], TODO: best way to hide + validate
 
     initialize: function () {
+        this.on('saving', this.validateSave, this);
         this.on('saving', this.hashPassword, this);
         this.on('saving', this.setDefaults, this);
-        this.on('saving', this.validateSave, this)
     },
 
     checkIns: function () {
@@ -33,16 +32,11 @@ const User = bookshelf.Model.extend({
         username: ['required'],
         password: ['required'],
         email: ['required', 'email'],
-        level: ['required']
+        level: ['required'],
     },
 
     validateSave: function () {
-        const jsonVersion = this.toJSON();
-        console.log('jsonversion');
-        console.log(jsonVersion);
-        const validation = CheckIt(this.validationRules);
-        const runResult = validation.run(jsonVersion);
-        return runResult;
+        return CheckIt(this.validationRules).validate(this.toJSON());
     },
 
     virtuals: {

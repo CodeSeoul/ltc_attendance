@@ -7,7 +7,9 @@ describe('User modelRead', () => {
     it('Should find a User record by _id', (done) => {
         const joe = new User({
             username: 'joe',
-            password: 'mypass'
+            password: 'mypass',
+            email: 'fake@fake.com',
+            level: 'student'
         });
         joe.save()
             .then(() => User.where({id: joe.id}).fetch())

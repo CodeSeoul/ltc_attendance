@@ -2,6 +2,7 @@ require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
 const User = require('../../models/User').User;
 const CheckIn = require('../../models/checkIn').CheckIn;
+const CheckIt = require('checkit');
 const assert = require('assert');
 
 describe('User modelCreate', () => {
@@ -15,10 +16,16 @@ describe('User modelCreate', () => {
             email: 'fake@fake.com',
             level: 'student'
         });
-        console.log('beforeEach saving Joe')
         joe.save()
             .then(() => done())
-            .catch(err => done(err));
+            .catch(err => {
+                if (err instanceof CheckIt.Error) {
+                    err.each((fieldError) => {
+                        console.error(fieldError.message);
+                    });
+                }
+                done(err)
+            });
     });
 
     afterEach((done) => {
@@ -113,7 +120,7 @@ describe('User modelCreate', () => {
             .then(savedCheckIn => {
                 return joe.checkIns().create(savedCheckIn);
             })
-            .then(updatedUser => User.where({id: joe.get('id')}).fetch({withRelated: 'checkIns'}))
+            .then(() => User.where({id: joe.get('id')}).fetch({withRelated: 'checkIns'}))
             .then(result => {
                 assert(result.related('checkIns').length === 1);
                 assert(result.related('checkIns').at(0).get('id') === firstCheckIn.get('id'));

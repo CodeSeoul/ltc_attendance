@@ -2,6 +2,7 @@ require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
 const Event = require('../../models/Event').Event;
 const User = require('../../models/User').User;
+const CheckIt = require('checkit');
 const moment = require('moment');
 const assert = require('assert');
 
@@ -10,20 +11,40 @@ describe('Event modelCreate', () => {
     let baseEvent;
 
     beforeEach((done) => {
+        const joe = new User({
+            username: 'joe',
+            password: 'mypass',
+            email: 'fake@fake.com',
+            level: 'student'
+        });
+
         baseEvent = new Event({
             title: 'Test Event',
             description: 'the best event evar',
-            type: 'Workshop',
-            created_by: '1'
+            type: 'Workshop'
         });
 
-        baseEvent.save().then(() => done()).catch(err => done(err));
+        joe.save()
+            .then(savedUser => {
+                baseEvent.createdBy = savedUser;
+                return baseEvent.save();
+            })
+            .then(() => done())
+            .catch(err => {
+                console.log(err);
+                if (err instanceof CheckIt.Error) {
+                    err.each((fieldError) => {
+                        console.error(fieldError.message);
+                    });
+                }
+                done(err);
+            });
     });
 
     afterEach((done) => {
-        knex('user').truncate()
+        knex('event').truncate()
             .then(() => {
-                return knex('event').truncate()
+                return knex('user').truncate()
             })
             .then(() => done())
             .catch(err => done(err));
@@ -65,7 +86,12 @@ describe('Event modelCreate', () => {
 
     // TODO: verify test is valid. I think maybe it should be failing
     it('Should be able to set CreatedBy', (done) => {
-        const joe = new User();
+        const joe = new User({
+            username: 'joe',
+            password: 'mypass',
+            email: 'fake@fake.com',
+            level: 'student'
+        });
         baseEvent.instructors().push({id: joe.get('id')});
         baseEvent.save()
             .then(() => Event.where({title: 'Test Event'}).fetch())
@@ -73,7 +99,14 @@ describe('Event modelCreate', () => {
                 assert(String(result.instructors().id) === String(joe.id));
                 done();
             })
-            .catch(err => done(err));
+            .catch(err => {
+                if (err instanceof CheckIt.Error) {
+                    err.each((fieldError) => {
+                        console.error(fieldError.message);
+                    });
+                }
+                done(err)
+            });
     });
 
 });

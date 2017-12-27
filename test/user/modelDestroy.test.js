@@ -9,7 +9,9 @@ describe('User modelDestroy', () => {
     beforeEach((done) => {
         joe = new User({
             username: 'joe',
-            password: 'mypass'
+            password: 'mypass',
+            email: 'rofl@copters.com',
+            level: 'student'
         });
         joe.save()
             .then(() => done())
@@ -25,7 +27,9 @@ describe('User modelDestroy', () => {
     it('Should destroy User record', (done) => {
         const jane = new User({
             username: 'jane',
-            password: 'otherpass'
+            password: 'otherpass',
+            email: 'loller@sakes.com',
+            level: 'student'
         });
         jane.save()
             .then(() => {
