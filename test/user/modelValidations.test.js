@@ -1,33 +1,44 @@
 require('../test_helper.test');
-const User = require('../../models/User');
+const knex = require('../../config/bookshelf').knex;
+const User = require('../../models/User').User;
 const assert = require('assert');
 
-// TODO: validations
-/*
 describe('User modelValidations', () => {
+
+    let joe;
+
     beforeEach((done) => {
-        const joe = new User({
+        joe = new User({
             username: 'joe',
             email: 'mail@mail.com',
             password: 'mypass'
         });
         joe.save()
             .then(() => done())
-            .catch(done);
+            .catch(err => done(err));
     });
 
     afterEach((done) => {
-        User.collection.drop();
-        done();
+        knex('user').truncate()
+            .then(() => {
+                return knex('check_in').truncate();
+            })
+            .then(() => done())
+            .catch(err => done(err));
     });
 
     it('Should require unique email', (done) => {
         new User({username: 'jane', email: 'mail@mail.com', password: 'otherpass'})
             .save()
-            .catch((err) => {
-                const message = err.errors.email.message;
-                assert(message.includes('to be unique'));
-                done();
+            .then(() => {
+                assert.fail('Should not allow saving a duplicate email');
+                done()
+            })
+            .catch(err => {
+                console.log('err: ' + err);
+                /*const message = err.errors.email.message;
+                assert(message.includes('to be unique'));*/
+                done()
             });
     });
 
@@ -35,11 +46,18 @@ describe('User modelValidations', () => {
         const jane = new User({
             username: 'jane',
             email: 'mm.'
-        });
-        const validationResult = jane.validateSync();
-        const message = validationResult.errors.email.message;
-        assert(message === 'Email must be valid');
-        done()
+        }).save()
+            .then(() => {
+
+                done()
+            })
+            .catch(err => {
+                const validationResult = jane.validateSync();
+                const message = validationResult.errors.email.message;
+                assert(message === 'Email must be valid');
+                done()
+            });
+
     });
 
     it('Should require name to be more than 2 chars', (done) => {
@@ -130,4 +148,3 @@ describe('User modelValidations', () => {
     });
 
 });
-*/

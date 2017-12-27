@@ -1,8 +1,10 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
 const bcrypt = require('bcrypt');
-const SALT_WORK_FACTOR = 10;
+const CheckIt = require('checkit');
 
-// TODO: Add validations
+const SALT_WORK_FACTOR = 10;
+;
+
 const User = bookshelf.Model.extend({
 
     tableName: 'user',
@@ -12,6 +14,7 @@ const User = bookshelf.Model.extend({
     initialize: function () {
         this.on('saving', this.hashPassword, this);
         this.on('saving', this.setDefaults, this);
+        this.on('saving', this.validateSave, this)
     },
 
     checkIns: function () {
@@ -24,6 +27,22 @@ const User = bookshelf.Model.extend({
 
     createdEvents: function () {
         return this.hasMany('Event', 'created_by');
+    },
+
+    validationRules: {
+        username: ['required'],
+        password: ['required'],
+        email: ['required', 'email'],
+        level: ['required']
+    },
+
+    validateSave: function () {
+        const jsonVersion = this.toJSON();
+        console.log('jsonversion');
+        console.log(jsonVersion);
+        const validation = CheckIt(this.validationRules);
+        const runResult = validation.run(jsonVersion);
+        return runResult;
     },
 
     virtuals: {

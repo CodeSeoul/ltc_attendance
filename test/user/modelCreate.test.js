@@ -11,8 +11,11 @@ describe('User modelCreate', () => {
     beforeEach((done) => {
         joe = new User({
             username: 'joe',
-            password: 'mypass'
+            password: 'mypass',
+            email: 'fake@fake.com',
+            level: 'student'
         });
+        console.log('beforeEach saving Joe')
         joe.save()
             .then(() => done())
             .catch(err => done(err));
