@@ -52,92 +52,152 @@ describe('User modelValidations', () => {
         }).save()
             .then(() => {
                 assert.fail('Should not permit an invalid email address');
-                done()
+                done();
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
                     assert(fieldError.message === 'The email must be a valid email address');
                 });
-                done()
+                done();
+            });
+
+    });
+
+    it('Should require an email no more than 128 characters', (done) => {
+        joe.set('email', 'mm.' + 'l'.repeat(125) + '.com',);
+        joe.save()
+            .then(() => {
+                assert.fail('Should not permit an email longer than 128 characters');
+                done();
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The email must be no more than 128 characters');
+                });
+                done();
             });
 
     });
 
     it('Should require name to be more than 2 chars', (done) => {
-        const jo = new User({
-            name: 'jo'
-        });
-        const validationResult = jo.validateSync();
-        const message = validationResult.errors.name.message;
-        assert(message === 'Name must be valid length');
-        done()
+        joe.set('name', 'jo');
+        joe.save()
+            .then(() => {
+                assert.fail('Should not permit a name with 2 or fewer characters');
+                done();
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The name should be more than 2 characters');
+                    done();
+                });
+                done();
+            });
     });
 
-    it('Should require name to be less then 100 chars', (done) => {
-        const jo = new User({
-            name: 'j'.repeat(100)
-        });
-        const validationResult = jo.validateSync();
-        const message = validationResult.errors.name.message;
-        assert(message === 'Name must be valid length');
-        done()
+    it('Should require name to be no more than 100 chars', (done) => {
+        joe.set('name', 'j'.repeat(101));
+        joe.save()
+            .then(() => {
+                assert.fail('Should not permit a name with more than 100 characters');
+                done();
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The name should be no more than 100 characters');
+                    done();
+                });
+                done();
+            });
     });
 
     it('Should require username to be more than 2 chars', (done) => {
-        const jo = new User({
-            username: 'jo',
-            email: 'jo@mail.com'
-        });
-        const validationResult = jo.validateSync();
-        const message = validationResult.errors.username.message;
-        assert(message === 'Username must be valid length');
-        done()
+        joe.set('username', 'jo');
+        joe.save()
+            .then(() => {
+                assert.fail('Should not permit a username with 2 or fewer characters');
+                done();
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The username should be more than 2 characters');
+                    done();
+                });
+                done();
+            });
     });
 
-    it('Should require username to be less then 100 chars', (done) => {
-        const jo = new User({
-            username: 'j'.repeat(100),
-            email: 'jo@mail.com'
-        });
-        const validationResult = jo.validateSync();
-        const message = validationResult.errors.username.message;
-        assert(message === 'Username must be valid length');
-        done()
+    it('Should require username to be no more than 100 chars', (done) => {
+        joe.set('username', 'j'.repeat(101));
+        joe.save()
+            .then(() => {
+                assert.fail('Should not permit a username with more than 100 characters');
+                done();
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The username should be no more than 100 characters');
+                    done();
+                });
+                done();
+            });
     });
 
-    it('Should require Description to be less then 1000 chars', (done) => {
-        const joe = new User({
-            username: 'joe',
-            email: 'jo@mail.com',
-            description: 'j'.repeat(1000)
-        });
-        const validationResult = joe.validateSync();
-        const message = validationResult.errors.description.message;
-        assert(message === 'Description must be less than 1000 characters');
-        done()
+    it('Should require Description to be no more than 1000 chars', (done) => {
+        joe.set('description', 'j'.repeat(1001));
+        joe.save()
+            .then(() => {
+                assert.fail('Should not permit a description with more than 1000 characters');
+                done();
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The description should be no more than 1000 characters');
+                    done();
+                });
+                done();
+            });
     });
 
-    it('Should require Hometown to be less then 100 chars', (done) => {
-        const joe = new User({
-            username: 'joe',
-            email: 'jo@mail.com',
-            hometown: 'j'.repeat(100)
-        });
-        const validationResult = joe.validateSync();
-        const message = validationResult.errors.hometown.message;
-        assert(message === 'Hometown must be less than 100 characters');
-        done()
+    it('Should require Hometown to be no more than 100 chars', (done) => {
+        joe.set('hometown', 'j'.repeat(101));
+        joe.save()
+            .then(() => {
+                assert.fail('Should not permit a hometown with more than 100 characters');
+                done();
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The hometown should be no more than 100 characters');
+                    done();
+                });
+                done();
+            });
     });
 
     it('Should require valid level', (done) => {
-        const joe = new User({
-            level: 'dragon'
-        });
-        const validationResult = joe.validateSync();
-        const {message} = validationResult.errors.level;
-        assert(message.includes('not a valid enum'));
-        done()
+        joe.set('level', 'dragon');
+        joe.save()
+            .then(() => {
+                assert.fail('Should not permit a hometown with more than 100 characters');
+                done();
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'The hometown should be no more than 100 characters');
+                    done();
+                });
+                done();
+            });
     });
 
     it('Should require valid Website url', (done) => {
