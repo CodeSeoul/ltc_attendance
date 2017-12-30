@@ -10,7 +10,7 @@ const expect = chai.expect;
 describe('User Repo routes', () => {
     let joe, tad;
 
-    beforeEach((done) => {
+    beforeEach(() => {
         joe = new User({
             username: 'joe',
             email: 'joe@mail.com',
@@ -23,19 +23,14 @@ describe('User Repo routes', () => {
             password: 'otherpass'
         });
 
-        joe.save()
+        return joe.save()
             .then(() => {
                 return tad.save();
-            })
-            .then(() => {
-                done();
-            })
-            .catch(err => done(err));
+            });
     });
 
-    afterEach((done) => {
-        knex('user').truncate()
-            .then(() => done());
+    afterEach(() => {
+        return knex('user').truncate();
     });
 
     it('should list all users with getUsers()', (done) => {

@@ -101,9 +101,9 @@ describe('User modelCreate', () => {
     });
 
     it('Should be able to set Website', (done) => {
-        joe.save({website: 'mail.com'})
+        joe.save({website: 'http://mail.com'})
             .then(result => {
-                assert(result.get('website') === 'mail.com');
+                assert(result.get('website') === 'http://mail.com');
                 done()
             })
             .catch(err => done(err));

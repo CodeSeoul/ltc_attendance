@@ -7,44 +7,40 @@ describe('User modelValidations', () => {
 
     let joe;
 
-    beforeEach((done) => {
+    beforeEach(() => {
         joe = new User({
             username: 'joe',
             email: 'mail@mail.com',
             password: 'mypass',
             level: 'student'
         });
-        joe.save()
-            .then(() => done())
-            .catch(err => done(err));
+        return joe.save();
     });
 
-    afterEach((done) => {
-        knex('user').truncate()
+    afterEach(() => {
+        return knex('user').truncate()
             .then(() => {
                 return knex('check_in').truncate();
-            })
-            .then(() => done())
-            .catch(err => done(err));
-    });
-
-    it('Should require unique email', (done) => {
-        new User({username: 'jane', email: 'mail@mail.com', password: 'otherpass', level: 'student'})
-            .save()
-            .then(() => {
-                assert.fail('Should not allow saving a duplicate email');
-                done()
-            })
-            .catch(err => {
-                console.log('err: ' + err);
-                /*const message = err.errors.email.message;
-                assert(message.includes('to be unique'));*/
-                done()
             });
     });
 
-    it('Should require valid email', (done) => {
-        new User({
+    it('Should require unique email', () => {
+        return new User({username: 'jane', email: 'mail@mail.com', password: 'otherpass', level: 'student'})
+            .save()
+            .then(() => {
+                assert.fail('Should not allow saving a duplicate email');
+            })
+            .catch(err => {
+                console.log(err);
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'Email is duplicated', 'Incorrect error message for duplicate email. Received: ' + fieldError.message);
+                });
+            });
+    });
+
+    it('Should require valid email', () => {
+        return new User({
             username: 'jane',
             email: 'mm.',
             password: 'lol',
@@ -52,163 +48,144 @@ describe('User modelValidations', () => {
         }).save()
             .then(() => {
                 assert.fail('Should not permit an invalid email address');
-                done();
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
                     assert(fieldError.message === 'The email must be a valid email address');
                 });
-                done();
             });
 
     });
 
-    it('Should require an email no more than 128 characters', (done) => {
-        joe.set('email', 'mm.' + 'l'.repeat(125) + '.com',);
-        joe.save()
+    it('Should require an email no more than 128 characters', () => {
+        joe.set('email', 'mm@' + 'l'.repeat(125) + '.com',);
+        return joe.save()
             .then(() => {
                 assert.fail('Should not permit an email longer than 128 characters');
-                done();
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'The email must be no more than 128 characters');
+                    assert(fieldError.message === 'The email must not exceed 128 characters long', 'Incorrect error message for email > 128 characters. Received: ' + fieldError.message);
                 });
-                done();
             });
 
     });
 
-    it('Should require name to be more than 2 chars', (done) => {
+    it('Should require name to be more than 2 chars', () => {
         joe.set('name', 'jo');
-        joe.save()
+        return joe.save()
             .then(() => {
-                assert.fail('Should not permit a name with 2 or fewer characters');
-                done();
+                assert.fail('Should not permit a name with fewer than 3 characters');
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'The name should be more than 2 characters');
-                    done();
+                    assert(fieldError.message === 'The name must be at least 3 characters long', 'Incorrect error message for name > 2 characters. Received: ' + fieldError.message);
                 });
-                done();
             });
     });
 
-    it('Should require name to be no more than 100 chars', (done) => {
+    it('Should require name to be no more than 100 chars', () => {
         joe.set('name', 'j'.repeat(101));
-        joe.save()
+        return joe.save()
             .then(() => {
                 assert.fail('Should not permit a name with more than 100 characters');
-                done();
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'The name should be no more than 100 characters');
-                    done();
+                    assert(fieldError.message === 'The name must not exceed 100 characters long', 'Incorrect error message for name <= 100 characters. Received: ' + fieldError.message);
                 });
-                done();
             });
     });
 
-    it('Should require username to be more than 2 chars', (done) => {
+    it('Should require username to be more than 2 chars', () => {
         joe.set('username', 'jo');
-        joe.save()
+        return joe.save()
             .then(() => {
-                assert.fail('Should not permit a username with 2 or fewer characters');
-                done();
+                assert.fail('Should not permit a username with fewer than 3 characters');
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'The username should be more than 2 characters');
-                    done();
+                    assert(fieldError.message === 'The username must be at least 3 characters long', 'Incorrect error message for username > 2 characters.  Received: ' + fieldError.message);
                 });
-                done();
             });
     });
 
-    it('Should require username to be no more than 100 chars', (done) => {
+    it('Should require username to be no more than 100 chars', () => {
         joe.set('username', 'j'.repeat(101));
-        joe.save()
+        return joe.save()
             .then(() => {
                 assert.fail('Should not permit a username with more than 100 characters');
-                done();
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'The username should be no more than 100 characters');
-                    done();
+                    assert(fieldError.message === 'The username must not exceed 100 characters long', 'Incorrect error message for username <= 100 characters. Received: ' + fieldError.message);
                 });
-                done();
             });
     });
 
-    it('Should require Description to be no more than 1000 chars', (done) => {
+    it('Should require Description to be no more than 1000 chars', () => {
         joe.set('description', 'j'.repeat(1001));
-        joe.save()
+        return joe.save()
             .then(() => {
                 assert.fail('Should not permit a description with more than 1000 characters');
-                done();
+
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'The description should be no more than 1000 characters');
-                    done();
+                    assert(fieldError.message === 'The description must not exceed 1000 characters long', 'Incorrect error message for description <= 1000 characters. Received: ' + fieldError.message);
                 });
-                done();
+
             });
     });
 
-    it('Should require Hometown to be no more than 100 chars', (done) => {
+    it('Should require Hometown to be no more than 100 chars', () => {
         joe.set('hometown', 'j'.repeat(101));
-        joe.save()
+        return joe.save()
             .then(() => {
                 assert.fail('Should not permit a hometown with more than 100 characters');
-                done();
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'The hometown should be no more than 100 characters');
-                    done();
+                    assert(fieldError.message === 'The hometown must not exceed 100 characters long', 'Incorrect error message for hometown <= 100 characters. Received: ' + fieldError.message);
                 });
-                done();
+
             });
     });
 
-    it('Should require valid level', (done) => {
+    it('Should require valid level', () => {
         joe.set('level', 'dragon');
-        joe.save()
+        return joe.save()
             .then(() => {
                 assert.fail('Should not permit a hometown with more than 100 characters');
-                done();
             })
             .catch(err => {
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'The hometown should be no more than 100 characters');
-                    done();
+                    assert(fieldError.message === 'The level must be one of ["student", "admin"]', 'Incorrect error message for level being student or admin. Received: ' + fieldError.message);
                 });
-                done();
             });
     });
 
-    it('Should require valid Website url', (done) => {
-        const jane = new User({
-            username: 'jane',
-            website: 'mm.'
-        });
-        const validationResult = jane.validateSync();
-        const message = validationResult.errors.website.message;
-        assert(message === 'Website must be valid url');
-        done()
+    it('Should require valid Website url', () => {
+        joe.set('website', 'roflcopters');
+        return joe.save()
+            .then(() => {
+                assert.fail('Should not permit a web address that is invalid');
+            })
+            .catch(err => {
+                assert(err.keys().length === 1);
+                err.each(fieldError => {
+                    assert(fieldError.message === 'Validation for website did not pass', 'Incorrect message for web address being an invalid format. Received: ' + fieldError.message);
+                });
+            });
     });
 
 });

@@ -29,12 +29,12 @@ const User = bookshelf.Model.extend({
     },
 
     validationRules: {
-        username: ['string', 'required', 'maxLength:100'],
+        username: ['string', 'required', 'maxLength:100', 'minLength:3'],
         password: ['string', 'required'],
-        name: ['string', 'maxLength:100'],
+        name: ['string', 'maxLength:100', 'minLength:3'],
         email: ['required', 'email', 'maxLength:128'],
         level: ['required'],
-        website: ['string'],
+        website: ['string', 'url'],
         hometown: ['maxLength:100'],
         description: ['maxLength:1000']
         // TODO: custom validator to ensure level is student or admin

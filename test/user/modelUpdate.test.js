@@ -104,10 +104,10 @@ describe('User modelUpdate', () => {
 
         User.where({username: 'joe'}).fetch()
             .then(user => {
-                return user.save({website: 'www.github.com'});
+                return user.save({website: 'http://www.github.com'});
             })
             .then(user => {
-                assert(user.get('website') === 'www.github.com');
+                assert(user.get('website') === 'http://www.github.com');
                 done();
             })
             .catch(err => done(err));
