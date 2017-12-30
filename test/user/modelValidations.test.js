@@ -14,7 +14,10 @@ describe('User modelValidations', () => {
             password: 'mypass',
             level: 'student'
         });
-        return joe.save();
+        return joe.save()
+            .then((savedJoe) => {
+                joe = savedJoe;
+            });
     });
 
     afterEach(() => {
@@ -34,7 +37,7 @@ describe('User modelValidations', () => {
                 console.log(err);
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
-                    assert(fieldError.message === 'Email is duplicated', 'Incorrect error message for duplicate email. Received: ' + fieldError.message);
+                    assert(fieldError.message === 'The email address is already in use', 'Incorrect error message for duplicate email. Received: ' + fieldError.message);
                 });
             });
     });
@@ -164,7 +167,7 @@ describe('User modelValidations', () => {
         joe.set('level', 'dragon');
         return joe.save()
             .then(() => {
-                assert.fail('Should not permit a hometown with more than 100 characters');
+                assert.fail('Should not permit a level that is not student or admin');
             })
             .catch(err => {
                 assert(err.keys().length === 1);

@@ -9,22 +9,24 @@ describe('User modelCreate', () => {
 
     let joe;
 
-    beforeEach((done) => {
+    beforeEach(() => {
         joe = new User({
             username: 'joe',
             password: 'mypass',
             email: 'fake@fake.com',
             level: 'student'
         });
-        joe.save()
-            .then(() => done())
+        return joe.save()
+            .then((savedJoe) => {
+                joe = savedJoe;
+            })
             .catch(err => {
                 if (err instanceof CheckIt.Error) {
                     err.each((fieldError) => {
                         console.error(fieldError.message);
                     });
                 }
-                done(err)
+                return err;
             });
     });
 

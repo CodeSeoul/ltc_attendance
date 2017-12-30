@@ -1,4 +1,5 @@
 const bookshelf = require('../config/bookshelf').bookshelf;
+const knex = require('../config/bookshelf').knex;
 const bcrypt = require('bcrypt');
 const CheckIt = require('checkit');
 
@@ -32,16 +33,35 @@ const User = bookshelf.Model.extend({
         username: ['string', 'required', 'maxLength:100', 'minLength:3'],
         password: ['string', 'required'],
         name: ['string', 'maxLength:100', 'minLength:3'],
-        email: ['required', 'email', 'maxLength:128'],
-        level: ['required'],
+        email: ['required', 'email', 'maxLength:128'/*, function(val, params, context) {
+            const query = knex('user');
+            if (context && context.transacting){
+                query.transacting(context.transacting);
+            }
+
+            console.log(this);
+            console.log(this.target);
+            return query.where('email', '=', val)
+                .andWhere('id', '<>', this.target.id) // TODO: This is the problem
+                .then(function(resp){
+                    if (resp.length > 0){
+                        throw new Error('The email address is already in use');
+                    }
+                });
+        }*/],
+        level: ['required', (val) => {
+            if (['student', 'admin'].includes(val) === false) {
+                throw new Error('The level must be one of ["student", "admin"]');
+            }
+        }],
         website: ['string', 'url'],
         hometown: ['maxLength:100'],
         description: ['maxLength:1000']
-        // TODO: custom validator to ensure level is student or admin
     },
 
     validateSave: function () {
         return CheckIt(this.validationRules).validate(this.toJSON());
+        // TODO: Find a way to update only changed attributes and only have those validation rules run against them
     },
 
     virtuals: {

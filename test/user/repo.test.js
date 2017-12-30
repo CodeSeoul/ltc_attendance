@@ -14,18 +14,24 @@ describe('User Repo routes', () => {
         joe = new User({
             username: 'joe',
             email: 'joe@mail.com',
-            password: 'somepass'
+            password: 'somepass',
+            level: 'student'
         });
 
         tad = new User({
             username: 'tad',
             email: 'tad@mail.com',
-            password: 'otherpass'
+            password: 'otherpass',
+            level: 'student'
         });
 
         return joe.save()
-            .then(() => {
+            .then((savedJoe) => {
+                joe = savedJoe;
                 return tad.save();
+            })
+            .then((savedTad) => {
+                tad = savedTad;
             });
     });
 
@@ -33,8 +39,8 @@ describe('User Repo routes', () => {
         return knex('user').truncate();
     });
 
-    it('should list all users with getUsers()', (done) => {
-        Repo.getUsers()
+    it('should list all users with getUsers()', () => {
+        return Repo.getUsers()
             .then(users => {
                 const sortedUsers = users.models.sort(function (a, b) {
                     if (a.get('username').toUpperCase() < b.get('username').toUpperCase()) return -1;
@@ -51,14 +57,12 @@ describe('User Repo routes', () => {
             })
             .then(isMatch => {
                 expect(isMatch).to.eql(true);
-                done();
-            })
-            .catch(err => done(err));
+            });
     });
 
-    it('should add new user with createUser()', (done) => {
-        const jane = {username: 'jane', email: 'jane@mail.com', password: 'roflcopter'};
-        Repo.createUser(jane)
+    it('should add new user with createUser()', () => {
+        const jane = {username: 'jane', email: 'jane@mail.com', password: 'roflcopter', level: 'student'};
+        return Repo.createUser(jane)
             .then(newUser => {
                 expect(newUser.toJSON()).to.have.property('username').eql('jane');
                 expect(newUser.toJSON()).to.have.property('email').eql('jane@mail.com');
@@ -67,40 +71,29 @@ describe('User Repo routes', () => {
             .then(users => {
                 expect(users.models).to.be.a('array');
                 expect(users.length).to.be.eql(3);
-                done();
-            })
-            .catch(err => done(err));
+            });
     });
 
-    it('should list single user with getUser()', (done) => {
-        Repo.getUser(joe.get('id'))
+    it('should list single user with getUser()', () => {
+        return Repo.getUser(joe.get('id'))
             .then(result => {
                 expect(result.toJSON()).to.have.property('username').eql('joe');
-                done()
-            })
-            .catch(err => done(err));
+            });
     });
 
-    it('should update existing user with updateUser()', (done) => {
-        const jane = {username: 'jane', email: 'jane@mail.com', password: 'datpass'};
-        //let toBeUpdated = new User({email: 'thadious@m.com'});
+    it('should update existing user with updateUser()', () => {
         let toBeUpdated = {email: 'thadious@m.com'};
-        Repo.createUser(jane)
-            .then(() => {
-                return Repo.updateUser(tad.get('id'), toBeUpdated);
-            })
+        return Repo.updateUser(tad.get('id'), toBeUpdated)
             .then(() => {
                 return Repo.getUser(tad.get('id'));
             })
             .then(user => {
                 expect(user.toJSON()).to.have.property('email').eql('thadious@m.com');
-                done();
-            })
-            .catch(err => done(err));
+            });
     });
 
-    it('should delete existing user with deleteUser()', (done) => {
-        Repo.getUsers()
+    it('should delete existing user with deleteUser()', () => {
+        return Repo.getUsers()
             .then(users => {
                 expect(users.length).to.eql(2);
                 return Repo.deleteUser(joe.get('id'));
@@ -110,8 +103,7 @@ describe('User Repo routes', () => {
             })
             .then(users => {
                 expect(users.length).to.eql(1);
-                done();
-            })
-            .catch(err => done(err));
+            });
     });
-});
+})
+;

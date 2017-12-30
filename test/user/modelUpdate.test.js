@@ -8,15 +8,16 @@ const assert = require('assert');
 describe('User modelUpdate', () => {
     let joe;
 
-    beforeEach((done) => {
+    beforeEach(() => {
         joe = new User({
             username: 'joe',
             email: 'mail@mail.com',
             password: 'mypass',
             level: 'student'
         });
-        joe.save()
-            .then(user => {
+        return joe.save()
+            .then(savedJoe => {
+                joe = savedJoe;
                 new Event({
                     title: 'User Test Event',
                     description: 'roflcopters and lollerskates',
@@ -24,16 +25,11 @@ describe('User modelUpdate', () => {
                 }).save()
                     .then(event => {
                         return new CheckIn().save({
-                            'user_id': user.get('id'),
+                            'user_id': joe.get('id'),
                             'event_id': event.get('id')
                         })
-                            .then(() => {
-                                done();
-                            });
                     })
-                    .catch(err => done(err));
-            })
-            .catch(err => done(err));
+            });
     });
 
     afterEach((done) => {
@@ -91,10 +87,10 @@ describe('User modelUpdate', () => {
 
         User.where({username: 'joe'}).fetch()
             .then(user => {
-                return user.save({level: 'instructor'});
+                return user.save({level: 'admin'});
             })
             .then(user => {
-                assert(user.get('level') === 'instructor');
+                assert(user.get('level') === 'admin');
                 done();
             })
             .catch(err => done(err));
@@ -140,8 +136,6 @@ describe('User modelUpdate', () => {
     });
 
     it('Should update CheckIns', (done) => {
-        //const user = User.forge
-
         User.where({username: 'joe'}).fetch({withRelated: 'checkIns'})
             .then(user => {
                 return user.checkIns().create({})

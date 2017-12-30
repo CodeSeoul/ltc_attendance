@@ -16,8 +16,9 @@ module.exports = {
         return new User().save({
             username: reqBody.username,
             email: reqBody.email,
-            password: reqBody.password
-        });
+            password: reqBody.password,
+            level: reqBody.level
+        }); // TODO: expand this for safety and remaining fields
     },
 
     getUser(id) {
@@ -34,7 +35,10 @@ module.exports = {
     },
 
     updateUser(id, attributesToUpdate) {
-        return new User({id: id}).save(attributesToUpdate, {patch: true});
+        return new User({id: id}).fetch()
+            .then(user => {
+                return user.save(attributesToUpdate, {patch: true});
+            }); // TODO: this is an extra database call, but I'm tired
     },
 
     deleteUser(id) {

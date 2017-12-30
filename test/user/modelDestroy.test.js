@@ -6,22 +6,21 @@ const assert = require('assert');
 describe('User modelDestroy', () => {
     let joe;
 
-    beforeEach((done) => {
+    beforeEach(() => {
         joe = new User({
             username: 'joe',
             password: 'mypass',
             email: 'rofl@copters.com',
             level: 'student'
         });
-        joe.save()
-            .then(() => done())
-            .catch(err => done(err));
+        return joe.save()
+            .then((savedJoe) => {
+                joe = savedJoe;
+            });
     });
-    afterEach((done) => {
-        knex('user').truncate()
-            .then(() => knex('event').truncate())
-            .then(() => done())
-            .catch(err => done(err))
+    afterEach(() => {
+        return knex('user').truncate()
+            .then(() => knex('event').truncate());
     });
 
     it('Should destroy User record', (done) => {
