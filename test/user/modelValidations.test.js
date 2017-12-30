@@ -34,7 +34,6 @@ describe('User modelValidations', () => {
                 assert.fail('Should not allow saving a duplicate email');
             })
             .catch(err => {
-                console.log(err);
                 assert(err.keys().length === 1);
                 err.each(fieldError => {
                     assert(fieldError.message === 'The email address is already in use', 'Incorrect error message for duplicate email. Received: ' + fieldError.message);

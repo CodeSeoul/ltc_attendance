@@ -33,22 +33,28 @@ const User = bookshelf.Model.extend({
         username: ['string', 'required', 'maxLength:100', 'minLength:3'],
         password: ['string', 'required'],
         name: ['string', 'maxLength:100', 'minLength:3'],
-        email: ['required', 'email', 'maxLength:128'/*, function(val, params, context) {
+        email: ['required', 'email', 'maxLength:128', function (val, params, context) {
             const query = knex('user');
             if (context && context.transacting){
                 query.transacting(context.transacting);
             }
-
-            console.log(this);
-            console.log(this.target);
-            return query.where('email', '=', val)
-                .andWhere('id', '<>', this.target.id) // TODO: This is the problem
-                .then(function(resp){
-                    if (resp.length > 0){
-                        throw new Error('The email address is already in use');
-                    }
-                });
-        }*/],
+            if (this.target.id == null) {
+                return query.where('email', '=', val)
+                    .then(function (resp) {
+                        if (resp.length > 0) {
+                            throw new Error('The email address is already in use');
+                        }
+                    });
+            } else {
+                return query.where('email', '=', val)
+                    .andWhere('id', '<>', this.target.id)
+                    .then(function (resp) {
+                        if (resp.length > 0) {
+                            throw new Error('The email address is already in use');
+                        }
+                    });
+            }
+        }],
         level: ['required', (val) => {
             if (['student', 'admin'].includes(val) === false) {
                 throw new Error('The level must be one of ["student", "admin"]');
