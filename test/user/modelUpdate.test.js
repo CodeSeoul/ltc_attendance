@@ -9,19 +9,19 @@ describe('User modelUpdate', () => {
     let joe;
 
     beforeEach(() => {
-        joe = new User({
+        return new User({
             username: 'joe',
             email: 'mail@mail.com',
             password: 'mypass',
             level: 'student'
-        });
-        return joe.save()
+        }).save()
             .then(savedJoe => {
                 joe = savedJoe;
-                new Event({
+                return new Event({
                     title: 'User Test Event',
                     description: 'roflcopters and lollerskates',
-                    type: 'Workshop'
+                    type: 'Workshop',
+                    createdBy: joe
                 }).save()
                     .then(event => {
                         return new CheckIn().save({
@@ -32,123 +32,80 @@ describe('User modelUpdate', () => {
             });
     });
 
-    afterEach((done) => {
-        knex('check_in').truncate()
+    afterEach(() => {
+        return knex('check_in').truncate()
             .then(() => {
                 return knex('user').truncate()
             })
             .then(() => {
                 return knex('event').truncate()
-            })
-            .then(done())
-            .catch(err => done(err));
+            });
     });
 
-    it('Should update Username', (done) => {
-
-        User.where({username: 'joe'}).fetch()
+    it('Should update Username', () => {
+        joe.set('username', 'jane');
+        return joe.save()
             .then(user => {
-                return user.save({username: 'jane'});
-            })
-            .then(user => {
-                assert(user.get('username') === 'jane');
-                done();
-            })
-            .catch(err => done(err));
+                assert(user.get('username') === 'jane', `Username should be "jane" but got "${user.get('username')}"`);
+            });
     });
 
-    it('Should update Name', (done) => {
-
-        User.where({username: 'joe'}).fetch()
+    it('Should update Name', () => {
+        joe.set('name', 'jane smith');
+        return joe.save()
             .then(user => {
-                return user.save({name: 'jane smith'});
-            })
-            .then(user => {
-                assert(user.get('name') === 'jane smith');
-                done();
-            })
-            .catch(err => done(err));
+                assert(user.get('name') === 'jane smith', `Name should be "jane smith" but got "${user.get('name')}"`);
+            });
     });
 
-    it('Should update Email', (done) => {
-
-        User.where({username: 'joe'}).fetch()
+    it('Should update Email', () => {
+        joe.set('email', 'm@m.com');
+        return joe.save()
             .then(user => {
-                return user.save({email: 'm@m.com'});
-            })
-            .then(user => {
-                assert(user.get('email') === 'm@m.com');
-                done();
-            })
-            .catch(err => done(err));
+                assert(user.get('email') === 'm@m.com', `Email should be "m@m.com" but got "${user.get('email')}"`);
+            });
     });
 
-    it('Should update Level', (done) => {
-
-        User.where({username: 'joe'}).fetch()
+    it('Should update Level', () => {
+        joe.set('level', 'admin');
+        return joe.save()
             .then(user => {
-                return user.save({level: 'admin'});
-            })
-            .then(user => {
-                assert(user.get('level') === 'admin');
-                done();
-            })
-            .catch(err => done(err));
+                assert(user.get('level') === 'admin', `Level should be "admin" but got "${user.get('level')}"`);
+            });
     });
 
-    it('Should update Website', (done) => {
-
-        User.where({username: 'joe'}).fetch()
+    it('Should update Website', () => {
+        joe.set('website', 'http://www.github.com');
+        return joe.save()
             .then(user => {
-                return user.save({website: 'http://www.github.com'});
-            })
-            .then(user => {
-                assert(user.get('website') === 'http://www.github.com');
-                done();
-            })
-            .catch(err => done(err));
+                assert(user.get('website') === 'http://www.github.com', `Website should be "http://www.github.com" but got "${user.get('website')}"`);
+            });
     });
 
-    it('Should update Hometown', (done) => {
-
-        User.where({username: 'joe'}).fetch()
+    it('Should update Hometown', () => {
+        joe.set('hometown', 'Capetown, South Africa');
+        return joe.save()
             .then(user => {
-                return user.save({hometown: 'Capetown, South Africa'});
-            })
-            .then(user => {
-                assert(user.get('hometown') === 'Capetown, South Africa');
-                done();
-            })
-            .catch(err => done(err));
+                assert(user.get('hometown') === 'Capetown, South Africa', `Hometown should be "Capetown, South Africa" but got "${user.get('hometown')}"`);
+            });
     });
 
-    it('Should update Description', (done) => {
-
-        User.where({username: 'joe'}).fetch()
+    it('Should update Description', () => {
+        joe.set('description', 'I like to play guitar');
+        return joe.save()
             .then(user => {
-                return user.save({description: 'I like to play guitar'});
-            })
-            .then(user => {
-                assert(user.get('description') === 'I like to play guitar');
-                done();
-            })
-            .catch(err => done(err));
+                assert(user.get('description') === 'I like to play guitar', `Description should be "I like to play guitar" but got "${user.get('description')}"`);
+            });
     });
 
-    it('Should update CheckIns', (done) => {
-        User.where({username: 'joe'}).fetch({withRelated: 'checkIns'})
-            .then(user => {
-                return user.checkIns().create({})
-                    .then(checkIn => {
-                        return checkIn.related('user').fetch({withRelated: 'checkIns'});
-                    })
-                    .then(checkedInUser => {
-                        assert(checkedInUser.get('id') === user.get('id'));
-                        assert(checkedInUser.related('checkIns').length === 2);
-                        done();
-                    })
-                    .catch(err => done(err));
+    it('Should update CheckIns', () => {
+        return joe.checkIns().create({})
+            .then(checkIn => {
+                return checkIn.related('user').fetch({withRelated: 'checkIns'});
             })
-            .catch(err => done(err));
+            .then(checkedInUser => {
+                assert(checkedInUser.get('id') === joe.get('id'), `checkedInUser should have the same ID as original user but checkInUser is "${checkedInUser.get('id')}" and user is "${joe.get('id')}"`);
+                assert(checkedInUser.related('checkIns').length === 2, `The count of checkIns should be 2 but got "${checkedInUser.related('checkIns').length}"`);
+            });
     });
 });

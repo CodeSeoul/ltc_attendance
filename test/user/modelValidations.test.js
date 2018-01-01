@@ -6,15 +6,15 @@ const assert = require('assert');
 describe('User modelValidations', () => {
 
     let joe;
+    // TODO: test setting required values to null
 
     beforeEach(() => {
-        joe = new User({
+        return new User({
             username: 'joe',
             email: 'mail@mail.com',
             password: 'mypass',
             level: 'student'
-        });
-        return joe.save()
+        }).save()
             .then((savedJoe) => {
                 joe = savedJoe;
             });

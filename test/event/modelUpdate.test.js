@@ -6,62 +6,46 @@ const assert = require('assert');
 describe('Event modelUpdate', () => {
     let baseEvent;
 
-    beforeEach((done) => {
-        baseEvent = new Event({
+    beforeEach(() => {
+        return new Event({
             title: 'Test Event',
             description: 'beginner sql',
-            type: 'Workshop'
-        });
-        baseEvent.save()
-            .then(() => done())
-            .catch(err => done(err));
+            type: 'Workshop',
+            created_by: 1
+        }).save()
+            .then(savedBaseEvent => {
+                baseEvent = savedBaseEvent;
+            });
     });
 
-    afterEach((done) => {
-        knex('event').truncate()
+    afterEach(() => {
+        return knex('event').truncate()
             .then(() => {
-                return knex('user').truncate()
-            })
-            .then(() => done())
-            .catch(err => done(err));
+                return knex('user').truncate();
+            });
     });
 
-    it('Should update Title', (done) => {
+    it('Should update Title', () => {
         baseEvent.set('title', 'ruby');
-        baseEvent.save()
-            .then(() => {
-                return Event.where({id: baseEvent.get('id')}).fetch()
+        return baseEvent.save()
+            .then(event => {
+                assert(event.get('title') === 'ruby', `Title should be "ruby" but got "${event.get('title')}"`);
             })
-            .then(result => {
-                assert(result.get('title') === 'ruby');
-                done();
-            })
-            .catch(err => done(err));
     });
 
-    it('Should update Description', (done) => {
+    it('Should update Description', () => {
         baseEvent.set('description', 'beginner ruby');
-        baseEvent.save()
-            .then(() => {
-                return Event.where({id: baseEvent.get('id')}).fetch()
-            })
-            .then(result => {
-                assert(result.get('description') === 'beginner ruby');
-                done();
-            })
-            .catch(err => done(err));
+        return baseEvent.save()
+            .then(event => {
+                assert(event.get('description') === 'beginner ruby', `Description should be "beginner ruby" but got "${event.get('description')}"`);
+            });
     });
 
-    it('Should update Type', (done) => {
-        baseEvent.set('type', 'Hack Night');
-        baseEvent.save()
-            .then(() => {
-                return Event.where({id: baseEvent.get('id')}).fetch()
-            })
-            .then(result => {
-                assert(result.get('type') === 'Hack Night');
-                done();
-            })
-            .catch(err => done(err));
+    it('Should update Type', () => {
+        baseEvent.set('type', 'hack-night');
+        return baseEvent.save()
+            .then(event => {
+                assert(event.get('type') === 'hack-night', `Type should be "hack-night" but got "${event.get('type')}"`);
+            });
     });
 });

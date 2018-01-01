@@ -1,24 +1,36 @@
 require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
+const User = require('../../models/User').User;
 const Event = require('../../models/Event').Event;
 const assert = require('assert');
 
 describe('Event modelDestroy', () => {
-    beforeEach((done) => {
-        const baseEvent = new Event({title: 'Test Event'});
-        baseEvent.save()
-            .then(() => done())
-            .catch(err => done(err));
+    beforeEach(() => {
+        return new User({
+            username: 'joe',
+            password: 'mypass',
+            email: 'fake@fake.com',
+            level: 'student'
+        }).save()
+            .then(savedUser => {
+                return new Event({
+                    title: 'Test Event',
+                    description: 'we\'ll do some stuff!',
+                    type: 'workshop',
+                    created_by: savedUser
+                }).save();
+            });
     });
-    afterEach((done) => {
-        knex('event').truncate()
-            .then(() => done())
-            .catch(err => done(err));
+    afterEach(() => {
+        return knex('event').truncate()
+            .then(() => {
+                return knex('user').truncate();
+            });
     });
 
-    it('Should destroy event record', (done) => {
-        const ruby = new Event({title: 'ruby'});
-        ruby.save()
+    it('Should destroy event record', () => {
+        return new Event({title: 'ruby class'})
+            .save()
             .then(() => {
                 return Event.where({title: 'Test Event'}).fetch()
             })
@@ -28,9 +40,7 @@ describe('Event modelDestroy', () => {
             .then(() => Event.forge().fetchAll())
             .then(results => {
                 assert(results.length === 1);
-                assert(results.at(0).get('title') === 'ruby');
-                done()
-            })
-            .catch(err => done(err));
+                assert(results.at(0).get('title') === 'ruby class');
+            });
     });
 });

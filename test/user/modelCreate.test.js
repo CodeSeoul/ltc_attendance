@@ -30,104 +30,91 @@ describe('User modelCreate', () => {
             });
     });
 
-    afterEach((done) => {
+    afterEach(() => {
         knex('user').truncate()
             .then(() => {
                 return knex('check_in').truncate();
-            })
-            .then(() => done())
-            .catch(err => done(err));
+            });
     });
 
-    it('Should create a new User record', (done) => {
-        assert(!joe.isNew());
-        done()
+    it('Should create a new User record', () => {
+        assert(!joe.isNew(), 'Expected user to be not new, but user was new');
     });
 
-    it('Should be able to set Username', (done) => {
-        joe.save({username: 'joe'})
+    it('Should be able to set Username', () => {
+        joe.set('username', 'joe');
+        return joe.save()
             .then(result => {
-                assert(result.get('username') === 'joe');
-                done()
-            })
-            .catch(err => done(err));
+                assert(result.get('username') === 'joe', `Expected user's username to be "joe" but got "${result.get('username')}"`);
+            });
     });
 
-    it('Should hash password', (done) => {
-        joe.save({password: 'newpass'})
+    it('Should hash password', () => {
+        joe.set('password', 'newpass');
+        return joe.save()
             .then(result => {
                 assert(result.get('password') !== 'newpass');
                 return result.comparePassword('newpass');
             })
             .then(result => {
-                assert(result);
-                done()
+                assert(result, 'Expected comparePassword to return true but got false');
             })
-            .catch(err => done(err));
     });
 
-    it('Should be able to set Name', (done) => {
-        joe.save({name: 'joe billy bob'})
+    it('Should be able to set Name', () => {
+        joe.set('name', 'joe billy bob');
+        return joe.save()
             .then(result => {
-                assert(result.get('name') === 'joe billy bob');
-                done()
-            })
-            .catch(err => done(err));
+                assert(result.get('name') === 'joe billy bob', `Expected user's name to be "joe billy bob" but got "${result.get('name')}"`);
+            });
     });
 
-    it('Should be able to set Description', (done) => {
-        joe.save({description: 'I like to surf'})
+    it('Should be able to set Description', () => {
+        joe.set('description', 'I like to surf');
+        return joe.save()
             .then(result => {
-                assert(result.get('description') === 'I like to surf');
-                done()
-            })
-            .catch(err => done(err));
+                assert(result.get('description') === 'I like to surf', `Expected user's description to be "I like to surf" but got "${result.get('description')}"`);
+            });
     });
 
-    it('Should be able to set Email', (done) => {
-        joe.save({email: 'mail@mail.com'})
+    it('Should be able to set Email', () => {
+        joe.set('email', 'mail@mail.com');
+        return joe.save()
             .then(result => {
-                assert(result.get('email') === 'mail@mail.com');
-                done()
-            })
-            .catch(err => done(err));
+                assert(result.get('email') === 'mail@mail.com', `Expected user's email to be "mail@mail.com" but user's email was "${result.get('email')}"`);
+            });
     });
 
-    it('Should be able to set Hometown', (done) => {
-        joe.save({hometown: 'Detroit'})
+    it('Should be able to set Hometown', () => {
+        joe.set('hometown', 'Detroit');
+        return joe.save()
             .then(result => {
-                assert(result.get('hometown') === 'Detroit');
-                done()
-            })
-            .catch(err => done(err));
+                assert(result.get('hometown') === 'Detroit', `Expected user's hometown to be "Detroit" but user's hometown was "${result.get('hometown')}"`);
+            });
     });
 
-    it('Should be able to set Website', (done) => {
-        joe.save({website: 'http://mail.com'})
+    it('Should be able to set Website', () => {
+        joe.set('website', 'http://mail.com');
+        return joe.save()
             .then(result => {
-                assert(result.get('website') === 'http://mail.com');
-                done()
-            })
-            .catch(err => done(err));
+                assert(result.get('website') === 'http://mail.com', `Expected user's website to be "http://mail.com" but user's website was "${result.get('website')}"`);
+            });
     });
 
-    it('Should set Level to student by default', (done) => {
-        assert(joe.get('level') === 'student');
-        done()
+    it('Should set Level to student by default', () => {
+        assert(joe.get('level') === 'student', `Expected user's level to default to "student" but user's level was "${joe.get('level')}"`);
     });
 
-    it('Should be able to set CheckIns', (done) => {
+    it('Should be able to set CheckIns', () => {
         const firstCheckIn = new CheckIn();
-        firstCheckIn.save()
+        return firstCheckIn.save()
             .then(savedCheckIn => {
                 return joe.checkIns().create(savedCheckIn);
             })
             .then(() => User.where({id: joe.get('id')}).fetch({withRelated: 'checkIns'}))
             .then(result => {
                 assert(result.related('checkIns').length === 1);
-                assert(result.related('checkIns').at(0).get('id') === firstCheckIn.get('id'));
-                done()
-            })
-            .catch(err => done(err));
+                assert(result.related('checkIns').at(0).get('id') === firstCheckIn.get('id'), `Expected user's first checkIn ID to match firstCheckIn but user's checkIn had ID "${result.related('checkIns').at(0).get('id')}" and firstCheckIn had ID "${firstCheckIn.get('id')}"`);
+            });
     });
 });

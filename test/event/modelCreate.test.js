@@ -9,9 +9,10 @@ const assert = require('assert');
 describe('Event modelCreate', () => {
 
     let baseEvent;
+    let joe;
 
-    beforeEach((done) => {
-        const joe = new User({
+    beforeEach(() => {
+        joe = new User({
             username: 'joe',
             password: 'mypass',
             email: 'fake@fake.com',
@@ -21,15 +22,18 @@ describe('Event modelCreate', () => {
         baseEvent = new Event({
             title: 'Test Event',
             description: 'the best event evar',
-            type: 'Workshop'
+            type: 'workshop'
         });
 
-        joe.save()
+        return joe.save()
             .then(savedUser => {
-                baseEvent.createdBy = savedUser;
+                joe = savedUser;
+                baseEvent.createdBy = joe;
                 return baseEvent.save();
             })
-            .then(() => done())
+            .then(savedBaseEvent => {
+                baseEvent = savedBaseEvent;
+            })
             .catch(err => {
                 console.log(err);
                 if (err instanceof CheckIt.Error) {
@@ -37,75 +41,49 @@ describe('Event modelCreate', () => {
                         console.error(fieldError.message);
                     });
                 }
-                done(err);
             });
     });
 
-    afterEach((done) => {
-        knex('event').truncate()
+    afterEach(() => {
+        return knex('event').truncate()
             .then(() => {
                 return knex('user').truncate()
-            })
-            .then(() => done())
-            .catch(err => done(err));
+            });
     });
 
-    it('Should create a new Event record', (done) => {
-        assert(!baseEvent.isNew());
-        done();
+    it('Should create a new Event record', () => {
+        return assert(!baseEvent.isNew());
     });
 
-    it('Should be able to set Event Description', (done) => {
-        baseEvent.save({description: 'beginner sql'})
+    it('Should be able to set Event Description', () => {
+        baseEvent.set('description', 'beginner sql');
+        return baseEvent.save()
             .then(result => {
                 assert(result.get('description') === 'beginner sql');
-                done();
-            })
-            .catch(err => {
-                done(err);
             });
     });
 
-    it('Should be able to set Event Type', (done) => {
-        baseEvent.save({type: 'Workshop'})
+    it('Should be able to set Event Type', () => {
+        baseEvent.set('type', 'workshop');
+        return baseEvent.save()
             .then(() => Event.where({title: 'Test Event'}).fetch())
             .then(result => {
-                assert(result.get('type') === 'Workshop');
-                done();
-            })
-            .catch(err => {
-                done(err);
+                assert(result.get('type') === 'workshop');
             });
     });
 
-    it('Should set CreatedAt timestamp by default', (done) => {
+    it('Should set CreatedAt timestamp by default', () => {
         const createdAt = moment(baseEvent.get('createdAt'), 'YYYY-MM-DD HH:mm:ss');
         assert(createdAt instanceof moment);
-        done();
     });
 
     // TODO: verify test is valid. I think maybe it should be failing
-    it('Should be able to set CreatedBy', (done) => {
-        const joe = new User({
-            username: 'joe',
-            password: 'mypass',
-            email: 'fake@fake.com',
-            level: 'student'
-        });
+    it('Should be able to set CreatedBy', () => {
         baseEvent.instructors().push({id: joe.get('id')});
-        baseEvent.save()
+        return baseEvent.save()
             .then(() => Event.where({title: 'Test Event'}).fetch())
             .then(result => {
-                assert(String(result.instructors().id) === String(joe.id));
-                done();
-            })
-            .catch(err => {
-                if (err instanceof CheckIt.Error) {
-                    err.each((fieldError) => {
-                        console.error(fieldError.message);
-                    });
-                }
-                done(err)
+                assert(String(result.instructors()[0].get('id')) === String(joe.get('id')), `Expected instructor ID to match joe ID. Instructor ID was "${result.instructors().get('id')}", and joe ID was "${joe.get('id')}"`);
             });
     });
 
