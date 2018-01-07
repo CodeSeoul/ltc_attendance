@@ -77,13 +77,39 @@ describe('Event modelCreate', () => {
         assert(createdAt instanceof moment);
     });
 
-    // TODO: verify test is valid. I think maybe it should be failing
     it('Should be able to set CreatedBy', () => {
-        baseEvent.instructors().push({id: joe.get('id')});
-        return baseEvent.save()
-            .then(() => Event.where({title: 'Test Event'}).fetch())
+        console.log('creating bob');
+        const bob = new User({
+            username: 'bob',
+            password: 'pass',
+            email: 'fake@test.org',
+            level: 'admin'
+        });
+        console.log(bob);
+        console.log('saving user');
+        return bob.save(savedUser => {
+            console.log('setting createdBy');
+            baseEvent.set('createdBy', savedUser);
+            console.log('after set');
+            return baseEvent.save()
+                .then(() => {
+                    console.log('saved baseEvent');
+                    return Event.where({title: 'Test Event'}).fetch({withRelated: 'created_by'})
+                })
+                .then(result => {
+                    console.log('result');
+                    console.log(result);
+                    assert(result.related('createdBy').get('username') === 'bob');
+                });
+        });
+    });
+
+    it('Should be able to add instructors', () => {
+        return baseEvent.instructors()
+            .attach([joe])
+            .then(() => Event.where({title: 'Test Event'}).fetch({withRelated: 'instructors'}))
             .then(result => {
-                assert(String(result.instructors()[0].get('id')) === String(joe.get('id')), `Expected instructor ID to match joe ID. Instructor ID was "${result.instructors().get('id')}", and joe ID was "${joe.get('id')}"`);
+                assert(String(result.related('instructors').at(0).get('id')) === String(joe.get('id')), `Expected instructor ID to match joe ID. Instructor ID was "${result.instructors().get('id')}", and joe ID was "${joe.get('id')}"`);
             });
     });
 

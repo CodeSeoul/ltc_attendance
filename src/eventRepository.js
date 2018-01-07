@@ -10,7 +10,8 @@ module.exports = {
             title: reqBody.title,
             description: reqBody.description,
             type: reqBody.type,
-            created_by: creator
+            created_by: creator,
+            instructors: reqBody.instructors
         });
     },
 
