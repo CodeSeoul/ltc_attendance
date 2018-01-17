@@ -78,27 +78,20 @@ describe('Event modelCreate', () => {
     });
 
     it('Should be able to set CreatedBy', () => {
-        console.log('creating bob');
         const bob = new User({
             username: 'bob',
             password: 'pass',
             email: 'fake@test.org',
             level: 'admin'
         });
-        console.log(bob);
-        console.log('saving user');
-        return bob.save(savedUser => {
-            console.log('setting createdBy');
+        return bob.save()
+            .then(savedUser => {
             baseEvent.set('createdBy', savedUser);
-            console.log('after set');
             return baseEvent.save()
                 .then(() => {
-                    console.log('saved baseEvent');
                     return Event.where({title: 'Test Event'}).fetch({withRelated: 'created_by'})
                 })
                 .then(result => {
-                    console.log('result');
-                    console.log(result);
                     assert(result.related('createdBy').get('username') === 'bob');
                 });
         });
