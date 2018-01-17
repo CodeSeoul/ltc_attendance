@@ -19,16 +19,15 @@ describe('Event modelCreate', () => {
             level: 'student'
         });
 
-        baseEvent = new Event({
-            title: 'Test Event',
-            description: 'the best event evar',
-            type: 'workshop'
-        });
-
         return joe.save()
             .then(savedUser => {
                 joe = savedUser;
-                baseEvent.createdBy = joe;
+                baseEvent = new Event({
+                    title: 'Test Event',
+                    description: 'the best event evar',
+                    type: 'workshop',
+                    created_by: joe.get('id')
+                });
                 return baseEvent.save();
             })
             .then(savedBaseEvent => {

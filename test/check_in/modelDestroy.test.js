@@ -2,9 +2,13 @@ require('../test_helper.test');
 const knex = require('../../config/bookshelf').knex;
 const User = require('../../models/User').User;
 const Event = require('../../models/Event').Event;
+const CheckIn = require('../../models/checkIn').CheckIn;
 const assert = require('assert');
 
-describe('Event modelDestroy', () => {
+describe('CheckIn modelDestroy', () => {
+
+    let baseCheckIn;
+
     beforeEach(() => {
         return new User({
             username: 'joe',
@@ -18,29 +22,33 @@ describe('Event modelDestroy', () => {
                     description: 'we\'ll do some stuff!',
                     type: 'workshop',
                     created_by: savedUser.get('id')
-                }).save();
+                }).save()
+                    .then(savedEvent => {
+                        return new CheckIn({
+                            user_id: savedUser.get('id'),
+                            event_id: savedEvent.get('id')
+                        }).save();
+                    })
+                    .then(savedCheckIn => {
+                        baseCheckIn = savedCheckIn;
+                    });
             });
     });
     afterEach(() => {
         return knex('event').truncate()
             .then(() => {
                 return knex('user').truncate();
+            })
+            .then(() => {
+                return knex('check_in').truncate();
             });
     });
 
-    it('Should destroy event record', () => {
-        return new Event({title: 'ruby class'})
-            .save()
-            .then(() => {
-                return Event.where({title: 'Test Event'}).fetch()
-            })
-            .then(event => {
-                return event.destroy()
-            })
-            .then(() => Event.forge().fetchAll())
+    it('Should destroy check_in record', () => {
+        return baseCheckIn.destroy()
+            .then(() => CheckIn.forge().fetchAll())
             .then(results => {
-                assert(results.length === 1);
-                assert(results.at(0).get('title') === 'ruby class');
+                assert(results.length === 0);
             });
     });
 });
