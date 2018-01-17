@@ -61,7 +61,7 @@ describe('User modelValidations', () => {
     });
 
     it('Should require an email no more than 128 characters', () => {
-        joe.set('email', 'mm@' + 'l'.repeat(125) + '.com',);
+        joe.set('email', 'mm@' + 'l'.repeat(125) + '.com');
         return joe.save()
             .then(() => {
                 assert.fail('Should not permit an email longer than 128 characters');
