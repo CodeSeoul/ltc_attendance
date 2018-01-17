@@ -55,7 +55,7 @@ const User = bookshelf.Model.extend({
                     });
             }
         }],
-        level: ['required', (val) => {
+        level: ['required', 'string', (val) => {
             if (['student', 'admin'].includes(val) === false) {
                 throw new Error('The level must be one of ["student", "admin"]');
             }
@@ -68,31 +68,6 @@ const User = bookshelf.Model.extend({
     validateSave: function () {
         return CheckIt(this.validationRules).validate(this.toJSON());
         // TODO: Find a way to update only changed attributes and only have those validation rules run against them
-    },
-
-    virtuals: {
-        countCheckIns: function () {
-            // this property exists due our query in userRepository
-            return this.get('check_in_count');
-        },
-        createdAt: {
-            get: function () {
-                return this.get('created_at');
-            },
-
-            set: function (newDate) {
-                this.set('created_at', newDate);
-            }
-        },
-        updatedAt: {
-            get: function () {
-                return this.get('updated_at');
-            },
-
-            set: function (newDate) {
-                this.set('updated_at', newDate);
-            }
-        }
     },
 
     // https://wesleytsai.io/2015/07/28/bookshelf-bcrpyt-password-hashing/
@@ -117,7 +92,7 @@ const User = bookshelf.Model.extend({
     },
 
     setDefaults: function (model, attrs, options) {
-        if (!attrs.level && !model.level) {
+        if (!attrs.level && !model.get('level')) {
             model.set('level', 'student');
         }
     }

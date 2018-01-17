@@ -66,41 +66,25 @@ describe('Event modelCreate', () => {
     it('Should be able to set Event Type', () => {
         baseEvent.set('type', 'workshop');
         return baseEvent.save()
-            .then(() => Event.where({title: 'Test Event'}).fetch())
+            .then(() => {
+                return Event.where({title: 'Test Event'}).fetch();
+            })
             .then(result => {
                 assert(result.get('type') === 'workshop');
             });
     });
 
-    it('Should set CreatedAt timestamp by default', () => {
-        const createdAt = moment(baseEvent.get('createdAt'), 'YYYY-MM-DD HH:mm:ss');
+    it('Should set created_at timestamp by default', () => {
+        const createdAt = moment(baseEvent.get('created_at'), 'YYYY-MM-DD HH:mm:ss');
         assert(createdAt instanceof moment);
-    });
-
-    it('Should be able to set CreatedBy', () => {
-        const bob = new User({
-            username: 'bob',
-            password: 'pass',
-            email: 'fake@test.org',
-            level: 'admin'
-        });
-        return bob.save()
-            .then(savedUser => {
-            baseEvent.set('createdBy', savedUser);
-            return baseEvent.save()
-                .then(() => {
-                    return Event.where({title: 'Test Event'}).fetch({withRelated: 'created_by'})
-                })
-                .then(result => {
-                    assert(result.related('createdBy').get('username') === 'bob');
-                });
-        });
     });
 
     it('Should be able to add instructors', () => {
         return baseEvent.instructors()
             .attach([joe])
-            .then(() => Event.where({title: 'Test Event'}).fetch({withRelated: 'instructors'}))
+            .then(() => {
+                return Event.where({title: 'Test Event'}).fetch({withRelated: 'instructors'});
+            })
             .then(result => {
                 assert(String(result.related('instructors').at(0).get('id')) === String(joe.get('id')), `Expected instructor ID to match joe ID. Instructor ID was "${result.instructors().get('id')}", and joe ID was "${joe.get('id')}"`);
             });

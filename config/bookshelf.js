@@ -25,13 +25,13 @@ module.exports = {
                 client: config.DB_TYPE,
                 connection: {
                     filename: config.FILENAME
-                }
+                },
+                useNullAsDefault: true
             });
         }
 
         const bookshelf = require('bookshelf')(module.exports.knex);
         bookshelf.plugin('registry');
-        bookshelf.plugin('virtuals');
         bookshelf.plugin('visibility');
         module.exports.bookshelf = bookshelf;
     },

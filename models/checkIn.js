@@ -11,26 +11,6 @@ const CheckIn = bookshelf.Model.extend({
 
     event: function () {
         return this.belongsTo('Event', 'event_id');
-    },
-
-    virtuals: {
-
-        createdAt: {
-            get: function () {
-                return this.get('created_at');
-            },
-            set: function (newDate) {
-                this.set('created_at', newDate);
-            }
-        },
-        updatedAt: {
-            get: function () {
-                return this.get('updated_at');
-            },
-            set: function (newDate) {
-                this.set('updated_at', newDate)
-            }
-        }
     }
 });
 

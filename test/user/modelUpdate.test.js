@@ -21,7 +21,7 @@ describe('User modelUpdate', () => {
                     title: 'User Test Event',
                     description: 'roflcopters and lollerskates',
                     type: 'Workshop',
-                    createdBy: joe
+                    created_by: joe
                 }).save()
                     .then(event => {
                         return new CheckIn().save({
@@ -68,8 +68,10 @@ describe('User modelUpdate', () => {
 
     it('Should update Level', () => {
         joe.set('level', 'admin');
+        console.log('joe after set: ' + JSON.stringify(joe));
         return joe.save()
             .then(user => {
+                console.log('joe after save: ' + JSON.stringify(user));
                 assert(user.get('level') === 'admin', `Level should be "admin" but got "${user.get('level')}"`);
             });
     });

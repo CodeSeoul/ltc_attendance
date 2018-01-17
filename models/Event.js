@@ -21,7 +21,7 @@ const Event = bookshelf.Model.extend({
         return this.belongsToMany('User', 'event_instructor');
     },
 
-    createdBy: function () {
+    created_by: function () {
         return this.belongsTo('User', 'created_by');
     },
 
@@ -42,41 +42,7 @@ const Event = bookshelf.Model.extend({
 
     validateSave: function () {
         return CheckIt(this.validationRules).validate(this.toJSON());
-    },
-
-    virtuals: {
-
-        countCheckIns: function () {
-            return this.related('checkIns').length;
-        },
-
-        createdAt: {
-            get: function () {
-                return moment(this.get('created_at')).format('YYYY-MM-DD HH:mm:ss');
-            },
-            set: function (newDate) {
-                this.set('created_at', newDate);
-            }
-        },
-
-        updatedAt: {
-            get: function () {
-                return moment(this.get('updated_at')).format('YYYY-MM-DD HH:mm:ss');
-            },
-            set: function (newDate) {
-                this.set('updated_at', newDate);
-            }
-        },
-
-        createdBy: {
-            get: function () {
-                return this.get('created_by');
-            },
-            set: function (newCreatedBy) {
-                this.set('created_by', newCreatedBy);
-            }
-        }
-    },
+    }
 });
 
 const Events = bookshelf.Collection.extend({
