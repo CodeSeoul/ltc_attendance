@@ -12,8 +12,8 @@ module.exports = {
 
     getCheckInByUserIdAndEventId(user, event) {
         return CheckIn.where({
-            'user': user,
-            'event': event
+            'user_id': user.get('id'),
+            'event_id': event.get('id')
         }).fetch();
     },
 

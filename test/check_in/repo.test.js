@@ -63,12 +63,9 @@ describe('CheckIn Repo routes', () => {
 
     it('should retrieve the correct check_in with getCheckInByUserIdAndEventId()', () => {
         return Repo.getCheckInByUserIdAndEventId(joe, baseEvent)
-            .then(checkInCollection => {
-                console.log(checkInCollection);
-                console.log(JSON.stringify(checkInCollection));
-                expect(checkInCollection.size()).to.be.eql(1);
-                expect(checkInCollection.get(0).get('user_id')).to.be.eql(joe.get('id'));
-                expect(checkInCollection.get(0).get('event_id')).to.be.eql(baseEvent.get('id'));
+            .then(retrievedCheckIn => {
+                expect(retrievedCheckIn.get('user_id')).to.be.eql(joe.get('id'));
+                expect(retrievedCheckIn.get('event_id')).to.be.eql(baseEvent.get('id'));
             });
     });
 })
